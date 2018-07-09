@@ -14,9 +14,9 @@ func Test_WithBox(t *testing.T) {
 
 	var names []string
 	g := genny.Background()
-	g, err := WithBox(g, box, func(f genny.File) genny.Generator {
+	g, err := WithBox(g, box, func(gg genny.Generator, f genny.File) genny.Generator {
 		names = append(names, f.Name())
-		return genny.WithFile(g, f)
+		return genny.WithFile(gg, f)
 	})
 	r.NoError(err)
 	r.NoError(g.Run())

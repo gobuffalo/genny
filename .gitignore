@@ -1,4 +1,5 @@
 *.log
+examples/output
 .DS_Store
 doc
 tmp

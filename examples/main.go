@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"text/template"
@@ -39,11 +40,16 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// install a package with go get
+	g = gotools.WithGoGet(g, "github.com/gobuffalo/envy", "-v")
+
 	// run another command
 	g = genny.WithCmd(g, exec.CommandContext(g.Context(), "echo", "almost finished"))
 
 	// add the contents of a packr box to the generators
-	g, err = packrgen.WithBox(g, packr.NewBox("../"), nil)
+	g, err = packrgen.WithBox(g, packr.NewBox("../"), func(gg genny.Generator, f genny.File) genny.Generator {
+		return genny.WithFileFromReader(gg, filepath.Join("examples", "output", f.Name()), f)
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,10 +57,15 @@ func main() {
 	// add another file
 	g = genny.WithFileFromReader(g, "examples/output/baz/bar.txt", strings.NewReader("plain text"))
 
+	// try to get the same package, but it won't run 2x
 	g = gotools.WithGoGet(g, "github.com/gobuffalo/envy", "-v")
+	g = gotools.WithGoGet(g, "github.com/gobuffalo/plush", "-u", "-v")
 
 	// wrap in a "dry runner" so files and commands are echoed to the screen, but not executed:
 	g = genny.DryRun(g)
+
+	// wrap in a "wet runner" so files and commands will be executed
+	// g = genny.WetRun(g)
 
 	// actually run the generators:
 	err = g.Run()
