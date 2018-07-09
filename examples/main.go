@@ -51,6 +51,8 @@ func main() {
 	// add another file
 	g = genny.WithFileFromReader(g, "examples/output/baz/bar.txt", strings.NewReader("plain text"))
 
+	g = gotools.WithGoGet(g, "github.com/gobuffalo/envy", "-v")
+
 	// wrap in a "dry runner" so files and commands are echoed to the screen, but not executed:
 	g = genny.DryRun(g)
 
