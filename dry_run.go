@@ -12,7 +12,6 @@ import (
 func DryRun(g Generator) Generator {
 	g = DryExec(g)
 	g = WithFilesHandler(g, func(f File) error {
-		g.Logger().Infof("[genny.DryRun] %s", f.Name())
 		b, err := ioutil.ReadAll(f)
 		if err != nil {
 			return errors.WithStack(err)

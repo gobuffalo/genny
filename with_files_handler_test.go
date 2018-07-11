@@ -4,8 +4,6 @@ import "strings"
 
 func (r *Suite) Test_WithFilesHandler() {
 	g := Background()
-	g = WithFileFromReader(g, "foo.txt", strings.NewReader("foo"))
-	g = WithFileFromReader(g, "bar.txt", strings.NewReader("bar"))
 
 	var names []string
 	g = WithFilesHandler(g, func(f File) error {
@@ -13,6 +11,9 @@ func (r *Suite) Test_WithFilesHandler() {
 		return nil
 	})
 
-	r.NoError(g.Run())
+	g = WithFileFromReader(g, "foo.txt", strings.NewReader("foo"))
+	g = WithFileFromReader(g, "bar.txt", strings.NewReader("bar"))
+
+	r.NoError(Run(g))
 	r.Len(names, 2)
 }

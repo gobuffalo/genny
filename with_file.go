@@ -1,6 +1,10 @@
 package genny
 
-import "io"
+import (
+	"io"
+
+	"github.com/pkg/errors"
+)
 
 type withFile struct {
 	Generator
@@ -13,6 +17,22 @@ func (w withFile) Parent() Generator {
 
 func (w withFile) File() File {
 	return w.file
+}
+
+func (w withFile) String() string {
+	return "genny.WithFile"
+}
+
+func (w withFile) Run() error {
+	for _, p := range Tree(w) {
+		if e, ok := p.(FileHandler); ok {
+			err := e.Handle(w.File())
+			if err != nil {
+				return errors.WithStack(err)
+			}
+		}
+	}
+	return nil
 }
 
 // WithFile returns a generator wrapped with a file

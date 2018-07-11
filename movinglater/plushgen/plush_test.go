@@ -10,6 +10,7 @@ import (
 	"github.com/gobuffalo/genny"
 	"github.com/gobuffalo/genny/movinglater/gotools"
 	"github.com/gobuffalo/plush"
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 )
 
@@ -17,20 +18,26 @@ func Test_WithTemplate(t *testing.T) {
 	r := require.New(t)
 
 	g := genny.Background()
-	g = genny.WithFile(g, genny.NewFile("foo.go", strings.NewReader(`{{.}} <%= name %>`)))
 
-	g, err := gotools.WithTemplate(g, "Hello", template.FuncMap{})
-	r.NoError(err)
+	g = gotools.WithTemplate(g, "Hello", template.FuncMap{})
 
 	ctx := plush.NewContext()
 	ctx.Set("name", "mark")
-	g, err = WithTemplate(g, ctx)
-	r.NoError(err)
+	g = WithPlush(g, ctx)
 
-	fa, ok := g.(genny.Fileable)
-	r.True(ok)
-	b, err := ioutil.ReadAll(fa.File())
-	r.NoError(err)
+	var finished string
+	g = genny.WithFilesHandler(g, func(f genny.File) error {
+		b, err := ioutil.ReadAll(f)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		finished = string(b)
+		return nil
+	})
 
-	r.Equal("Hello mark", string(b))
+	g = genny.WithFile(g, genny.NewFile("foo.go", strings.NewReader(`{{.}} <%= name %>`)))
+
+	r.NoError(genny.Run(g))
+
+	r.Equal("Hello mark", finished)
 }

@@ -10,7 +10,3 @@ type Logger interface {
 	Errorf(string, ...interface{})
 	Fatalf(string, ...interface{})
 }
-
-type setLogable interface {
-	setLogger(Logger)
-}

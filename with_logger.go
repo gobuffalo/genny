@@ -13,24 +13,16 @@ func (w withLogger) Logger() Logger {
 	return w.logger
 }
 
-func (w *withLogger) setLogger(l Logger) {
-	w.logger = l
+func (w withLogger) String() string {
+	return "genny.WithLogger"
 }
 
 // WithLogger will apply a new Logger to the entire tree
 // of generators.
 func WithLogger(g Generator, l Logger) Generator {
-	if sl, ok := g.(setLogable); ok {
-		sl.setLogger(l)
-		return g
-	}
-	p := g.Parent()
-	for p != nil {
-		if sl, ok := p.(setLogable); ok {
-			sl.setLogger(l)
-			return g
-		}
-		p = p.Parent()
+	g = withLogger{
+		Generator: g,
+		logger:    l,
 	}
 	return g
 }

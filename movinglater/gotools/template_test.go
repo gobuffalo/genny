@@ -7,44 +7,30 @@ import (
 	"text/template"
 
 	"github.com/gobuffalo/genny"
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_WithTemplate(t *testing.T) {
 	r := require.New(t)
 
-	input := `hello {{.}}`
-	g := genny.Background()
-	g = genny.WithFile(g, genny.NewFile("foo.go", strings.NewReader(input)))
-
-	g, err := WithTemplate(g, "mark", template.FuncMap{})
-	r.NoError(err)
-
-	fa, ok := g.(genny.Fileable)
-	r.True(ok)
-	b, err := ioutil.ReadAll(fa.File())
-	r.NoError(err)
-
-	r.Equal("hello mark", string(b))
-}
-
-func Test_WithTemplate_NoFile(t *testing.T) {
-	r := require.New(t)
-
 	g := genny.Background()
 
-	_, err := WithTemplate(g, "mark", template.FuncMap{})
-	r.Error(err)
-	r.Equal(genny.ErrNilFile, err)
-}
+	g = WithTemplate(g, "Hello", template.FuncMap{})
 
-func Test_WithTemplate_BadTemplate(t *testing.T) {
-	r := require.New(t)
+	var finished string
+	g = genny.WithFilesHandler(g, func(f genny.File) error {
+		b, err := ioutil.ReadAll(f)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		finished = string(b)
+		return nil
+	})
 
-	input := `hello {{.}`
-	g := genny.Background()
-	g = genny.WithFile(g, genny.NewFile("foo.go", strings.NewReader(input)))
+	g = genny.WithFile(g, genny.NewFile("foo.go", strings.NewReader(`{{.}} mark`)))
 
-	_, err := WithTemplate(g, "mark", template.FuncMap{})
-	r.Error(err)
+	r.NoError(genny.Run(g))
+
+	r.Equal("Hello mark", finished)
 }

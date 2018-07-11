@@ -11,3 +11,15 @@ type Generator interface {
 	Parent() Generator
 	Logger() Logger
 }
+
+type Generators []Generator
+
+func Tree(g Generator) Generators {
+	gens := Generators{g}
+	p := g.Parent()
+	for p != nil {
+		gens = append(gens, p)
+		p = p.Parent()
+	}
+	return gens
+}

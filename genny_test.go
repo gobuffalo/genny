@@ -1,6 +1,7 @@
 package genny
 
 import (
+	"bytes"
 	"context"
 	"io/ioutil"
 	"os"
@@ -8,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
@@ -49,4 +51,12 @@ func (s *Suite) Command(name string, args ...string) *exec.Cmd {
 func Test_Suite(t *testing.T) {
 	s := &Suite{}
 	suite.Run(t, s)
+}
+
+func withTestLogger(g Generator) (Generator, *bytes.Buffer) {
+	bb := &bytes.Buffer{}
+	l := logrus.New()
+	l.Out = bb
+	g = WithLogger(g, l)
+	return g, bb
 }

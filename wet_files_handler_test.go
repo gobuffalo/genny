@@ -8,6 +8,7 @@ import (
 
 func (r *Suite) Test_WetFilesHandler() {
 	g := Background()
+	g = WetFilesHandler(g)
 
 	f1 := filepath.Join(r.PWD, "foo.txt")
 	c1 := strings.ToUpper(f1)
@@ -16,8 +17,7 @@ func (r *Suite) Test_WetFilesHandler() {
 
 	g = WithFileFromReader(g, f1, strings.NewReader(c1))
 	g = WithFileFromReader(g, f2, strings.NewReader(c2))
-	g = WetFilesHandler(g)
-	r.NoError(g.Run())
+	r.NoError(Run(g))
 
 	b, err := ioutil.ReadFile(f1)
 	r.NoError(err)

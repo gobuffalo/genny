@@ -22,7 +22,7 @@ func (w withContext) String() string {
 }
 
 // Context returns a new Generator with the given context
-func Context(g Generator, ctx context.Context) Generator {
+func WithContext(g Generator, ctx context.Context) Generator {
 	return withContext{
 		Generator: g,
 		ctx:       ctx,

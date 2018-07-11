@@ -12,7 +12,7 @@ func (r *Suite) Test_Context() {
 	ctx, cancel := context.WithTimeout(g.Context(), time.Second)
 	defer cancel()
 
-	g = Context(g, ctx)
+	g = WithContext(g, ctx)
 	r.NotEqual(g.Context(), context.Background())
 	r.Equal(g.Context(), ctx)
 }

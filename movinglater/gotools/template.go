@@ -9,17 +9,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-// WithTemplate returns a generator who's previous file has been run through text/template
-func WithTemplate(g genny.Generator, data interface{}, helpers template.FuncMap) (genny.Generator, error) {
-	fa, ok := g.(genny.Fileable)
-	if !ok {
-		return g, genny.ErrNilFile
-	}
-	f, err := renderWithTemplate(fa.File(), data, helpers)
-	if err != nil {
-		return g, errors.WithStack(err)
-	}
-	return genny.WithFile(g, f), nil
+// WithTemplate returns a file transformer for rendering files with go templates
+func WithTemplate(g genny.Generator, data interface{}, helpers template.FuncMap) genny.Generator {
+	g = genny.WithFileTransformer(g, func(f genny.File) (genny.File, error) {
+		return renderWithTemplate(f, data, helpers)
+	})
+	return g
 }
 
 func renderWithTemplate(f genny.File, data interface{}, helpers template.FuncMap) (genny.File, error) {

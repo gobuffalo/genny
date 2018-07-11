@@ -1,22 +1,14 @@
 package genny
 
 import (
-	"bytes"
 	"os"
-
-	"github.com/sirupsen/logrus"
 )
 
 func (r *Suite) Test_WetExec() {
 	g := Background()
-
-	g = WithCmd(g, r.Command("bad-command", "bad-args"))
 	g = WetExec(g)
 
-	bb := &bytes.Buffer{}
-	l := logrus.New()
-	l.Out = bb
-	g = WithLogger(g, l)
+	g = WithCmd(g, r.Command("bad-command", "bad-args"))
 
 	err := g.Run()
 	r.Error(err)
@@ -26,6 +18,7 @@ func (r *Suite) Test_WetExec() {
 
 func (r *Suite) Test_WetExec_SetsIO() {
 	g := Background()
+	g = WetExec(g)
 
 	cmd := r.Command("bad-command", "bad args")
 	g = WithCmd(g, cmd)
@@ -34,7 +27,6 @@ func (r *Suite) Test_WetExec_SetsIO() {
 	r.NotEqual(cmd.Stderr, os.Stderr)
 	r.NotEqual(cmd.Stdout, os.Stdout)
 
-	g = WetExec(g)
 	r.Error(g.Run())
 
 	r.Equal(cmd.Stdin, os.Stdin)
