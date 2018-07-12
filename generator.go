@@ -1,25 +1,73 @@
 package genny
 
 import (
-	"context"
+	"os/exec"
+	"sync"
+
+	"github.com/gobuffalo/packr"
+	"github.com/pkg/errors"
 )
 
-// Generator is the main interface for writing new generators
-type Generator interface {
-	Context() context.Context
-	Run() error
-	Parent() Generator
-	Logger() Logger
+// Generator is the basic type for generators to use
+type Generator struct {
+	runners      []RunFn
+	transformers []Transformer
+	moot         *sync.RWMutex
 }
 
-type Generators []Generator
-
-func Tree(g Generator) Generators {
-	gens := Generators{g}
-	p := g.Parent()
-	for p != nil {
-		gens = append(gens, p)
-		p = p.Parent()
+// New, well-formed, generator
+func New() *Generator {
+	g := &Generator{
+		runners:      []RunFn{},
+		moot:         &sync.RWMutex{},
+		transformers: []Transformer{},
 	}
-	return gens
+	return g
+}
+
+// File adds a file to be run when the generator is run
+func (g *Generator) File(f File) {
+	g.RunFn(func(r *Runner) error {
+		g.moot.RLock()
+		defer g.moot.RUnlock()
+		var err error
+		for _, t := range g.transformers {
+			f, err = t.Transform(f)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+		}
+
+		return r.File(f)
+	})
+}
+
+// Transformer adds a file transform to the generator
+func (g *Generator) Transformer(t Transformer) {
+	g.moot.Lock()
+	defer g.moot.Unlock()
+	g.transformers = append(g.transformers, t)
+}
+
+// Command adds a command to be run when the generator is run
+func (g *Generator) Command(cmd *exec.Cmd) {
+	g.RunFn(func(r *Runner) error {
+		return r.Exec(cmd)
+	})
+}
+
+// Box walks through a packr.Box and adds Files for each entry
+// in the box.
+func (g *Generator) Box(box packr.Box) error {
+	return box.Walk(func(path string, f packr.File) error {
+		g.File(NewFile(path, f))
+		return nil
+	})
+}
+
+// RunFn adds a generic "runner" function to the generator.
+func (g *Generator) RunFn(fn RunFn) {
+	g.moot.Lock()
+	defer g.moot.Unlock()
+	g.runners = append(g.runners, fn)
 }

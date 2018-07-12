@@ -1,0 +1,5 @@
+create_table("{{.Model.Table}}") {
+  {{ range $a := .Attrs }}
+  t.Column("{{$a.Name.Underscore}}", "{{$a.CommonType}}")
+  {{ end }}
+}

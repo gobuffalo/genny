@@ -1,4 +1,4 @@
-package plushgen
+package gotools
 
 import (
 	"io/ioutil"
@@ -6,18 +6,15 @@ import (
 	"testing"
 
 	"github.com/gobuffalo/genny"
-	"github.com/gobuffalo/plush"
 	"github.com/stretchr/testify/require"
 )
 
-func Test_Transformer(t *testing.T) {
+func Test_TemplateTransformer(t *testing.T) {
 	r := require.New(t)
 
-	ctx := plush.NewContext()
-	ctx.Set("name", "mark")
-	f := genny.NewFile("foo.plush.txt", strings.NewReader("Hello <%= name %>"))
+	f := genny.NewFile("foo.tmpl.txt", strings.NewReader("Hello {{.}}"))
 
-	tr := Transformer(ctx)
+	tr := TemplateTransformer("mark", nil)
 	f, err := tr.Transform(f)
 	r.NoError(err)
 	r.Equal("foo.txt", f.Name())

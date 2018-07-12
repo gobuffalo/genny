@@ -1,0 +1,7 @@
+package models
+
+type <%= model.Name.Model() %> struct {
+  <%= for (a) in attrs { %>
+  <%= a.Name.Camel() %> <%= a.GoType() %>
+  <% } %>
+}

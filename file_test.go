@@ -3,9 +3,14 @@ package genny
 import (
 	"io/ioutil"
 	"strings"
+	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
-func (r *Suite) Test_NewFile() {
+func Test_NewFile(t *testing.T) {
+	r := require.New(t)
+
 	input := "hi"
 	f := NewFile("foo.txt", strings.NewReader(input))
 	r.NotNil(f)

@@ -9,9 +9,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-// WithPlush adds a file transform to render files with plush syntax
-func WithPlush(g genny.Generator, ctx *plush.Context) genny.Generator {
-	g = genny.WithFileTransformer(g, func(f genny.File) (genny.File, error) {
+// Transformer will plushify any file that has a ".plush" extension
+func Transformer(ctx *plush.Context) genny.Transformer {
+	t := genny.NewTransformer(".plush", func(f genny.File) (genny.File, error) {
 		b, err := ioutil.ReadAll(f)
 		if err != nil {
 			return f, errors.WithStack(err)
@@ -22,5 +22,6 @@ func WithPlush(g genny.Generator, ctx *plush.Context) genny.Generator {
 		}
 		return genny.NewFile(f.Name(), strings.NewReader(s)), nil
 	})
-	return g
+	t.StripExt = true
+	return t
 }
