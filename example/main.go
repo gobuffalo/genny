@@ -7,10 +7,10 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/gobuffalo/attrs"
 	"github.com/gobuffalo/genny"
 	"github.com/gobuffalo/genny/example/fizz"
 	"github.com/gobuffalo/genny/example/pop"
+	"github.com/gobuffalo/genny/movinglater/attrs"
 	"github.com/gobuffalo/genny/movinglater/plushgen"
 	"github.com/gobuffalo/plush"
 )

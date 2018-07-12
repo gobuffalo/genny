@@ -8,8 +8,8 @@ import (
 
 	"text/template"
 
-	"github.com/gobuffalo/attrs"
 	"github.com/gobuffalo/genny"
+	"github.com/gobuffalo/genny/movinglater/attrs"
 	"github.com/gobuffalo/genny/movinglater/gotools"
 	"github.com/gobuffalo/packr"
 	"github.com/markbates/inflect"

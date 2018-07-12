@@ -4,16 +4,16 @@ import (
 	"errors"
 	"path/filepath"
 
-	"github.com/gobuffalo/attrs"
 	"github.com/gobuffalo/genny"
+	"github.com/gobuffalo/genny/movinglater/attrs"
 	"github.com/gobuffalo/genny/movinglater/plushgen"
 	"github.com/gobuffalo/packr"
 	"github.com/gobuffalo/plush"
 )
 
-func Model(attrs attrs.Attrs) (*genny.Generator, error) {
+func Model(ats attrs.Attrs) (*genny.Generator, error) {
 	g := genny.New()
-	if len(attrs) < 1 {
+	if len(ats) < 1 {
 		return g, errors.New("requires at least attr")
 	}
 
@@ -21,11 +21,11 @@ func Model(attrs attrs.Attrs) (*genny.Generator, error) {
 		return g, err
 	}
 
-	name := attrs[0].Name
+	name := ats[0].Name
 	ctx := plush.NewContext()
-	ctx.Set("model", attrs[0])
-	if len(attrs) > 1 {
-		ctx.Set("attrs", attrs[1:])
+	ctx.Set("model", ats[0])
+	if len(ats) > 1 {
+		ctx.Set("attrs", ats[1:])
 	}
 
 	g.Transformer(plushgen.Transformer(ctx))
