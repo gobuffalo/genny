@@ -24,43 +24,43 @@ func main() {
 		args = os.Args[1:]
 	}
 
-	attrs, err := attrs.ParseArgs(args...)
+	ats, err := attrs.ParseNamedArgs(args...)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	err = r.WithFn(func() (*genny.Generator, error) {
-		return pop.Model(attrs)
+		return pop.Model(ats)
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	err = r.WithFn(func() (*genny.Generator, error) {
-		return fizz.FizzMigration(attrs)
+		return fizz.FizzMigration(ats)
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	r.With(MyCustomGenerator(attrs))
+	r.With(MyCustomGenerator(ats))
 
 	if err := r.Run(); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func MyCustomGenerator(ats attrs.Attrs) *genny.Generator {
+func MyCustomGenerator(ats attrs.NamedAttrs) *genny.Generator {
 	g := genny.New()
 	g.File(genny.NewFile("templates/index.plush.html", strings.NewReader(template)))
 	g.Command(exec.Command("asdf", "asdfasdf"))
 
 	ctx := plush.NewContext()
-	ctx.Set("model", ats[0].Name)
+	ctx.Set("model", ats)
 	g.Transformer(plushgen.Transformer(ctx))
 	return g
 }
 
 const template = `
-<h1>Hello <%= model.Model() %></h1>
+<h1>Hello <%= model.Name.Model() %></h1>
 `
