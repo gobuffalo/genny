@@ -3,10 +3,28 @@ package gotools
 import (
 	"os/exec"
 
+	"github.com/gobuffalo/genny"
 	"github.com/pkg/errors"
 )
 
-func GoFmt(files ...string) (*exec.Cmd, error) {
+func GoFmt(root string) (*genny.Generator, error) {
+	g := genny.New()
+	g.RunFn(func(r *genny.Runner) error {
+		files, err := GoFiles(root)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		cmd, err := goFmtCmd(files...)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		return r.Exec(cmd)
+	})
+
+	return g, nil
+}
+
+func goFmtCmd(files ...string) (*exec.Cmd, error) {
 	if len(files) == 0 {
 		files = []string{"."}
 	}
