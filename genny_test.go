@@ -15,6 +15,7 @@ func testLogger(r *Runner) *bytes.Buffer {
 	r.Logger = l
 	return bb
 }
+
 func testRunner() (*Runner, *bytes.Buffer) {
 	r := DryRunner(context.Background())
 	return r, testLogger(r)
