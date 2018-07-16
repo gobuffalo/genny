@@ -1,6 +1,8 @@
 package genny
 
 import (
+	"strings"
+
 	"github.com/pkg/errors"
 )
 
@@ -34,4 +36,12 @@ func NewTransformer(ext string, fn TransformerFn) Transformer {
 		Ext: ext,
 		fn:  fn,
 	}
+}
+
+func Replace(search string, replace string) Transformer {
+	return NewTransformer("*", func(f File) (File, error) {
+		name := f.Name()
+		name = strings.Replace(name, search, replace, -1)
+		return NewFile(name, f), nil
+	})
 }
