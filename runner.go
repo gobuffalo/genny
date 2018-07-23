@@ -22,6 +22,12 @@ type Runner struct {
 	moot       *sync.Mutex
 }
 
+func (r *Runner) WithRun(fn RunFn) {
+	g := New()
+	g.RunFn(fn)
+	r.With(g)
+}
+
 // With adds a Generator to the Runner
 func (r *Runner) With(g *Generator) {
 	r.moot.Lock()

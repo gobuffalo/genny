@@ -14,18 +14,12 @@ func Test_Force_Exists(t *testing.T) {
 	dir, err := ioutil.TempDir("", "test")
 	r.NoError(err)
 
-	g, err := Force(dir, false)
-	r.NoError(err)
-
 	run := DryRunner(context.Background())
-	run.With(g)
+	run.WithRun(Force(dir, false))
 	r.Error(run.Run())
 
-	g, err = Force(dir, true)
-	r.NoError(err)
-
 	run = DryRunner(context.Background())
-	run.With(g)
+	run.WithRun(Force(dir, true))
 	r.NoError(run.Run())
 }
 
@@ -33,17 +27,12 @@ func Test_Force_Doesnt_Exists(t *testing.T) {
 	r := require.New(t)
 
 	dir := "i don't exist"
-	g, err := Force(dir, false)
-	r.NoError(err)
 
 	run := DryRunner(context.Background())
-	run.With(g)
+	run.WithRun(Force(dir, false))
 	r.NoError(run.Run())
 
-	g, err = Force(dir, true)
-	r.NoError(err)
-
 	run = DryRunner(context.Background())
-	run.With(g)
+	run.WithRun(Force(dir, true))
 	r.NoError(run.Run())
 }
