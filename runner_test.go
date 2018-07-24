@@ -26,6 +26,10 @@ func Test_Runner_Run(t *testing.T) {
 
 	r.NoError(run.Run())
 
+	res := run.Results()
+	r.Len(res.Commands, 1)
+	r.Len(res.Files, 1)
+
 	out := bb.String()
 	r.Contains(out, "foo bar")
 	r.Contains(out, "foo.txt")

@@ -20,6 +20,11 @@ type Runner struct {
 	Root       string                // the root of the write path
 	generators []*Generator
 	moot       *sync.Mutex
+	results    Results
+}
+
+func (r *Runner) Results() Results {
+	return r.results
 }
 
 func (r *Runner) WithRun(fn RunFn) {
@@ -62,6 +67,7 @@ func (r *Runner) Run() error {
 
 // Exec can be used inside of Generators to run commands
 func (r *Runner) Exec(cmd *exec.Cmd) error {
+	r.results.Commands = append(r.results.Commands, cmd)
 	r.Logger.Infof(strings.Join(cmd.Args, " "))
 	if r.ExecFn == nil {
 		return nil
@@ -71,6 +77,7 @@ func (r *Runner) Exec(cmd *exec.Cmd) error {
 
 // File can be used inside of Generators to write files
 func (r *Runner) File(f File) error {
+	r.results.Files = append(r.results.Files, f)
 	name := f.Name()
 	if !filepath.IsAbs(name) {
 		name = filepath.Join(r.Root, name)
