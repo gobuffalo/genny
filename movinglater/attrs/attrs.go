@@ -1,17 +1,15 @@
 package attrs
 
-import (
-	"github.com/markbates/inflect"
-)
+import "github.com/gobuffalo/flect/name"
 
 type Attr struct {
 	Original   string
-	Name       inflect.Name
-	commonType inflect.Name
-	goType     inflect.Name
+	Name       name.Ident
+	commonType string
+	goType     string
 }
 
-func (a Attr) GoType() inflect.Name {
+func (a Attr) GoType() string {
 	if a.goType != "" {
 		return a.goType
 	}
@@ -22,7 +20,7 @@ func (a Attr) GoType() inflect.Name {
 	return a.commonType
 }
 
-func (a Attr) CommonType() inflect.Name {
+func (a Attr) CommonType() string {
 	if a.commonType != "" {
 		return a.commonType
 	}

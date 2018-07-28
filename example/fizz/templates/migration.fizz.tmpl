@@ -1,4 +1,4 @@
-create_table("{{.Name.Table}}") {
+create_table("{{.Name.Tableize}}") {
   {{ range $a := .Attrs }}
   t.Column("{{$a.Name.Underscore}}", "{{$a.CommonType}}")
   {{ end }}

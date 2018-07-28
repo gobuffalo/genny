@@ -25,7 +25,8 @@ func FizzMigration(ats attrs.NamedAttrs) (*genny.Generator, error) {
 			return f, nil
 		}
 		t := time.Now()
-		return genny.NewFile(filepath.Join("migrations", fmt.Sprintf("%d_create_%s.fizz", t.UnixNano(), ats.Name.PluralUnder())), f), nil
+		p := ats.Name.File().Pluralize().String()
+		return genny.NewFile(filepath.Join("migrations", fmt.Sprintf("%d_create_%s.fizz", t.UnixNano(), p)), f), nil
 	}))
 	return g, nil
 }

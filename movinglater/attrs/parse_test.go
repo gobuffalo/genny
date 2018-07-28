@@ -3,15 +3,16 @@ package attrs
 import (
 	"testing"
 
+	"github.com/gobuffalo/flect/name"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_Parse(t *testing.T) {
 	attrs := Attrs{
-		{Original: "foo", goType: "string", commonType: "string", Name: "foo"},
-		{Original: "foo:int", goType: "int", commonType: "int", Name: "foo"},
-		{Original: "foo:timestamp", goType: "time.Time", commonType: "timestamp", Name: "foo"},
-		{Original: "foo:text:exec.Command", goType: "exec.Command", commonType: "text", Name: "foo"},
+		{Original: "foo", goType: "string", commonType: "string", Name: name.New("foo")},
+		{Original: "foo:int", goType: "int", commonType: "int", Name: name.New("foo")},
+		{Original: "foo:timestamp", goType: "time.Time", commonType: "timestamp", Name: name.New("foo")},
+		{Original: "foo:text:exec.Command", goType: "exec.Command", commonType: "text", Name: name.New("foo")},
 	}
 
 	for _, a := range attrs {

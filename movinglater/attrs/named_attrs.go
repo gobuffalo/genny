@@ -1,12 +1,12 @@
 package attrs
 
 import (
-	"github.com/markbates/inflect"
+	"github.com/gobuffalo/flect/name"
 	"github.com/pkg/errors"
 )
 
 type NamedAttrs struct {
-	Name  inflect.Name
+	Name  name.Ident
 	Attrs Attrs
 }
 
@@ -15,7 +15,7 @@ func ParseNamedArgs(args ...string) (NamedAttrs, error) {
 	if len(args) < 1 {
 		return na, errors.New("requires a name argument")
 	}
-	na.Name = inflect.Name(args[0])
+	na.Name = name.New(args[0])
 	if len(args) > 1 {
 		var err error
 		if na.Attrs, err = ParseArgs(args[1:]...); err != nil {

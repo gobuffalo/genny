@@ -3,7 +3,7 @@ package attrs
 import (
 	"strings"
 
-	"github.com/markbates/inflect"
+	"github.com/gobuffalo/flect/name"
 	"github.com/pkg/errors"
 )
 
@@ -18,13 +18,13 @@ func Parse(arg string) (Attr, error) {
 	}
 
 	parts := strings.Split(arg, ":")
-	attr.Name = inflect.Name(parts[0])
+	attr.Name = name.New(parts[0])
 	if len(parts) > 1 {
-		attr.commonType = inflect.Name(parts[1])
+		attr.commonType = parts[1]
 	}
 
 	if len(parts) > 2 {
-		attr.goType = inflect.Name(parts[2])
+		attr.goType = parts[2]
 	}
 
 	return attr, nil
