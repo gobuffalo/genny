@@ -10,22 +10,24 @@ import (
 
 func Init(path string, verbose bool) (*genny.Generator, error) {
 	g := genny.New()
-	pwd, err := os.Getwd()
-	if err != nil {
-		return g, errors.WithStack(err)
-	}
-	defer os.Chdir(pwd)
-	if err := os.Chdir(path); err != nil {
-		return g, errors.WithStack(err)
-	}
+	g.RunFn(func(r *genny.Runner) error {
+		pwd, err := os.Getwd()
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		defer os.Chdir(pwd)
+		if err := os.Chdir(path); err != nil {
+			return errors.WithStack(err)
+		}
 
-	if _, err := exec.LookPath("dep"); err != nil {
-		return g, nil
-	}
-	cmd := exec.Command("dep", "init")
-	if verbose {
-		cmd.Args = append(cmd.Args, "-v")
-	}
-	g.Command(cmd)
+		if _, err := exec.LookPath("dep"); err != nil {
+			return err
+		}
+		cmd := exec.Command("dep", "init")
+		if verbose {
+			cmd.Args = append(cmd.Args, "-v")
+		}
+		return r.Exec(cmd)
+	})
 	return g, nil
 }
