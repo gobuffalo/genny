@@ -6,9 +6,10 @@ require (
 	github.com/fatih/structs v1.0.0
 	github.com/gobuffalo/envy v1.6.3
 	github.com/gobuffalo/flect v0.0.0-20180728145722-2949e73d74b0
-	github.com/gobuffalo/packr v1.12.0
-	github.com/gobuffalo/plush v0.0.0-20180724100351-726a3d7f08d2
-	github.com/gobuffalo/tags v0.0.0-20180702174034-96c7cdfcadcb
+	github.com/gobuffalo/github_flavored_markdown v1.0.0
+	github.com/gobuffalo/packr v1.12.1
+	github.com/gobuffalo/plush v0.0.0-20180806154719-8d37e0b25872
+	github.com/gobuffalo/tags v2.0.6+incompatible
 	github.com/gobuffalo/uuid v2.0.0+incompatible
 	github.com/gobuffalo/validate v2.0.0+incompatible
 	github.com/joho/godotenv v1.2.0
@@ -17,10 +18,8 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.0
 	github.com/pkg/errors v0.8.0
 	github.com/pmezard/go-difflib v1.0.0
-	github.com/russross/blackfriday v0.0.0-20180428102519-11635eb403ff
 	github.com/serenize/snaker v0.0.0-20171204205717-a683aaf2d516
 	github.com/sergi/go-diff v1.0.0
-	github.com/shurcooL/github_flavored_markdown v0.0.0-20180602233135-8913699a52e3
 	github.com/shurcooL/go v0.0.0-20180423040247-9e1955d9fb6e
 	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041
 	github.com/shurcooL/graphql v0.0.0-20180514000029-62c9ce094e75
@@ -32,8 +31,9 @@ require (
 	github.com/sourcegraph/annotate v0.0.0-20160123013949-f4cad6c6324d
 	github.com/sourcegraph/syntaxhighlight v0.0.0-20170531221838-bd320f5d308e
 	github.com/stretchr/testify v1.2.2
-	golang.org/x/crypto v0.0.0-20180723164146-c126467f60eb
-	golang.org/x/net v0.0.0-20180724234803-3673e40ba225
-	golang.org/x/sys v0.0.0-20180727230415-bd9dbc187b6e
-	golang.org/x/tools v0.0.0-20180727195141-8cc4e8a6f484
+	golang.org/x/crypto v0.0.0-20180806171022-f792edd33d2c
+	golang.org/x/net v0.0.0-20180801234040-f4c29de78a2a
+	golang.org/x/sys v0.0.0-20180806082429-34b17bdb4300
+	golang.org/x/tools v0.0.0-20180803180156-3c07937fe18c
+	gopkg.in/russross/blackfriday.v1 v1.5.1
 )
