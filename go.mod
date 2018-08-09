@@ -7,7 +7,7 @@ require (
 	github.com/gobuffalo/envy v1.6.3
 	github.com/gobuffalo/flect v0.0.0-20180728145722-2949e73d74b0
 	github.com/gobuffalo/github_flavored_markdown v1.0.0
-	github.com/gobuffalo/packr v1.12.1
+	github.com/gobuffalo/packr v1.13.1
 	github.com/gobuffalo/plush v0.0.0-20180806154719-8d37e0b25872
 	github.com/gobuffalo/tags v2.0.6+incompatible
 	github.com/gobuffalo/uuid v2.0.0+incompatible
@@ -31,9 +31,9 @@ require (
 	github.com/sourcegraph/annotate v0.0.0-20160123013949-f4cad6c6324d
 	github.com/sourcegraph/syntaxhighlight v0.0.0-20170531221838-bd320f5d308e
 	github.com/stretchr/testify v1.2.2
-	golang.org/x/crypto v0.0.0-20180806171022-f792edd33d2c
-	golang.org/x/net v0.0.0-20180801234040-f4c29de78a2a
-	golang.org/x/sys v0.0.0-20180806082429-34b17bdb4300
-	golang.org/x/tools v0.0.0-20180803180156-3c07937fe18c
+	golang.org/x/crypto v0.0.0-20180808211826-de0752318171
+	golang.org/x/net v0.0.0-20180808004115-f9ce57c11b24
+	golang.org/x/sys v0.0.0-20180808154034-904bdc257025
+	golang.org/x/tools v0.0.0-20180809185707-0167fde4103b
 	gopkg.in/russross/blackfriday.v1 v1.5.1
 )

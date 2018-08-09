@@ -40,8 +40,8 @@
 [[projects]]
   name = "github.com/gobuffalo/packr"
   packages = ["."]
-  revision = "9e76dbe10b00dd1fa8f29cfa4fac72297beb32a4"
-  version = "v1.12.1"
+  revision = "4399355520ba52518a972ac16c24f6eb8a1610c1"
+  version = "v1.13.1"
 
 [[projects]]
   name = "github.com/gobuffalo/plush"
@@ -185,25 +185,25 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
-  revision = "f792edd33d2c59a74c4d81e9b9a536e5301a8b83"
+  revision = "de0752318171da717af4ce24d0a2e8626afaeb11"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["html","html/atom"]
-  revision = "f4c29de78a2a91c00474a2e689954305c350adf9"
+  revision = "f9ce57c11b242f0f1599cf25c89d8cb02c45295a"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix","windows"]
-  revision = "34b17bdb430002e9db9ae7ddc8480b9fa05edc22"
+  revision = "904bdc257025c7b3f43c19360ad3ab85783fad78"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/tools"
   packages = ["go/ast/astutil","imports","internal/fastwalk"]
-  revision = "3c07937fe18c27668fd78bbaed3d6b8b39e202ea"
+  revision = "0167fde4103bd8b15775e19816345d5c54d9fb0e"
 
 [[projects]]
   name = "gopkg.in/russross/blackfriday.v1"
