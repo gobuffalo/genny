@@ -1,7 +1,6 @@
-
 # Gopkg.toml example
 #
-# Refer to https://github.com/golang/dep/blob/master/docs/Gopkg.toml.md
+# Refer to https://golang.github.io/dep/docs/Gopkg.toml.html
 # for detailed Gopkg.toml documentation.
 #
 # required = ["github.com/user/thing/cmd/thing"]
@@ -17,8 +16,13 @@
 #   source = "github.com/myfork/project2"
 #
 # [[override]]
-#  name = "github.com/x/y"
-#  version = "2.4.0"
+#   name = "github.com/x/y"
+#   version = "2.4.0"
+#
+# [prune]
+#   non-go = false
+#   go-tests = true
+#   unused-packages = true
 
 
 [[constraint]]
@@ -27,15 +31,15 @@
 
 [[constraint]]
   name = "github.com/gobuffalo/packr"
-  version = "1.12.1"
+  version = "1.13.1"
 
 [[constraint]]
   name = "github.com/gobuffalo/plush"
-  version = "3.7.11"
+  version = "3.7.13"
 
 [[constraint]]
   name = "github.com/markbates/going"
-  version = "1.0.0"
+  version = "1.0.1"
 
 [[constraint]]
   name = "github.com/pkg/errors"
@@ -52,3 +56,7 @@
 [[constraint]]
   branch = "master"
   name = "golang.org/x/tools"
+
+[prune]
+  go-tests = true
+  unused-packages = true
