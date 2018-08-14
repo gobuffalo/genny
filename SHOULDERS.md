@@ -13,6 +13,8 @@ Thank you to the following **GIANTS**:
 
 * [github.com/gobuffalo/flect/name](https://godoc.org/github.com/gobuffalo/flect/name)
 
+* [github.com/gobuffalo/github_flavored_markdown](https://godoc.org/github.com/gobuffalo/github_flavored_markdown)
+
 * [github.com/gobuffalo/packr](https://godoc.org/github.com/gobuffalo/packr)
 
 * [github.com/gobuffalo/plush](https://godoc.org/github.com/gobuffalo/plush)
@@ -39,7 +41,11 @@ Thank you to the following **GIANTS**:
 
 * [github.com/joho/godotenv](https://godoc.org/github.com/joho/godotenv)
 
+* [github.com/kr/pretty](https://godoc.org/github.com/kr/pretty)
+
 * [github.com/markbates/going/defaults](https://godoc.org/github.com/markbates/going/defaults)
+
+* [github.com/markbates/going/randx](https://godoc.org/github.com/markbates/going/randx)
 
 * [github.com/markbates/going/wait](https://godoc.org/github.com/markbates/going/wait)
 
@@ -47,15 +53,15 @@ Thank you to the following **GIANTS**:
 
 * [github.com/microcosm-cc/bluemonday](https://godoc.org/github.com/microcosm-cc/bluemonday)
 
-* [github.com/pkg/errors](https://godoc.org/github.com/pkg/errors)
+* [github.com/onsi/ginkgo](https://godoc.org/github.com/onsi/ginkgo)
 
-* [github.com/russross/blackfriday](https://godoc.org/github.com/russross/blackfriday)
+* [github.com/onsi/gomega](https://godoc.org/github.com/onsi/gomega)
+
+* [github.com/pkg/errors](https://godoc.org/github.com/pkg/errors)
 
 * [github.com/serenize/snaker](https://godoc.org/github.com/serenize/snaker)
 
 * [github.com/sergi/go-diff/diffmatchpatch](https://godoc.org/github.com/sergi/go-diff/diffmatchpatch)
-
-* [github.com/shurcooL/github_flavored_markdown](https://godoc.org/github.com/shurcooL/github_flavored_markdown)
 
 * [github.com/shurcooL/highlight_diff](https://godoc.org/github.com/shurcooL/highlight_diff)
 
@@ -71,11 +77,23 @@ Thank you to the following **GIANTS**:
 
 * [github.com/sourcegraph/syntaxhighlight](https://godoc.org/github.com/sourcegraph/syntaxhighlight)
 
+* [github.com/stretchr/testify/assert](https://godoc.org/github.com/stretchr/testify/assert)
+
+* [github.com/stretchr/testify/require](https://godoc.org/github.com/stretchr/testify/require)
+
+* [github.com/stretchr/testify/vendor/github.com/davecgh/go-spew/spew](https://godoc.org/github.com/stretchr/testify/vendor/github.com/davecgh/go-spew/spew)
+
+* [github.com/stretchr/testify/vendor/github.com/pmezard/go-difflib/difflib](https://godoc.org/github.com/stretchr/testify/vendor/github.com/pmezard/go-difflib/difflib)
+
 * [golang.org/x/crypto/ssh/terminal](https://godoc.org/golang.org/x/crypto/ssh/terminal)
+
+* [golang.org/x/net/context](https://godoc.org/golang.org/x/net/context)
 
 * [golang.org/x/net/html](https://godoc.org/golang.org/x/net/html)
 
 * [golang.org/x/net/html/atom](https://godoc.org/golang.org/x/net/html/atom)
+
+* [golang.org/x/sync/errgroup](https://godoc.org/golang.org/x/sync/errgroup)
 
 * [golang.org/x/sys/unix](https://godoc.org/golang.org/x/sys/unix)
 
@@ -84,3 +102,7 @@ Thank you to the following **GIANTS**:
 * [golang.org/x/tools/imports](https://godoc.org/golang.org/x/tools/imports)
 
 * [golang.org/x/tools/internal/fastwalk](https://godoc.org/golang.org/x/tools/internal/fastwalk)
+
+* [gopkg.in/check.v1](https://godoc.org/gopkg.in/check.v1)
+
+* [gopkg.in/russross/blackfriday.v1](https://godoc.org/gopkg.in/russross/blackfriday.v1)
