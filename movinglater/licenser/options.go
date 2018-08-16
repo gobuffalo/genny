@@ -5,7 +5,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/markbates/going/defaults"
 	"github.com/pkg/errors"
 )
 
@@ -16,7 +15,10 @@ type Options struct {
 }
 
 func NormalizeOptions(opts *Options) error {
-	opts.Name = defaults.String(opts.Name, "mit")
+	opts.Name = strings.TrimSpace(opts.Name)
+	if opts.Name == "" {
+		opts.Name = "mit"
+	}
 	opts.Name = strings.ToLower(opts.Name)
 	if opts.Year == 0 {
 		opts.Year = time.Now().Year()
@@ -27,7 +29,10 @@ func NormalizeOptions(opts *Options) error {
 		if err != nil {
 			return errors.WithStack(err)
 		}
-		opts.Author = defaults.String(u.Name, u.Username)
+		opts.Author = strings.TrimSpace(u.Name)
+		if opts.Author == "" {
+			opts.Author = strings.TrimSpace(u.Username)
+		}
 	}
 
 	return nil

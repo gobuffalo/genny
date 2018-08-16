@@ -1,39 +1,18 @@
 module github.com/gobuffalo/genny
 
 require (
-	dmitri.shuralyov.com/text/kebabcase v0.0.0-20180217051803-40e40b42552a
-	github.com/davecgh/go-spew v1.1.0
-	github.com/fatih/structs v1.0.0
-	github.com/gobuffalo/envy v1.6.3
 	github.com/gobuffalo/flect v0.0.0-20180728145722-2949e73d74b0
-	github.com/gobuffalo/github_flavored_markdown v1.0.0
-	github.com/gobuffalo/packr v1.13.1
-	github.com/gobuffalo/plush v0.0.0-20180810170812-274552812256
-	github.com/gobuffalo/tags v2.0.6+incompatible
-	github.com/gobuffalo/uuid v2.0.0+incompatible
-	github.com/gobuffalo/validate v2.0.0+incompatible
-	github.com/joho/godotenv v1.2.0
-	github.com/markbates/going v1.0.1
-	github.com/markbates/inflect v1.0.0
-	github.com/microcosm-cc/bluemonday v1.0.0
+	github.com/gobuffalo/packr v1.13.2
+	github.com/gobuffalo/plush v3.7.15+incompatible
+	github.com/gobuffalo/tags v2.0.8+incompatible // indirect
+	github.com/gobuffalo/uuid v2.0.2+incompatible // indirect
+	github.com/gobuffalo/validate v2.0.1+incompatible // indirect
+	github.com/markbates/going v1.0.2 // indirect
 	github.com/pkg/errors v0.8.0
-	github.com/pmezard/go-difflib v1.0.0
-	github.com/serenize/snaker v0.0.0-20171204205717-a683aaf2d516
-	github.com/sergi/go-diff v1.0.0
-	github.com/shurcooL/go v0.0.0-20180423040247-9e1955d9fb6e
-	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041
-	github.com/shurcooL/graphql v0.0.0-20180514000029-62c9ce094e75
-	github.com/shurcooL/highlight_diff v0.0.0-20170515013008-09bb4053de1b
-	github.com/shurcooL/highlight_go v0.0.0-20170515013102-78fb10f4a5f8
-	github.com/shurcooL/octicon v0.0.0-20180602230221-c42b0e3b24d9
-	github.com/shurcooL/sanitized_anchor_name v0.0.0-20170918181015-86672fcb3f95
 	github.com/sirupsen/logrus v1.0.6
-	github.com/sourcegraph/annotate v0.0.0-20160123013949-f4cad6c6324d
-	github.com/sourcegraph/syntaxhighlight v0.0.0-20170531221838-bd320f5d308e
 	github.com/stretchr/testify v1.2.2
-	golang.org/x/crypto v0.0.0-20180808211826-de0752318171
-	golang.org/x/net v0.0.0-20180811021610-c39426892332
-	golang.org/x/sys v0.0.0-20180814072032-4e1fef560951
-	golang.org/x/tools v0.0.0-20180813205110-a434f64ace81
-	gopkg.in/russross/blackfriday.v1 v1.5.1
+	golang.org/x/crypto v0.0.0-20180808211826-de0752318171 // indirect
+	golang.org/x/tools v0.0.0-20180816152721-1dfe8478fdec
+	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect
+	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect
 )
