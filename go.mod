@@ -3,7 +3,7 @@ module github.com/gobuffalo/genny
 require (
 	github.com/fatih/structs v1.0.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.7 // indirect
-	github.com/gobuffalo/envy v1.6.4 // indirect
+	github.com/gobuffalo/envy v1.6.4
 	github.com/gobuffalo/flect v0.0.0-20180728145722-2949e73d74b0
 	github.com/gobuffalo/github_flavored_markdown v1.0.0 // indirect
 	github.com/gobuffalo/packr v1.13.2
@@ -14,6 +14,7 @@ require (
 	github.com/golang/protobuf v1.1.0 // indirect
 	github.com/hpcloud/tail v1.0.0 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
+	github.com/kr/pty v1.1.2 // indirect
 	github.com/markbates/inflect v1.0.0 // indirect
 	github.com/onsi/ginkgo v1.6.0 // indirect
 	github.com/onsi/gomega v1.4.1 // indirect

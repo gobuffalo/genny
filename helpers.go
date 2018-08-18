@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/gobuffalo/envy"
 	"github.com/pkg/errors"
 )
 
@@ -58,4 +59,8 @@ func Chdir(path string, fn func() error) error {
 		return errors.WithStack(err)
 	}
 	return nil
+}
+
+func GoBin() string {
+	return envy.Get("GO_BIN", "go")
 }
