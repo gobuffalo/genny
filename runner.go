@@ -3,6 +3,7 @@ package genny
 import (
 	"context"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -11,13 +12,16 @@ import (
 	"github.com/pkg/errors"
 )
 
+type RunFn func(r *Runner) error
+
 // Runner will run the generators
 type Runner struct {
-	Logger     Logger                // Logger to use for the run
-	Context    context.Context       // context to use for the run
-	ExecFn     func(*exec.Cmd) error // function to use when executing files
-	FileFn     func(File) error      // function to use when writing files
-	Root       string                // the root of the write path
+	Logger     Logger                           // Logger to use for the run
+	Context    context.Context                  // context to use for the run
+	ExecFn     func(*exec.Cmd) error            // function to use when executing files
+	FileFn     func(File) error                 // function to use when writing files
+	ChdirFn    func(string, func() error) error // function to use when changing directories
+	Root       string                           // the root of the write path
 	generators []*Generator
 	moot       *sync.Mutex
 	results    Results
@@ -83,15 +87,37 @@ func (r *Runner) File(f File) error {
 		name = filepath.Join(r.Root, name)
 	}
 	r.Logger.Infof(name)
-	if r.FileFn == nil {
-		b, err := ioutil.ReadAll(f)
-		if err != nil {
-			return errors.WithStack(err)
-		}
-		r.Logger.Debugf(string(b))
-		return nil
+	if r.FileFn != nil {
+		return r.FileFn(f)
 	}
-	return r.FileFn(f)
+	b, err := ioutil.ReadAll(f)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	r.Logger.Debugf(string(b))
+	return nil
 }
 
-type RunFn func(r *Runner) error
+// Chdir will change to the specified directory
+// and revert back to the current directory when
+// the runner function has returned.
+// If the directory does not exist, it will be
+// created for you.
+func (r *Runner) Chdir(path string, fn func() error) error {
+	r.Logger.Infof("CD: %s", path)
+
+	if r.ChdirFn != nil {
+		return r.ChdirFn(path, fn)
+	}
+
+	pwd, _ := os.Getwd()
+	defer os.Chdir(pwd)
+	os.MkdirAll(path, 0755)
+	if err := os.Chdir(path); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := fn(); err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
+}

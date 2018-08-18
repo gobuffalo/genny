@@ -33,7 +33,7 @@ func Init(name string, path string) (*genny.Generator, error) {
 		if envy.Get(ENV, "") != "on" {
 			return nil
 		}
-		return genny.Chdir(path, func() error {
+		return r.Chdir(path, func() error {
 			cmd := exec.Command(genny.GoBin(), "mod", "init", name)
 			return r.Exec(cmd)
 		})
@@ -47,7 +47,7 @@ func Tidy(path string, verbose bool) (*genny.Generator, error) {
 		if envy.Get(ENV, "") != "on" {
 			return nil
 		}
-		return genny.Chdir(path, func() error {
+		return r.Chdir(path, func() error {
 			cmd := exec.Command(genny.GoBin(), "mod", "tidy")
 			if verbose {
 				cmd.Args = append(cmd.Args, "-v")

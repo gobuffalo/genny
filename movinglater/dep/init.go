@@ -9,7 +9,7 @@ import (
 func Init(path string, verbose bool) (*genny.Generator, error) {
 	g := genny.New()
 	g.RunFn(func(r *genny.Runner) error {
-		return genny.Chdir(path, func() error {
+		return r.Chdir(path, func() error {
 			if _, err := exec.LookPath("dep"); err != nil {
 				return err
 			}
