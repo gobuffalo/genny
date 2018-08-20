@@ -5,7 +5,6 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
-	"io/ioutil"
 	"strings"
 
 	"github.com/gobuffalo/genny"
@@ -20,19 +19,14 @@ func AddImport(gf genny.File, imports ...string) (genny.File, error) {
 		return gf, errors.WithStack(err)
 	}
 
-	src, err := ioutil.ReadAll(gf)
-	if err != nil {
-		return gf, errors.WithStack(err)
-	}
-
+	src := gf.String()
 	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, gf.Name(), string(src), 0)
+	f, err := parser.ParseFile(fset, gf.Name(), src, 0)
 	if err != nil {
 		return gf, errors.WithStack(err)
 	}
 
-	srcContent := string(src)
-	fileLines := strings.Split(srcContent, "\n")
+	fileLines := strings.Split(src, "\n")
 
 	end := findLastImport(f, fset, fileLines)
 

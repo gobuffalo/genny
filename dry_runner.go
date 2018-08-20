@@ -19,7 +19,8 @@ func DryRunner(ctx context.Context) *Runner {
 		Logger:  l,
 		Context: ctx,
 		Root:    pwd,
-		moot:    &sync.Mutex{},
+		moot:    &sync.RWMutex{},
+		files:   map[string]File{},
 	}
 	return r
 }

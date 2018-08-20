@@ -3,10 +3,12 @@ package genny
 import (
 	"bytes"
 	"context"
+	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sort"
 	"strings"
 	"sync"
 
@@ -24,11 +26,22 @@ type Runner struct {
 	ChdirFn    func(string, func() error) error // function to use when changing directories
 	Root       string                           // the root of the write path
 	generators []*Generator
-	moot       *sync.Mutex
+	moot       *sync.RWMutex
 	results    Results
+	files      map[string]File
 }
 
 func (r *Runner) Results() Results {
+	r.moot.Lock()
+	defer r.moot.Unlock()
+	var files []File
+	for _, f := range r.files {
+		files = append(files, f)
+	}
+	sort.Slice(files, func(i, j int) bool {
+		return files[i].Name() < files[j].Name()
+	})
+	r.results.Files = files
 	return r.results
 }
 
@@ -83,7 +96,7 @@ func (r *Runner) Exec(cmd *exec.Cmd) error {
 // File can be used inside of Generators to write files
 func (r *Runner) File(f File) error {
 	defer func() {
-		r.results.Files = append(r.results.Files, f)
+		r.files[f.Name()] = f
 	}()
 	name := f.Name()
 	if !filepath.IsAbs(name) {
@@ -100,6 +113,26 @@ func (r *Runner) File(f File) error {
 	f = NewFile(f.Name(), bytes.NewReader(b))
 	r.Logger.Debugf(string(b))
 	return nil
+}
+
+func (r *Runner) FindFile(name string) (File, error) {
+	if f, ok := r.files[name]; ok {
+		return f, nil
+	}
+
+	gf := NewFile(name, bytes.NewReader([]byte("")))
+	f, err := os.Open(name)
+	if err != nil {
+		return gf, errors.WithStack(err)
+	}
+	defer f.Close()
+
+	var bb bytes.Buffer
+	if _, err := io.Copy(&bb, f); err != nil {
+		return gf, errors.WithStack(err)
+	}
+
+	return NewFile(name, &bb), nil
 }
 
 // Chdir will change to the specified directory
