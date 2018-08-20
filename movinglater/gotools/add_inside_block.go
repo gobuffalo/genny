@@ -62,7 +62,7 @@ func AddInsideBlock(gf genny.File, search string, expressions ...string) (genny.
 	fileLines = append(sl, append(expressions, el...)...)
 
 	fileContent := strings.Join(fileLines, "\n")
-	return genny.NewFile(gf.Name(), strings.NewReader(fileContent)), err
+	return genny.NewFile(name, strings.NewReader(fileContent)), err
 }
 
 func findClosingRouteBlockEnd(search string, f *ast.File, fset *token.FileSet, fileLines []string) int {

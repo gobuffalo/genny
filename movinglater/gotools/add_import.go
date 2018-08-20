@@ -14,6 +14,7 @@ import (
 
 // AddImport adds n number of import statements into the path provided
 func AddImport(gf genny.File, imports ...string) (genny.File, error) {
+	name := gf.Name()
 	gf, err := beforeParse(gf)
 	if err != nil {
 		return gf, errors.WithStack(err)
@@ -48,7 +49,7 @@ func AddImport(gf genny.File, imports ...string) (genny.File, error) {
 	fileLines = append(fileLines[:end], append(x, fileLines[end:]...)...)
 
 	fileContent := strings.Join(fileLines, "\n")
-	return genny.NewFile(gf.Name(), strings.NewReader(fileContent)), err
+	return genny.NewFile(name, strings.NewReader(fileContent)), err
 }
 
 func findLastImport(f *ast.File, fset *token.FileSet, fileLines []string) int {
