@@ -8,6 +8,10 @@ import (
 
 // Force is a RunFn that will return an error if the path exists if `force` is false. If `force` is true it will delete the path.
 func Force(path string, force bool) RunFn {
+	if path == "." || path == "" {
+		pwd, _ := os.Getwd()
+		path = pwd
+	}
 	return func(r *Runner) error {
 		_, err := os.Stat(path)
 		if err != nil {
