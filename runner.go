@@ -1,6 +1,7 @@
 package genny
 
 import (
+	"bytes"
 	"context"
 	"io/ioutil"
 	"os"
@@ -81,7 +82,9 @@ func (r *Runner) Exec(cmd *exec.Cmd) error {
 
 // File can be used inside of Generators to write files
 func (r *Runner) File(f File) error {
-	r.results.Files = append(r.results.Files, f)
+	defer func() {
+		r.results.Files = append(r.results.Files, f)
+	}()
 	name := f.Name()
 	if !filepath.IsAbs(name) {
 		name = filepath.Join(r.Root, name)
@@ -94,6 +97,7 @@ func (r *Runner) File(f File) error {
 	if err != nil {
 		return errors.WithStack(err)
 	}
+	f = NewFile(f.Name(), bytes.NewReader(b))
 	r.Logger.Debugf(string(b))
 	return nil
 }
