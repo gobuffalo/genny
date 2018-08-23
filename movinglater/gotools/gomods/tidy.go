@@ -3,16 +3,15 @@ package gomods
 import (
 	"os/exec"
 
-	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/genny"
 )
 
 func Tidy(path string, verbose bool) (*genny.Generator, error) {
+	if !modsOn {
+		return nil, ErrModsOff
+	}
 	g := genny.New()
 	g.RunFn(func(r *genny.Runner) error {
-		if envy.Get(ENV, "") != "on" {
-			return nil
-		}
 		return r.Chdir(path, func() error {
 			cmd := exec.Command(genny.GoBin(), "mod", "tidy")
 			if verbose {
