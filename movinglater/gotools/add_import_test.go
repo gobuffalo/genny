@@ -1,9 +1,7 @@
 package gotools
 
 import (
-	"context"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -15,26 +13,16 @@ import (
 func Test_AddImport(t *testing.T) {
 	r := require.New(t)
 
-	run := genny.DryRunner(context.Background())
-	dir := os.TempDir()
-	err := run.Chdir(dir, func() error {
-		path := filepath.Join("actions", "app.go")
-		tf, err := os.Create(path)
-		r.NoError(err)
-		tf.Write([]byte(importBefore))
-		tf.Close()
+	path := filepath.Join("actions", "app.go")
+	f := genny.NewFile(path, strings.NewReader(importBefore))
 
-		f := genny.NewFile(path, strings.NewReader(importBefore))
-		f, err = AddImport(f, "foo/bar", "foo/baz")
-		r.NoError(err)
-
-		b, err := ioutil.ReadAll(f)
-		r.NoError(err)
-
-		r.Equal(importAfter, string(b))
-		return nil
-	})
+	f, err := AddImport(f, "foo/bar", "foo/baz")
 	r.NoError(err)
+
+	b, err := ioutil.ReadAll(f)
+	r.NoError(err)
+
+	r.Equal(importAfter, string(b))
 }
 
 const importBefore = `package actions

@@ -1,7 +1,6 @@
 package gotools
 
 import (
-	"context"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
@@ -14,13 +13,8 @@ import (
 func Test_AddInsideBlock(t *testing.T) {
 	r := require.New(t)
 
-	run := genny.DryRunner(context.Background())
-
-	g := genny.New()
 	path := filepath.Join("actions", "app.go")
 	f := genny.NewFile(path, strings.NewReader(appBefore))
-	g.File(f)
-	run.With(g)
 
 	f, err := AddInsideBlock(f, "if app == nil {", "app.Use(Foo)")
 	r.NoError(err)
@@ -34,13 +28,8 @@ func Test_AddInsideBlock(t *testing.T) {
 func Test_AddInsideBlock_NoFound(t *testing.T) {
 	r := require.New(t)
 
-	run := genny.DryRunner(context.Background())
-	g := genny.New()
 	path := filepath.Join("actions", "app.go")
 	f := genny.NewFile(path, strings.NewReader(appBefore))
-	g.File(f)
-	run.With(g)
-
 	_, err := AddInsideBlock(f, "idontexist", "app.Use(Foo)")
 	r.Error(err)
 }
