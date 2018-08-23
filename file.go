@@ -24,10 +24,15 @@ func (s simpleFile) Name() string {
 
 func (s simpleFile) String() string {
 	src, _ := ioutil.ReadAll(s)
-	if seek, ok := s.Reader.(io.Seeker); ok {
-		seek.Seek(0, 0)
-	}
+	s.Seek(0, 0)
 	return string(src)
+}
+
+func (s simpleFile) Seek(offset int64, whence int) (int64, error) {
+	if seek, ok := s.Reader.(io.Seeker); ok {
+		return seek.Seek(offset, whence)
+	}
+	return -1, nil
 }
 
 // NewFile takes the name of the file you want to

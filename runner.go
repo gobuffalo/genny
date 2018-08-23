@@ -117,6 +117,9 @@ func (r *Runner) File(f File) error {
 
 func (r *Runner) FindFile(name string) (File, error) {
 	if f, ok := r.files[name]; ok {
+		if seek, ok := f.(io.Seeker); ok {
+			seek.Seek(0, 0)
+		}
 		return f, nil
 	}
 
@@ -127,12 +130,13 @@ func (r *Runner) FindFile(name string) (File, error) {
 	}
 	defer f.Close()
 
-	var bb bytes.Buffer
-	if _, err := io.Copy(&bb, f); err != nil {
+	bb := &bytes.Buffer{}
+
+	if _, err := io.Copy(bb, f); err != nil {
 		return gf, errors.WithStack(err)
 	}
 
-	return NewFile(name, &bb), nil
+	return NewFile(name, bb), nil
 }
 
 // Chdir will change to the specified directory
