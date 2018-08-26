@@ -43,24 +43,3 @@ func Test_Transformer(t *testing.T) {
 		})
 	}
 }
-
-func Test_Replace(t *testing.T) {
-	r := require.New(t)
-
-	table := []struct {
-		in      string
-		out     string
-		search  string
-		replace string
-	}{
-		{in: "foo/-dot-git-keep", out: "foo/.git-keep", search: "-dot-", replace: "."},
-		{in: "foo/dot-git-keep", out: "foo/dot-git-keep", search: "-dot-", replace: "."},
-	}
-
-	for _, tt := range table {
-		in := NewFile(tt.in, nil)
-		out, err := Replace(tt.search, tt.replace).Transform(in)
-		r.NoError(err)
-		r.Equal(tt.out, out.Name())
-	}
-}
