@@ -20,7 +20,7 @@ func DryRunner(ctx context.Context) *Runner {
 		Context: ctx,
 		Root:    pwd,
 		moot:    &sync.RWMutex{},
-		files:   map[string]File{},
 	}
+	r.Disk = newDisk(r)
 	return r
 }

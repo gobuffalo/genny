@@ -1,6 +1,7 @@
 package genny
 
 import (
+	"context"
 	"os/exec"
 	"strings"
 	"testing"
@@ -15,13 +16,17 @@ func Test_Generator_File(t *testing.T) {
 	g := New()
 	g.File(NewFile("foo.txt", strings.NewReader("hello")))
 
-	run, bb := testRunner()
+	run := DryRunner(context.Background())
 	run.With(g)
 	r.NoError(run.Run())
 
-	out := bb.String()
-	r.Contains(out, "foo.txt")
-	r.Contains(out, "hello")
+	res := run.Results()
+	r.Len(res.Commands, 0)
+	r.Len(res.Files, 1)
+
+	f := res.Files[0]
+	r.Equal("foo.txt", f.Name())
+	r.Equal("hello", f.String())
 }
 
 func Test_Generator_Box(t *testing.T) {
@@ -30,15 +35,21 @@ func Test_Generator_Box(t *testing.T) {
 	g := New()
 	r.NoError(g.Box(packr.NewBox("./fixtures")))
 
-	run, bb := testRunner()
+	run := DryRunner(context.Background())
 	run.With(g)
 	r.NoError(run.Run())
 
-	out := bb.String()
-	r.Contains(out, "bar/baz.txt")
-	r.Contains(out, "baz!")
-	r.Contains(out, "foo.txt")
-	r.Contains(out, "foo!")
+	res := run.Results()
+	r.Len(res.Commands, 0)
+	r.Len(res.Files, 2)
+
+	f := res.Files[0]
+	r.Equal("bar/baz.txt", f.Name())
+	r.Equal("baz!\n", f.String())
+
+	f = res.Files[1]
+	r.Equal("foo.txt", f.Name())
+	r.Equal("foo!\n", f.String())
 }
 
 func Test_Command(t *testing.T) {
@@ -47,10 +58,14 @@ func Test_Command(t *testing.T) {
 	g := New()
 	g.Command(exec.Command("echo", "hello"))
 
-	run, bb := testRunner()
+	run := DryRunner(context.Background())
 	run.With(g)
 	r.NoError(run.Run())
 
-	out := bb.String()
-	r.Contains(out, "echo hello")
+	res := run.Results()
+	r.Len(res.Commands, 1)
+	r.Len(res.Files, 0)
+
+	c := res.Commands[0]
+	r.Equal("echo hello", strings.Join(c.Args, " "))
 }

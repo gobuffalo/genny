@@ -1,14 +1,11 @@
 package genny
 
 import (
-	"bytes"
 	"context"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"sort"
 	"strings"
 	"sync"
 
@@ -22,26 +19,20 @@ type Runner struct {
 	Logger     Logger                           // Logger to use for the run
 	Context    context.Context                  // context to use for the run
 	ExecFn     func(*exec.Cmd) error            // function to use when executing files
-	FileFn     func(File) error                 // function to use when writing files
+	FileFn     func(File) (File, error)         // function to use when writing files
 	ChdirFn    func(string, func() error) error // function to use when changing directories
+	DeleteFn   func(string) error               // function used to delete files/folders
 	Root       string                           // the root of the write path
+	Disk       *Disk
 	generators []*Generator
 	moot       *sync.RWMutex
 	results    Results
-	files      map[string]File
 }
 
 func (r *Runner) Results() Results {
 	r.moot.Lock()
 	defer r.moot.Unlock()
-	var files []File
-	for _, f := range r.files {
-		files = append(files, f)
-	}
-	sort.Slice(files, func(i, j int) bool {
-		return files[i].Name() < files[j].Name()
-	})
-	r.results.Files = files
+	r.results.Files = r.Disk.Files()
 	return r.results
 }
 
@@ -96,7 +87,10 @@ func (r *Runner) Exec(cmd *exec.Cmd) error {
 // File can be used inside of Generators to write files
 func (r *Runner) File(f File) error {
 	defer func() {
-		r.files[f.Name()] = f
+		if s, ok := f.(io.Seeker); ok {
+			s.Seek(0, 0)
+		}
+		r.Disk.Add(f)
 	}()
 	name := f.Name()
 	if !filepath.IsAbs(name) {
@@ -104,39 +98,21 @@ func (r *Runner) File(f File) error {
 	}
 	r.Logger.Infof(name)
 	if r.FileFn != nil {
-		return r.FileFn(f)
+		var err error
+		if f, err = r.FileFn(f); err != nil {
+			return errors.WithStack(err)
+		}
+		if s, ok := f.(io.Seeker); ok {
+			s.Seek(0, 0)
+		}
 	}
-	b, err := ioutil.ReadAll(f)
-	if err != nil {
-		return errors.WithStack(err)
-	}
-	f = NewFile(f.Name(), bytes.NewReader(b))
-	r.Logger.Debugf(string(b))
+	f = NewFile(f.Name(), f)
+	r.Logger.Debug(f.String())
 	return nil
 }
 
 func (r *Runner) FindFile(name string) (File, error) {
-	if f, ok := r.files[name]; ok {
-		if seek, ok := f.(io.Seeker); ok {
-			seek.Seek(0, 0)
-		}
-		return f, nil
-	}
-
-	gf := NewFile(name, bytes.NewReader([]byte("")))
-	f, err := os.Open(name)
-	if err != nil {
-		return gf, errors.WithStack(err)
-	}
-	defer f.Close()
-
-	bb := &bytes.Buffer{}
-
-	if _, err := io.Copy(bb, f); err != nil {
-		return gf, errors.WithStack(err)
-	}
-
-	return NewFile(name, bb), nil
+	return r.Disk.Find(name)
 }
 
 // Chdir will change to the specified directory
@@ -159,6 +135,16 @@ func (r *Runner) Chdir(path string, fn func() error) error {
 	}
 	if err := fn(); err != nil {
 		return errors.WithStack(err)
+	}
+	return nil
+}
+
+func (r *Runner) Delete(path string) error {
+	r.Logger.Infof("rm: %s", path)
+
+	defer r.Disk.Remove(path)
+	if r.DeleteFn != nil {
+		return r.DeleteFn(path)
 	}
 	return nil
 }

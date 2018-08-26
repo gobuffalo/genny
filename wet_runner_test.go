@@ -19,7 +19,6 @@ func Test_WetRunner(t *testing.T) {
 
 	run := WetRunner(context.Background())
 	run.Root = dir
-	bb := testLogger(run)
 
 	g := New()
 	g.Command(exec.Command("echo", "hello"))
@@ -27,7 +26,17 @@ func Test_WetRunner(t *testing.T) {
 	run.With(g)
 
 	r.NoError(run.Run())
-	r.Contains(bb.String(), "hello")
+
+	res := run.Results()
+	r.Len(res.Commands, 1)
+	r.Len(res.Files, 1)
+
+	c := res.Commands[0]
+	r.Equal("echo hello", strings.Join(c.Args, " "))
+
+	f := res.Files[0]
+	r.Equal("foo.txt", f.Name())
+	r.Equal("foo!", f.String())
 
 	b, err := ioutil.ReadFile(filepath.Join(run.Root, "foo.txt"))
 	r.NoError(err)

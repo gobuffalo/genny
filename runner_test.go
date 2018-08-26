@@ -2,7 +2,6 @@ package genny
 
 import (
 	"context"
-	"io"
 	"io/ioutil"
 	"os/exec"
 	"strings"
@@ -19,11 +18,7 @@ func Test_Runner_Run(t *testing.T) {
 	g.Command(exec.Command("foo", "bar"))
 	g.File(NewFile("foo.txt", strings.NewReader("Hello mark")))
 
-	run, bb := testRunner()
-	run.FileFn = func(f File) error {
-		io.Copy(bb, f)
-		return nil
-	}
+	run := DryRunner(context.Background())
 	run.With(g)
 
 	r.NoError(run.Run())
@@ -32,10 +27,12 @@ func Test_Runner_Run(t *testing.T) {
 	r.Len(res.Commands, 1)
 	r.Len(res.Files, 1)
 
-	out := bb.String()
-	r.Contains(out, "foo bar")
-	r.Contains(out, "foo.txt")
-	r.Contains(out, "Hello mark")
+	c := res.Commands[0]
+	r.Equal("foo bar", strings.Join(c.Args, " "))
+
+	f := res.Files[0]
+	r.Equal("foo.txt", f.Name())
+	r.Equal("Hello mark", f.String())
 }
 
 func Test_Runner_FindFile(t *testing.T) {
