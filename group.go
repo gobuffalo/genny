@@ -14,6 +14,12 @@ func (gg *Group) Add(g *Generator) {
 	gg.Generators = append(gg.Generators, g)
 }
 
+func (gg *Group) Merge(g2 *Group) {
+	for _, g := range g2.Generators {
+		gg.Add(g)
+	}
+}
+
 func (gg *Group) With(r *Runner) {
 	m := &gg.moot
 	m.RLock()
