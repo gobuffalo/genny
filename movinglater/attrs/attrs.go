@@ -9,6 +9,10 @@ type Attr struct {
 	goType     string
 }
 
+func (a Attr) String() string {
+	return a.Original
+}
+
 func (a Attr) GoType() string {
 	if a.goType != "" {
 		return a.goType

@@ -1,6 +1,8 @@
 package attrs
 
 import (
+	"strings"
+
 	"github.com/gobuffalo/flect/name"
 	"github.com/pkg/errors"
 )
@@ -8,6 +10,14 @@ import (
 type NamedAttrs struct {
 	Name  name.Ident
 	Attrs Attrs
+}
+
+func (n NamedAttrs) String() string {
+	x := []string{n.Name.Original}
+	for _, a := range n.Attrs {
+		x = append(x, a.String())
+	}
+	return strings.Join(x, " ")
 }
 
 func ParseNamedArgs(args ...string) (NamedAttrs, error) {
