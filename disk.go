@@ -24,6 +24,9 @@ type Disk struct {
 func (d *Disk) Files() []File {
 	var files []File
 	for _, f := range d.files {
+		if s, ok := f.(io.Seeker); ok {
+			s.Seek(0, 0)
+		}
 		files = append(files, f)
 	}
 	sort.Slice(files, func(i, j int) bool {

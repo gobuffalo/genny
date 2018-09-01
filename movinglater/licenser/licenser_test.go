@@ -1,12 +1,10 @@
 package licenser
 
 import (
-	"bytes"
 	"context"
 	"testing"
 
 	"github.com/gobuffalo/genny"
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,21 +20,20 @@ func Test_Licenser(t *testing.T) {
 	g, err := New(opts)
 	r.NoError(err)
 
-	bb := &bytes.Buffer{}
-	l := logrus.New()
-	l.SetLevel(logrus.DebugLevel)
-	l.Out = bb
-
 	run := genny.DryRunner(context.Background())
-	run.Logger = l
 	run.With(g)
 
 	r.NoError(run.Run())
 
-	out := bb.String()
-	r.Contains(out, "LICENSE")
-	r.Contains(out, "Apache License")
-	r.NotContains(out, "The MIT License")
+	res := run.Results()
+	r.Len(res.Commands, 0)
+	r.Len(res.Files, 1)
+
+	f := res.Files[0]
+	r.Equal("LICENSE", f.Name())
+	body := f.String()
+	r.Contains(body, "Apache License")
+	r.NotContains(body, "The MIT License")
 }
 
 func Test_Available(t *testing.T) {

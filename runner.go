@@ -86,12 +86,6 @@ func (r *Runner) Exec(cmd *exec.Cmd) error {
 
 // File can be used inside of Generators to write files
 func (r *Runner) File(f File) error {
-	defer func() {
-		if s, ok := f.(io.Seeker); ok {
-			s.Seek(0, 0)
-		}
-		r.Disk.Add(f)
-	}()
 	name := f.Name()
 	if !filepath.IsAbs(name) {
 		name = filepath.Join(r.Root, name)
@@ -107,7 +101,10 @@ func (r *Runner) File(f File) error {
 		}
 	}
 	f = NewFile(f.Name(), f)
-	r.Logger.Debug(f.String())
+	if s, ok := f.(io.Seeker); ok {
+		s.Seek(0, 0)
+	}
+	r.Disk.Add(f)
 	return nil
 }
 
