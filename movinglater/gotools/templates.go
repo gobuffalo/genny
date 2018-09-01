@@ -10,8 +10,13 @@ import (
 	"github.com/pkg/errors"
 )
 
+var TemplateHelpers = map[string]interface{}{}
+
 // TemplateTransformer will run any file that has a ".tmpl" extension through text/template
-func TemplateTransformer(data interface{}, helpers template.FuncMap) genny.Transformer {
+func TemplateTransformer(data interface{}, helpers map[string]interface{}) genny.Transformer {
+	if helpers == nil {
+		helpers = TemplateHelpers
+	}
 	t := genny.NewTransformer(".tmpl", func(f genny.File) (genny.File, error) {
 		return renderWithTemplate(f, data, helpers)
 	})
