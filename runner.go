@@ -65,6 +65,11 @@ func (r *Runner) Run() error {
 	r.moot.Lock()
 	defer r.moot.Unlock()
 	for _, g := range r.generators {
+		if g.Should != nil {
+			if !g.Should(r) {
+				continue
+			}
+		}
 		for _, fn := range g.runners {
 			if err := fn(r); err != nil {
 				return errors.WithStack(err)
