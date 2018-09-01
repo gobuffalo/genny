@@ -27,6 +27,7 @@ type Runner struct {
 	generators []*Generator
 	moot       *sync.RWMutex
 	results    Results
+	curGen     *Generator
 }
 
 func (r *Runner) Results() Results {
@@ -65,6 +66,7 @@ func (r *Runner) Run() error {
 	r.moot.Lock()
 	defer r.moot.Unlock()
 	for _, g := range r.generators {
+		r.curGen = g
 		if g.Should != nil {
 			if !g.Should(r) {
 				continue
@@ -96,6 +98,13 @@ func (r *Runner) File(f File) error {
 		name = filepath.Join(r.Root, name)
 	}
 	r.Logger.Infof(name)
+	if r.curGen != nil {
+		var err error
+		f, err = r.curGen.Transform(f)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+	}
 	if r.FileFn != nil {
 		var err error
 		if f, err = r.FileFn(f); err != nil {

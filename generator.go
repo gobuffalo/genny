@@ -29,18 +29,22 @@ func New() *Generator {
 // File adds a file to be run when the generator is run
 func (g *Generator) File(f File) {
 	g.RunFn(func(r *Runner) error {
-		g.moot.RLock()
-		defer g.moot.RUnlock()
-		var err error
-		for _, t := range g.transformers {
-			f, err = t.Transform(f)
-			if err != nil {
-				return errors.WithStack(err)
-			}
-		}
-
 		return r.File(f)
 	})
+}
+
+func (g *Generator) Transform(f File) (File, error) {
+	g.moot.RLock()
+	defer g.moot.RUnlock()
+	var err error
+	for _, t := range g.transformers {
+		f, err = t.Transform(f)
+		if err != nil {
+			return f, errors.WithStack(err)
+		}
+	}
+
+	return f, nil
 }
 
 // Transformer adds a file transform to the generator
