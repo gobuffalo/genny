@@ -7,9 +7,18 @@ import (
 	"github.com/pkg/errors"
 )
 
+var ErrMissingName = errors.New("requires a name argument")
+
 type NamedAttrs struct {
 	Name  name.Ident
 	Attrs Attrs
+}
+
+func (n NamedAttrs) Validate() error {
+	if len(n.Name.String()) == 0 {
+		return ErrMissingName
+	}
+	return nil
 }
 
 func (n NamedAttrs) String() string {
@@ -23,7 +32,7 @@ func (n NamedAttrs) String() string {
 func ParseNamedArgs(args ...string) (NamedAttrs, error) {
 	var na NamedAttrs
 	if len(args) < 1 {
-		return na, errors.New("requires a name argument")
+		return na, ErrMissingName
 	}
 	na.Name = name.New(args[0])
 	if len(args) > 1 {
