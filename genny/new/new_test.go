@@ -11,7 +11,10 @@ import (
 func Test_New(t *testing.T) {
 	r := require.New(t)
 
-	g, err := New(&Options{Name: "Foo"})
+	g, err := New(&Options{
+		Name:   "Foo",
+		Prefix: "bar",
+	})
 	r.NoError(err)
 
 	run := genny.DryRunner(context.Background())
@@ -25,21 +28,21 @@ func Test_New(t *testing.T) {
 	r.Len(res.Files, 4)
 
 	f := res.Files[0]
-	r.Equal("foo/foo.go", f.Name())
+	r.Equal("bar/foo/foo.go", f.Name())
 	body := f.String()
 	r.Contains(body, "package foo")
 	r.Contains(body, "../foo/templates")
 
 	f = res.Files[1]
-	r.Equal("foo/foo_test.go", f.Name())
+	r.Equal("bar/foo/foo_test.go", f.Name())
 	body = f.String()
 	r.Contains(body, "package foo")
 
 	f = res.Files[2]
-	r.Equal("foo/options.go", f.Name())
+	r.Equal("bar/foo/options.go", f.Name())
 	body = f.String()
 	r.Contains(body, "package foo")
 
 	f = res.Files[3]
-	r.Equal("foo/templates/example.txt", f.Name())
+	r.Equal("bar/foo/templates/example.txt", f.Name())
 }

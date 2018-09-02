@@ -5,7 +5,8 @@ import (
 )
 
 type Options struct {
-	Name string
+	Prefix string
+	Name   string
 }
 
 // Validate that options are usuable
