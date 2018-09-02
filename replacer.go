@@ -1,6 +1,8 @@
 package genny
 
-import "strings"
+import (
+	"strings"
+)
 
 // Replace search/replace in a file name
 func Replace(search string, replace string) Transformer {

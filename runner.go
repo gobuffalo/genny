@@ -93,11 +93,6 @@ func (r *Runner) Exec(cmd *exec.Cmd) error {
 
 // File can be used inside of Generators to write files
 func (r *Runner) File(f File) error {
-	name := f.Name()
-	if !filepath.IsAbs(name) {
-		name = filepath.Join(r.Root, name)
-	}
-	r.Logger.Infof(name)
 	if r.curGen != nil {
 		var err error
 		f, err = r.curGen.Transform(f)
@@ -105,6 +100,11 @@ func (r *Runner) File(f File) error {
 			return errors.WithStack(err)
 		}
 	}
+	name := f.Name()
+	if !filepath.IsAbs(name) {
+		name = filepath.Join(r.Root, name)
+	}
+	r.Logger.Infof(name)
 	if r.FileFn != nil {
 		var err error
 		if f, err = r.FileFn(f); err != nil {

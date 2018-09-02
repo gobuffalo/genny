@@ -4,7 +4,7 @@ require (
 	github.com/fatih/structs v1.0.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.7 // indirect
 	github.com/gobuffalo/envy v1.6.4
-	github.com/gobuffalo/flect v0.0.0-20180728145722-2949e73d74b0
+	github.com/gobuffalo/flect v0.0.0-20180902031507-19a633ad65a2
 	github.com/gobuffalo/github_flavored_markdown v1.0.0 // indirect
 	github.com/gobuffalo/packr v1.13.3
 	github.com/gobuffalo/plush v3.7.16+incompatible
@@ -13,6 +13,7 @@ require (
 	github.com/gobuffalo/validate v2.0.3+incompatible // indirect
 	github.com/golang/protobuf v1.2.0 // indirect
 	github.com/hpcloud/tail v1.0.0 // indirect
+	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/markbates/inflect v1.0.0 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.1 // indirect
@@ -23,6 +24,7 @@ require (
 	github.com/shurcooL/go v0.0.0-20180423040247-9e1955d9fb6e // indirect
 	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041 // indirect
 	github.com/sirupsen/logrus v1.0.6
+	github.com/spf13/cobra v0.0.3
 	github.com/stretchr/testify v1.2.2
 	golang.org/x/crypto v0.0.0-20180830192347-182538f80094 // indirect
 	golang.org/x/net v0.0.0-20180826012351-8a410e7b638d // indirect
