@@ -4,7 +4,7 @@ require (
 	github.com/fatih/structs v1.0.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.7 // indirect
 	github.com/gobuffalo/envy v1.6.4
-	github.com/gobuffalo/flect v0.0.0-20180902031507-19a633ad65a2
+	github.com/gobuffalo/flect v0.0.0-20180902163941-e03d6ccf1b21
 	github.com/gobuffalo/github_flavored_markdown v1.0.0 // indirect
 	github.com/gobuffalo/packr v1.13.3
 	github.com/gobuffalo/plush v3.7.16+incompatible
