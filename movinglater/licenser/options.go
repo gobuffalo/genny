@@ -14,7 +14,7 @@ type Options struct {
 	Author string
 }
 
-func NormalizeOptions(opts *Options) error {
+func (opts *Options) Validate() error {
 	opts.Name = strings.TrimSpace(opts.Name)
 	if opts.Name == "" {
 		opts.Name = "mit"

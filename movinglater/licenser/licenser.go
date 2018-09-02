@@ -25,6 +25,9 @@ func init() {
 
 func New(opts *Options) (*genny.Generator, error) {
 	g := genny.New()
+	if err := opts.Validate(); err != nil {
+		return g, errors.WithStack(err)
+	}
 
 	body, err := box.MustBytes(opts.Name)
 	if err != nil {

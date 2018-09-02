@@ -50,6 +50,12 @@ func (r *Runner) With(g *Generator) {
 	r.generators = append(r.generators, g)
 }
 
+func (r *Runner) WithGroup(gg *Group) {
+	for _, g := range gg.Generators {
+		r.With(g)
+	}
+}
+
 // WithFn will evaluate the function and if successful it will add
 // the Generator to the Runner, otherwise it will return the error
 func (r *Runner) WithFn(fn func() (*Generator, error)) error {
