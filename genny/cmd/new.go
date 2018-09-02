@@ -45,5 +45,6 @@ var newCmd = &cobra.Command{
 
 func init() {
 	newCmd.Flags().BoolVarP(&newOptions.dryRun, "dry-run", "d", false, "run the generator without creating files or running commands")
+	newCmd.Flags().StringVarP(&newOptions.Prefix, "prefix", "p", "", "path prefix for the generator")
 	rootCmd.AddCommand(newCmd)
 }
