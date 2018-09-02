@@ -138,6 +138,9 @@ func (r *Runner) FindFile(name string) (File, error) {
 // If the directory does not exist, it will be
 // created for you.
 func (r *Runner) Chdir(path string, fn func() error) error {
+	if len(path) == 0 {
+		return fn()
+	}
 	r.Logger.Infof("CD: %s", path)
 
 	if r.ChdirFn != nil {
