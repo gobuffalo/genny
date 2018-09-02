@@ -41,6 +41,9 @@ func Init(name string, path string) (*genny.Generator, error) {
 	}
 	g := genny.New()
 	g.RunFn(func(r *genny.Runner) error {
+		if len(path) == 0 {
+			path = r.Root
+		}
 		return r.Chdir(path, func() error {
 			cmd := exec.Command(genny.GoBin(), "mod", "init", name)
 			return r.Exec(cmd)
