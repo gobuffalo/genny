@@ -2,21 +2,10 @@ package gomods
 
 import (
 	"os/exec"
-	"strings"
 
-	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/genny"
 	"github.com/pkg/errors"
 )
-
-const ENV = "GO111MODULE"
-
-var ErrModsOff = errors.New("go mods are turned off")
-var modsOn = (strings.TrimSpace(envy.Get(ENV, "off")) == "on")
-
-func On() bool {
-	return modsOn
-}
 
 func New(name string, path string) (*genny.Group, error) {
 	g := &genny.Group{}
