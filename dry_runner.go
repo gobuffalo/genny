@@ -23,6 +23,11 @@ func DryRunner(ctx context.Context) *Runner {
 		Root:    pwd,
 		moot:    &sync.RWMutex{},
 		FileFn: func(f File) (File, error) {
+			defer func() {
+				if s, ok := f.(io.Seeker); ok {
+					s.Seek(0, 0)
+				}
+			}()
 			if _, err := io.Copy(os.Stdout, f); err != nil {
 				return f, errors.WithStack(err)
 			}
