@@ -1,6 +1,7 @@
 package genny
 
 import (
+	"bytes"
 	"context"
 	"io"
 	"os"
@@ -23,15 +24,12 @@ func DryRunner(ctx context.Context) *Runner {
 		Root:    pwd,
 		moot:    &sync.RWMutex{},
 		FileFn: func(f File) (File, error) {
-			defer func() {
-				if s, ok := f.(io.Seeker); ok {
-					s.Seek(0, 0)
-				}
-			}()
-			if _, err := io.Copy(os.Stdout, f); err != nil {
+			bb := &bytes.Buffer{}
+			mw := io.MultiWriter(bb, os.Stdout)
+			if _, err := io.Copy(mw, f); err != nil {
 				return f, errors.WithStack(err)
 			}
-			return f, nil
+			return NewFile(f.Name(), bb), nil
 		},
 	}
 	r.Disk = newDisk(r)
