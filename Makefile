@@ -14,9 +14,13 @@ build: deps
 	$(GO_BIN) build -v .
 
 test:
+	packr
 	$(GO_BIN) test -tags ${TAGS} ./...
 
 ci-test: deps
+	$(GO_BIN) test -tags ${TAGS} -race ./...
+
+release-test:
 	$(GO_BIN) test -tags ${TAGS} -race ./...
 
 update:
@@ -24,3 +28,4 @@ update:
 	$(GO_BIN) mod tidy
 	packr
 	make test
+

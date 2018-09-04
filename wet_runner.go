@@ -60,5 +60,5 @@ func wetFileFn(r *Runner, f File) (File, error) {
 	if _, err := io.Copy(mw, f); err != nil {
 		return f, errors.WithStack(err)
 	}
-	return f, nil
+	return NewFile(f.Name(), bb), nil
 }
