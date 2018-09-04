@@ -4,8 +4,23 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/gobuffalo/packr"
 	"github.com/pkg/errors"
 )
+
+// ForceBox will mount each file in the box and wrap it with ForceFile
+func ForceBox(g *Generator, box packr.Box, force bool) error {
+	return box.Walk(func(path string, bf packr.File) error {
+		f := NewFile(path, bf)
+		ff := ForceFile(f, force)
+		f, err := ff(f)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		g.File(f)
+		return nil
+	})
+}
 
 // ForceFile is a TransformerFn that will return an error if the path exists if `force` is false. If `force` is true it will delete the path.
 func ForceFile(f File, force bool) TransformerFn {
