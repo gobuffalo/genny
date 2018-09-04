@@ -1,6 +1,7 @@
 package genny
 
 import (
+	"bytes"
 	"context"
 	"io"
 	"os"
@@ -54,7 +55,9 @@ func wetFileFn(r *Runner, f File) (File, error) {
 		return f, errors.WithStack(err)
 	}
 	defer ff.Close()
-	if _, err := io.Copy(ff, f); err != nil {
+	bb := &bytes.Buffer{}
+	mw := io.MultiWriter(bb, ff)
+	if _, err := io.Copy(mw, f); err != nil {
 		return f, errors.WithStack(err)
 	}
 	return f, nil
