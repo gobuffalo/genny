@@ -2,9 +2,11 @@ package genny
 
 import (
 	"context"
+	"io"
 	"os"
 	"sync"
 
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -20,6 +22,12 @@ func DryRunner(ctx context.Context) *Runner {
 		Context: ctx,
 		Root:    pwd,
 		moot:    &sync.RWMutex{},
+		FileFn: func(f File) (File, error) {
+			if _, err := io.Copy(os.Stdout, f); err != nil {
+				return f, errors.WithStack(err)
+			}
+			return f, nil
+		},
 	}
 	r.Disk = newDisk(r)
 	return r

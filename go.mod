@@ -26,9 +26,9 @@ require (
 	github.com/sirupsen/logrus v1.0.6
 	github.com/spf13/cobra v0.0.3
 	github.com/stretchr/testify v1.2.2
-	golang.org/x/crypto v0.0.0-20180830192347-182538f80094 // indirect
+	golang.org/x/crypto v0.0.0-20180904163835-0709b304e793 // indirect
 	golang.org/x/net v0.0.0-20180826012351-8a410e7b638d // indirect
-	golang.org/x/sys v0.0.0-20180903171548-1b7396714020 // indirect
+	golang.org/x/sys v0.0.0-20180903190138-2b024373dcd9 // indirect
 	golang.org/x/text v0.3.0 // indirect
 	golang.org/x/tools v0.0.0-20180831211245-7ca132754999
 	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect
