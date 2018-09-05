@@ -20,8 +20,8 @@ test:
 ci-test: deps
 	$(GO_BIN) test -tags ${TAGS} -race ./...
 
-release-test:
-	$(GO_BIN) test -tags ${TAGS} -race ./...
+lint:
+	gometalinter --vendor ./... --deadline=1m --skip=internal
 
 update:
 	$(GO_BIN) get -u
@@ -29,3 +29,9 @@ update:
 	packr
 	make test
 
+release-test:
+	$(GO_BIN) test -tags ${TAGS} -race ./...
+
+release:
+	$(GO_BIN) get github.com/gobuffalo/release
+	release -y 
