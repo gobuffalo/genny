@@ -22,6 +22,7 @@ func Test_AddInsideBlock(t *testing.T) {
 	b, err := ioutil.ReadAll(f)
 	r.NoError(err)
 
+	r.Equal(path, f.Name())
 	r.Equal(appAfter, string(b))
 }
 

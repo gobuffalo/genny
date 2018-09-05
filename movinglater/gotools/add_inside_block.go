@@ -1,14 +1,9 @@
 package gotools
 
 import (
-	"bytes"
 	"fmt"
 	"go/ast"
-	"go/parser"
 	"go/token"
-	"io/ioutil"
-	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/gobuffalo/genny"
@@ -17,31 +12,21 @@ import (
 
 // AddInsideBlock will add anything inside of the app declaration block inside of file
 func AddInsideBlock(gf genny.File, search string, expressions ...string) (genny.File, error) {
-	name := gf.Name()
-	gf, err := beforeParse(gf)
+	pf, err := parseFile(gf)
 	if err != nil {
 		return gf, errors.WithStack(err)
 	}
+	gf = pf.File
 
-	src := gf.String()
-
-	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, gf.Name(), src, 0)
-	if err != nil {
-		return gf, err
-	}
-
-	fileLines := strings.Split(src, "\n")
-
-	end := findClosingRouteBlockEnd(search, f, fset, fileLines)
+	end := findClosingRouteBlockEnd(search, pf.Ast, pf.FileSet, pf.Lines)
 	if end < 0 {
-		return gf, errors.Errorf("could not find desired block in %s", name)
+		return gf, errors.Errorf("could not find desired block in %s", gf.Name())
 	}
 
-	el := fileLines[end:]
+	el := pf.Lines[end:]
 	sl := []string{}
 	sf := []string{}
-	for _, l := range fileLines[:end] {
+	for _, l := range pf.Lines[:end] {
 		// if there's a app.ServeFiles("/", foo) line it needs to be the last added to the router
 		if strings.Contains(l, "ServeFiles(\"/\"") {
 			sf = append(sf, l)
@@ -55,10 +40,10 @@ func AddInsideBlock(gf genny.File, search string, expressions ...string) (genny.
 	}
 
 	el = append(sf, el...)
-	fileLines = append(sl, append(expressions, el...)...)
+	pf.Lines = append(sl, append(expressions, el...)...)
 
-	fileContent := strings.Join(fileLines, "\n")
-	return genny.NewFile(name, strings.NewReader(fileContent)), err
+	fileContent := strings.Join(pf.Lines, "\n")
+	return genny.NewFile(gf.Name(), strings.NewReader(fileContent)), nil
 }
 
 func findClosingRouteBlockEnd(search string, f *ast.File, fset *token.FileSet, fileLines []string) int {
@@ -79,29 +64,4 @@ func findClosingRouteBlockEnd(search string, f *ast.File, fset *token.FileSet, f
 	})
 
 	return end
-}
-
-func beforeParse(gf genny.File) (genny.File, error) {
-	src, err := ioutil.ReadAll(gf)
-	if err != nil {
-		return gf, errors.WithStack(err)
-	}
-
-	dir := os.TempDir()
-	path := filepath.Join(dir, gf.Name())
-	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
-		return gf, errors.WithStack(err)
-	}
-
-	tf, err := os.Create(path)
-	if err != nil {
-		return gf, errors.WithStack(err)
-	}
-	if _, err := tf.Write(src); err != nil {
-		return gf, errors.WithStack(err)
-	}
-	if err := tf.Close(); err != nil {
-		return gf, errors.WithStack(err)
-	}
-	return genny.NewFile(path, bytes.NewReader(src)), nil
 }

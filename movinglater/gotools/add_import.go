@@ -3,7 +3,6 @@ package gotools
 import (
 	"fmt"
 	"go/ast"
-	"go/parser"
 	"go/token"
 	"strings"
 
@@ -13,22 +12,13 @@ import (
 
 // AddImport adds n number of import statements into the path provided
 func AddImport(gf genny.File, imports ...string) (genny.File, error) {
-	name := gf.Name()
-	gf, err := beforeParse(gf)
+	pf, err := parseFile(gf)
 	if err != nil {
 		return gf, errors.WithStack(err)
 	}
+	gf = pf.File
 
-	src := gf.String()
-	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, gf.Name(), src, 0)
-	if err != nil {
-		return gf, errors.WithStack(err)
-	}
-
-	fileLines := strings.Split(src, "\n")
-
-	end := findLastImport(f, fset, fileLines)
+	end := findLastImport(pf.Ast, pf.FileSet, pf.Lines)
 
 	x := make([]string, len(imports), len(imports)+2)
 	for _, i := range imports {
@@ -40,10 +30,10 @@ func AddImport(gf genny.File, imports ...string) (genny.File, error) {
 		x = append(x, ")")
 	}
 
-	fileLines = append(fileLines[:end], append(x, fileLines[end:]...)...)
+	pf.Lines = append(pf.Lines[:end], append(x, pf.Lines[end:]...)...)
 
-	fileContent := strings.Join(fileLines, "\n")
-	return genny.NewFile(name, strings.NewReader(fileContent)), err
+	fileContent := strings.Join(pf.Lines, "\n")
+	return genny.NewFile(gf.Name(), strings.NewReader(fileContent)), nil
 }
 
 func findLastImport(f *ast.File, fset *token.FileSet, fileLines []string) int {
