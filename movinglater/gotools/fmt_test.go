@@ -2,6 +2,7 @@ package gotools
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/gobuffalo/genny"
@@ -20,3 +21,31 @@ func Test_GoFmt(t *testing.T) {
 	r.NoError(run.Run())
 
 }
+
+func Test_FmtTransformer(t *testing.T) {
+	r := require.New(t)
+
+	f := genny.NewFile("foo.go", strings.NewReader(badFmt))
+
+	ft := FmtTransformer()
+	f, err := ft.Transform(f)
+	r.NoError(err)
+
+	fmted := f.String()
+	r.NotEqual(badFmt, fmted)
+	r.Equal(goodFmt, fmted)
+}
+
+const goodFmt = `package main
+
+// comment
+
+func fooo() {}
+`
+
+const badFmt = `package main
+      // comment
+
+		func   fooo(    ) {     }
+
+`
