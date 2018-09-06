@@ -25,7 +25,7 @@ func Test_New(t *testing.T) {
 	res := run.Results()
 
 	r.Len(res.Commands, 0)
-	r.Len(res.Files, 4)
+	r.Len(res.Files, 5)
 
 	f := res.Files[0]
 	r.Equal("bar/foo/foo.go", f.Name())
@@ -44,5 +44,10 @@ func Test_New(t *testing.T) {
 	r.Contains(body, "package foo")
 
 	f = res.Files[3]
+	r.Equal("bar/foo/options_test.go", f.Name())
+	body = f.String()
+	r.Contains(body, "package foo")
+
+	f = res.Files[4]
 	r.Equal("bar/foo/templates/example.txt", f.Name())
 }

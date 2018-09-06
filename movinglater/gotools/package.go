@@ -9,7 +9,7 @@ import (
 
 func PackageName(f genny.File) (string, error) {
 	pkg := filepath.Base(filepath.Dir(f.Name()))
-	pf, err := parseFile(f)
+	pf, err := ParseFile(f)
 	if err == nil {
 		pkg = pf.Ast.Name.String()
 	}

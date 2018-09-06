@@ -12,7 +12,7 @@ import (
 
 // AddInsideBlock will add anything inside of the app declaration block inside of file
 func AddInsideBlock(gf genny.File, search string, expressions ...string) (genny.File, error) {
-	pf, err := parseFile(gf)
+	pf, err := ParseFile(gf)
 	if err != nil {
 		return gf, errors.WithStack(err)
 	}

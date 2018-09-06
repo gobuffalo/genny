@@ -28,10 +28,11 @@ update:
 	$(GO_BIN) mod tidy
 	packr
 	make test
+	make install
 
 release-test:
 	$(GO_BIN) test -tags ${TAGS} -race ./...
 
 release:
 	$(GO_BIN) get github.com/gobuffalo/release
-	release -y 
+	release -y

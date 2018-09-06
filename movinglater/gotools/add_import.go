@@ -12,7 +12,7 @@ import (
 
 // AddImport adds n number of import statements into the path provided
 func AddImport(gf genny.File, imports ...string) (genny.File, error) {
-	pf, err := parseFile(gf)
+	pf, err := ParseFile(gf)
 	if err != nil {
 		return gf, errors.WithStack(err)
 	}
