@@ -11,6 +11,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/markbates/oncer"
 	"github.com/pkg/errors"
 )
 
@@ -59,9 +60,27 @@ func (r *Runner) WithGroup(gg *Group) {
 	}
 }
 
+// WithNew takes a Generator and an error.
+// Perfect for new-ing up generators
+/*
+// foo.New(Options) (*genny.Generator, error)
+if err := run.WithNew(foo.New(opts)); err != nil {
+	return err
+}
+*/
+func (r *Runner) WithNew(g *Generator, err error) error {
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	r.With(g)
+	return nil
+}
+
 // WithFn will evaluate the function and if successful it will add
 // the Generator to the Runner, otherwise it will return the error
+// Deprecated
 func (r *Runner) WithFn(fn func() (*Generator, error)) error {
+	oncer.Deprecate(5, "genny.Runner#WithFn", "")
 	g, err := fn()
 	if err != nil {
 		return errors.WithStack(err)
