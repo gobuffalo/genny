@@ -14,8 +14,11 @@ github.com/gobuffalo/flect v0.0.0-20180902163941-e03d6ccf1b21/go.mod h1:rCiQgmAE
 github.com/gobuffalo/flect v0.0.0-20180907193754-dc14d8acaf9f h1:No1XsG+vtAsv5FARrCoAg5Xv4xTGGC1JNGtJK656kcQ=
 github.com/gobuffalo/flect v0.0.0-20180907193754-dc14d8acaf9f/go.mod h1:rCiQgmAE4axgBNl3jZWzS5rETRYTGOsrixTRaCPzNdA=
 github.com/gobuffalo/genny v0.0.0-20180905180744-ca4140706556/go.mod h1:FZNXcfF+FuV4i8BANht5bghYawahu+sIrDdES9govgw=
+github.com/gobuffalo/genny v0.0.0-20180911182620-ca7c22ecfecc/go.mod h1:HbQtrpn9s0isId+tZMmU6Qssj5ag0Ce2Lj3qd3qBblE=
 github.com/gobuffalo/github_flavored_markdown v1.0.0 h1:e2dK+SoHgOc/vfXuYMdXwEg2vAUlFzp8SBRwTOXckQ0=
 github.com/gobuffalo/github_flavored_markdown v1.0.0/go.mod h1:c8/8gRnd6MSyyk+fp6E8O8cUTHd7P2cnDnH4G7o91l0=
+github.com/gobuffalo/licenser v0.0.0-20180911183003-6611b155b234 h1:l0nePm+AfmqsZ+Qm6UC4wqDtP8bDtC5DTKPUKpb9/Us=
+github.com/gobuffalo/licenser v0.0.0-20180911183003-6611b155b234/go.mod h1:dKS3aMBLM+AbeP4NdNL80CDl62D5aP/HmZ0Vwk72PLE=
 github.com/gobuffalo/packr v1.13.3 h1:XjxS2G7cI2kb1KtGwO+ziCdB/D0kAuU/eG3BAieQT+4=
 github.com/gobuffalo/packr v1.13.3/go.mod h1:qdqw8AgJyKw60qj56fnEBiS9fIqqCaP/vWJQvR4Jcss=
 github.com/gobuffalo/packr v1.13.4/go.mod h1:mDIuCJAdKuJD/M4Ub4ulEXde03DEPZc1HZfL2MxAn44=
