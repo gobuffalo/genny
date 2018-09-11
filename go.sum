@@ -58,6 +58,8 @@ github.com/markbates/inflect v1.0.0 h1:gTffXSQCc+WaIvBcI/IItJQMOemietXr5EIKLXDYq
 github.com/markbates/inflect v1.0.0/go.mod h1:oTeZL2KHA7CUX6X+fovmK9OvIOFuqu0TwdQrZjLTh88=
 github.com/markbates/oncer v0.0.0-20180911182537-c659b9304060 h1:2ogx7ADxtYLhLjrjlW0IF1uW6ABk8ZSft2cUgF/TSeo=
 github.com/markbates/oncer v0.0.0-20180911182537-c659b9304060/go.mod h1:rwZBl6yM6wSTptDSNbV86jNkXmrr8TYPQ3/qwkrIkp0=
+github.com/markbates/oncer v0.0.0-20180911185008-7302a2cd9114 h1:Gs7r7f9O+uvCdYY2z7q2ybdnDawXzVAxkQ6DvKfbMEU=
+github.com/markbates/oncer v0.0.0-20180911185008-7302a2cd9114/go.mod h1:rwZBl6yM6wSTptDSNbV86jNkXmrr8TYPQ3/qwkrIkp0=
 github.com/microcosm-cc/bluemonday v1.0.0 h1:dr58SIfmOwOVr+m4Ye1xLWv8Dk9OFwXAtYnbJSmJ65k=
 github.com/microcosm-cc/bluemonday v1.0.0/go.mod h1:hsXNsILzKxV+sX77C5b8FSuKF00vh2OMYv+xgHpAMF4=
 github.com/microcosm-cc/bluemonday v1.0.1 h1:SIYunPjnlXcW+gVfvm0IlSeR5U3WZUOLfVmqg85Go44=
