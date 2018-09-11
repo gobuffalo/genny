@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"context"
 	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -25,7 +27,27 @@ func WetRunner(ctx context.Context) *Runner {
 		return wetFileFn(r, f)
 	}
 	r.DeleteFn = os.RemoveAll
+	r.RequestFn = wetRequestFn
 	return r
+}
+
+func wetRequestFn(req *http.Request, c *http.Client) (*http.Response, error) {
+	if c == nil {
+		c = &http.Client{}
+	}
+	ctx, cancel := context.WithTimeout(req.Context(), 30*time.Second)
+	defer cancel()
+	req = req.WithContext(ctx)
+
+	res, err := c.Do(req)
+	if err != nil {
+		return res, errors.WithStack(err)
+	}
+
+	if res.StatusCode >= 400 {
+		return res, errors.WithStack(errors.Errorf("response returned non-success code: %d", res.StatusCode))
+	}
+	return res, nil
 }
 
 func wetExecFn(cmd *exec.Cmd) error {

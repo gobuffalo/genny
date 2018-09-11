@@ -3,6 +3,8 @@ package genny
 import (
 	"context"
 	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
 	"os/exec"
 	"strings"
 	"testing"
@@ -77,4 +79,53 @@ func Test_Runner_FindFile_DoesntExist(t *testing.T) {
 
 	_, err := run.FindFile("idontexist")
 	r.Error(err)
+}
+
+func Test_Runner_Request(t *testing.T) {
+	table := []struct {
+		code   int
+		method string
+		path   string
+		boom   bool
+	}{
+		{200, "GET", "/a", false},
+		{200, "POST", "/b", false},
+		{399, "PATCH", "/c", false},
+		{401, "GET", "/d", true},
+		{500, "POST", "/e", true},
+	}
+
+	for _, tt := range table {
+		t.Run(tt.method+tt.path, func(st *testing.T) {
+			ts := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				res.WriteHeader(tt.code)
+			}))
+			defer ts.Close()
+
+			r := require.New(st)
+			p := ts.URL + tt.path
+			req, err := http.NewRequest(tt.method, p, nil)
+			r.NoError(err)
+
+			run := WetRunner(context.Background())
+
+			res, err := run.Request(req)
+			if tt.boom {
+				r.Error(err)
+			} else {
+				r.NoError(err)
+			}
+
+			results := run.Results()
+			r.Len(results.Requests, 1)
+
+			rr := results.Requests[0]
+			r.Equal(tt.path, rr.Request.URL.Path)
+
+			if res != nil {
+				r.Equal(tt.code, res.StatusCode)
+			}
+
+		})
+	}
 }

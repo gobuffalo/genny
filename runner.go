@@ -2,7 +2,9 @@ package genny
 
 import (
 	"context"
+	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -16,13 +18,14 @@ type RunFn func(r *Runner) error
 
 // Runner will run the generators
 type Runner struct {
-	Logger     Logger                           // Logger to use for the run
-	Context    context.Context                  // context to use for the run
-	ExecFn     func(*exec.Cmd) error            // function to use when executing files
-	FileFn     func(File) (File, error)         // function to use when writing files
-	ChdirFn    func(string, func() error) error // function to use when changing directories
-	DeleteFn   func(string) error               // function used to delete files/folders
-	Root       string                           // the root of the write path
+	Logger     Logger                                                    // Logger to use for the run
+	Context    context.Context                                           // context to use for the run
+	ExecFn     func(*exec.Cmd) error                                     // function to use when executing files
+	FileFn     func(File) (File, error)                                  // function to use when writing files
+	ChdirFn    func(string, func() error) error                          // function to use when changing directories
+	DeleteFn   func(string) error                                        // function used to delete files/folders
+	RequestFn  func(*http.Request, *http.Client) (*http.Response, error) // function used to make http requests
+	Root       string                                                    // the root of the write path
 	Disk       *Disk
 	generators []*Generator
 	moot       *sync.RWMutex
@@ -141,7 +144,7 @@ func (r *Runner) Chdir(path string, fn func() error) error {
 	if len(path) == 0 {
 		return fn()
 	}
-	r.Logger.Infof("CD: %s", path)
+	r.Logger.Infof("cd: %s", path)
 
 	if r.ChdirFn != nil {
 		return r.ChdirFn(path, fn)
@@ -167,4 +170,30 @@ func (r *Runner) Delete(path string) error {
 		return r.DeleteFn(path)
 	}
 	return nil
+}
+
+func (r *Runner) Request(req *http.Request) (*http.Response, error) {
+	return r.RequestWithClient(req, http.DefaultClient)
+}
+
+func (r *Runner) RequestWithClient(req *http.Request, c *http.Client) (*http.Response, error) {
+	key := fmt.Sprintf("[%s] %s\n", strings.ToUpper(req.Method), req.URL)
+	r.Logger.Infof(key)
+	store := func(res *http.Response, err error) {
+		r.moot.Lock()
+		r.results.Requests = append(r.results.Requests, RequestResult{
+			Request:  req,
+			Response: res,
+			Client:   c,
+			Error:    err,
+		})
+		r.moot.Unlock()
+	}
+	if r.RequestFn == nil {
+		store(nil, nil)
+		return nil, nil
+	}
+	res, err := r.RequestFn(req, c)
+	store(res, err)
+	return res, err
 }
