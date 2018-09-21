@@ -21,7 +21,7 @@ type ParsedFile struct {
 	Lines   []string
 }
 
-func ParseFile(gf genny.File) (ParsedFile, error) {
+func ParseFileMode(gf genny.File, mode parser.Mode) (ParsedFile, error) {
 	name := gf.Name()
 	pf := ParsedFile{
 		FileSet: token.NewFileSet(),
@@ -33,7 +33,7 @@ func ParseFile(gf genny.File) (ParsedFile, error) {
 	}
 
 	src := gf.String()
-	f, err := parser.ParseFile(pf.FileSet, gf.Name(), src, 0)
+	f, err := parser.ParseFile(pf.FileSet, gf.Name(), src, mode)
 	if err != nil {
 		return pf, errors.WithStack(err)
 	}
@@ -42,6 +42,10 @@ func ParseFile(gf genny.File) (ParsedFile, error) {
 	pf.Lines = strings.Split(src, "\n")
 	pf.File = genny.NewFile(name, gf)
 	return pf, nil
+}
+
+func ParseFile(gf genny.File) (ParsedFile, error) {
+	return ParseFileMode(gf, 0)
 }
 
 func beforeParse(gf genny.File) (genny.File, error) {
