@@ -2,6 +2,7 @@ package gotools
 
 import (
 	"bytes"
+	"fmt"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -9,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/gobuffalo/genny"
 	"github.com/pkg/errors"
@@ -55,7 +57,7 @@ func beforeParse(gf genny.File) (genny.File, error) {
 	}
 
 	dir := os.TempDir()
-	path := filepath.Join(dir, gf.Name())
+	path := filepath.Join(dir, fmt.Sprintf("%d.go", time.Now().UnixNano()))
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 		return gf, errors.WithStack(err)
 	}
