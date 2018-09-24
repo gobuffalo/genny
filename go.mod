@@ -4,7 +4,7 @@ require (
 	github.com/gobuffalo/envy v1.6.4
 	github.com/gobuffalo/flect v0.0.0-20180907193754-dc14d8acaf9f
 	github.com/gobuffalo/licenser v0.0.0-20180924030923-99077da2c23e
-	github.com/gobuffalo/packr v1.13.6
+	github.com/gobuffalo/packr v1.13.7
 	github.com/gobuffalo/plush v3.7.16+incompatible
 	github.com/markbates/oncer v0.0.0-20180921140201-d941c19fb28a
 	github.com/pkg/errors v0.8.0
