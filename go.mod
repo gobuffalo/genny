@@ -10,7 +10,6 @@ require (
 	github.com/gobuffalo/tags v2.0.11+incompatible // indirect
 	github.com/gobuffalo/uuid v2.0.3+incompatible // indirect
 	github.com/gobuffalo/validate v2.0.3+incompatible // indirect
-	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/markbates/inflect v1.0.0 // indirect
 	github.com/markbates/oncer v0.0.0-20180924034138-723ad0170a46
 	github.com/onsi/gomega v1.4.2 // indirect
@@ -23,6 +22,5 @@ require (
 	golang.org/x/sys v0.0.0-20180921163948-d47a0f339242 // indirect
 	golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e
 	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect
-	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect
 )
