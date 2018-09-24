@@ -1,15 +1,17 @@
 TAGS ?= "sqlite"
 GO_BIN ?= go
 
-install: deps
+install:
 	packr
 	$(GO_BIN) install -v .
 
 deps:
+	$(GO_BIN) get github.com/gobuffalo/release
 	$(GO_BIN) get github.com/gobuffalo/packr/packr
 	$(GO_BIN) get -tags ${TAGS} -t ./...
+	$(GO_BIN) mod tidy
 
-build: deps
+build:
 	packr
 	$(GO_BIN) build -v .
 
@@ -29,10 +31,10 @@ update:
 	packr
 	make test
 	make install
+	$(GO_BIN) mod tidy
 
 release-test:
 	$(GO_BIN) test -tags ${TAGS} -race ./...
 
 release:
-	$(GO_BIN) get github.com/gobuffalo/release
 	release -y
