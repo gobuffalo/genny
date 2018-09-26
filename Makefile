@@ -3,13 +3,15 @@ GO_BIN ?= go
 
 install:
 	packr
-	$(GO_BIN) install -v .
+	$(GO_BIN) install -v ./genny
 
 deps:
 	$(GO_BIN) get github.com/gobuffalo/release
 	$(GO_BIN) get github.com/gobuffalo/packr/packr
 	$(GO_BIN) get -tags ${TAGS} -t ./...
+ifeq ($(GO111MODULE),on)
 	$(GO_BIN) mod tidy
+endif
 
 build:
 	packr
@@ -19,7 +21,7 @@ test:
 	packr
 	$(GO_BIN) test -tags ${TAGS} ./...
 
-ci-test: deps
+ci-test:
 	$(GO_BIN) test -tags ${TAGS} -race ./...
 
 lint:
@@ -27,14 +29,18 @@ lint:
 
 update:
 	$(GO_BIN) get -u -tags ${TAGS}
+ifeq ($(GO111MODULE),on)
 	$(GO_BIN) mod tidy
+endif
 	packr
 	make test
 	make install
+ifeq ($(GO111MODULE),on)
 	$(GO_BIN) mod tidy
+endif
 
 release-test:
 	$(GO_BIN) test -tags ${TAGS} -race ./...
 
 release:
-	release -y
+	release -y -f version.go

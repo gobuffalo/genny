@@ -1,5 +1,4 @@
 *.log
-examples/output
 .DS_Store
 doc
 tmp
@@ -27,4 +26,4 @@ generated/
 .vendor/
 bin/*
 gin-bin
-vendor/
+.idea/
