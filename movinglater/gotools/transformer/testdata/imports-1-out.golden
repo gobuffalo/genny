@@ -1,0 +1,8 @@
+package base
+
+import "fmt"
+import "github.com/wawandco/fako"
+
+func init(){
+	fmt.Println("AAA")
+}
