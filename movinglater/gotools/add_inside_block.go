@@ -51,6 +51,15 @@ func findClosingRouteBlockEnd(search string, f *ast.File, fset *token.FileSet, f
 
 	ast.Inspect(f, func(n ast.Node) bool {
 		switch x := n.(type) {
+		case *ast.StructType:
+			line := fset.Position(x.Pos()).Line
+			structDeclaration := fmt.Sprintf("%s\n", fileLines[line-1])
+
+			if strings.Contains(structDeclaration, search) {
+				end = fset.Position(x.End()).Line
+				return false
+			}
+
 		case *ast.BlockStmt:
 			start := fset.Position(x.Lbrace).Line
 			blockDeclaration := fmt.Sprintf("%s\n", fileLines[start-1])
