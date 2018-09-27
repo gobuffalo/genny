@@ -30,23 +30,23 @@ func Test_New(t *testing.T) {
 	f := res.Files[0]
 	r.Equal("bar/foo/foo.go", f.Name())
 	body := f.String()
-	r.Contains(body, "package Foo")
+	r.Contains(body, "package foo")
 	r.Contains(body, "../foo/templates")
 
 	f = res.Files[1]
 	r.Equal("bar/foo/foo_test.go", f.Name())
 	body = f.String()
-	r.Contains(body, "package Foo")
+	r.Contains(body, "package foo")
 
 	f = res.Files[2]
 	r.Equal("bar/foo/options.go", f.Name())
 	body = f.String()
-	r.Contains(body, "package Foo")
+	r.Contains(body, "package foo")
 
 	f = res.Files[3]
 	r.Equal("bar/foo/options_test.go", f.Name())
 	body = f.String()
-	r.Contains(body, "package Foo")
+	r.Contains(body, "package foo")
 
 	f = res.Files[4]
 	r.Equal("bar/foo/templates/example.txt", f.Name())
