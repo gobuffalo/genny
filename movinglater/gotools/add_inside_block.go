@@ -56,7 +56,7 @@ func findClosingRouteBlockEnd(search string, f *ast.File, fset *token.FileSet, f
 			structDeclaration := fmt.Sprintf("%s\n", fileLines[line-1])
 
 			if strings.Contains(structDeclaration, search) {
-				end = fset.Position(x.End()).Line
+				end = fset.Position(x.End()).Line - 1
 				return false
 			}
 
