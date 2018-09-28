@@ -17,7 +17,7 @@ func AddInsideBlock(gf genny.File, search string, expressions ...string) (genny.
 	}
 	gf = pf.File
 
-	end := findClosingRouteBlockEnd(search, pf)
+	_, end := findBlockCoordinates(search, pf)
 	if end < 0 {
 		return gf, errors.Errorf("could not find desired block in %s", gf.Name())
 	}
@@ -43,35 +43,6 @@ func AddInsideBlock(gf genny.File, search string, expressions ...string) (genny.
 
 	fileContent := strings.Join(pf.Lines, "\n")
 	return genny.NewFile(gf.Name(), strings.NewReader(fileContent)), nil
-}
-
-func findClosingRouteBlockEnd(search string, pf ParsedFile) int {
-	var end = -1
-
-	ast.Inspect(pf.Ast, func(n ast.Node) bool {
-		switch x := n.(type) {
-		case *ast.StructType:
-			line := pf.FileSet.Position(x.Pos()).Line
-			structDeclaration := fmt.Sprintf("%s\n", pf.Lines[line-1])
-
-			if strings.Contains(structDeclaration, search) {
-				end = pf.FileSet.Position(x.End()).Line - 1
-				return false
-			}
-
-		case *ast.BlockStmt:
-			start := pf.FileSet.Position(x.Lbrace).Line
-			blockDeclaration := fmt.Sprintf("%s\n", pf.Lines[start-1])
-
-			if strings.Contains(blockDeclaration, search) {
-				end = pf.FileSet.Position(x.Rbrace).Line - 1
-			}
-
-		}
-		return true
-	})
-
-	return end
 }
 
 func findBlockCoordinates(search string, pf ParsedFile) (int, int) {
