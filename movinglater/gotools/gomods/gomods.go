@@ -18,11 +18,7 @@ func On() bool {
 
 func Disable(fn func() error) error {
 	gm := envy.Get("GO111MODULE", "off")
-	defer func() {
-		if err := envy.MustSet("GO111MODULE", gm); err != nil {
-			panic(err)
-		}
-	}()
+	defer envy.MustSet("GO111MODULE", gm)
 	if err := envy.MustSet("GO111MODULE", "off"); err != nil {
 		return errors.WithStack(err)
 	}
