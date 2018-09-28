@@ -63,10 +63,10 @@ func (r *Runner) WithGroup(gg *Group) {
 // WithNew takes a Generator and an error.
 // Perfect for new-ing up generators
 /*
-// foo.New(Options) (*genny.Generator, error)
-if err := run.WithNew(foo.New(opts)); err != nil {
-	return err
-}
+	// foo.New(Options) (*genny.Generator, error)
+	if err := run.WithNew(foo.New(opts)); err != nil {
+		return err
+	}
 */
 func (r *Runner) WithNew(g *Generator, err error) error {
 	if err != nil {
