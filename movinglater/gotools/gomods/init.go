@@ -25,11 +25,11 @@ func New(name string, path string) (*genny.Group, error) {
 }
 
 func Init(name string, path string) (*genny.Generator, error) {
-	if !modsOn {
-		return nil, ErrModsOff
-	}
 	g := genny.New()
 	g.RunFn(func(r *genny.Runner) error {
+		if !modsOn {
+			return nil
+		}
 		return r.Chdir(path, func() error {
 			cmd := exec.Command(genny.GoBin(), "mod", "init", name)
 			return r.Exec(cmd)

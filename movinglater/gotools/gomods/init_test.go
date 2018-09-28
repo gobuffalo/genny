@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/gobuffalo/genny"
+	"github.com/gobuffalo/genny/gentest"
 	"github.com/stretchr/testify/require"
 )
 
@@ -15,8 +16,16 @@ func Test_New_No_Modules(t *testing.T) {
 	modsOn = false
 
 	r := require.New(t)
-	_, err := New("foo/bar", "")
-	r.Error(err)
+
+	run := gentest.NewRunner()
+	gg, err := New("foo/bar", "")
+	r.NoError(err)
+	run.WithGroup(gg)
+	r.NoError(run.Run())
+
+	res := run.Results()
+	r.Len(res.Files, 0)
+	r.Len(res.Commands, 0)
 }
 
 func Test_New_With_Modules(t *testing.T) {
