@@ -15,7 +15,7 @@ func ReplaceBlockContent(gf genny.File, search string, expressions ...string) (g
 	}
 	gf = pf.File
 
-	start, end := findBlockCoordinates(search, pf.Ast, pf.FileSet, pf.Lines)
+	start, end := findBlockCoordinates(search, pf)
 	if end < 0 {
 		return gf, errors.Errorf("could not find desired block in %s", gf.Name())
 	}
