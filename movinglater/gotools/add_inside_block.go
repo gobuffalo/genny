@@ -3,7 +3,6 @@ package gotools
 import (
 	"fmt"
 	"go/ast"
-	"go/token"
 	"strings"
 
 	"github.com/gobuffalo/genny"
@@ -18,10 +17,12 @@ func AddInsideBlock(gf genny.File, search string, expressions ...string) (genny.
 	}
 	gf = pf.File
 
-	end := findClosingRouteBlockEnd(search, pf.Ast, pf.FileSet, pf.Lines)
+	_, end := findBlockCoordinates(search, pf)
 	if end < 0 {
 		return gf, errors.Errorf("could not find desired block in %s", gf.Name())
 	}
+
+	end = end - 1
 
 	el := pf.Lines[end:]
 	sl := []string{}
@@ -46,22 +47,33 @@ func AddInsideBlock(gf genny.File, search string, expressions ...string) (genny.
 	return genny.NewFile(gf.Name(), strings.NewReader(fileContent)), nil
 }
 
-func findClosingRouteBlockEnd(search string, f *ast.File, fset *token.FileSet, fileLines []string) int {
+func findBlockCoordinates(search string, pf ParsedFile) (int, int) {
 	var end = -1
+	var start = -1
 
-	ast.Inspect(f, func(n ast.Node) bool {
+	ast.Inspect(pf.Ast, func(n ast.Node) bool {
 		switch x := n.(type) {
+		case *ast.StructType:
+			line := pf.FileSet.Position(x.Pos()).Line
+			structDeclaration := fmt.Sprintf("%s\n", pf.Lines[line-1])
+
+			if strings.Contains(structDeclaration, search) {
+				start = line
+				end = pf.FileSet.Position(x.End()).Line
+				return false
+			}
+
 		case *ast.BlockStmt:
-			start := fset.Position(x.Lbrace).Line
-			blockDeclaration := fmt.Sprintf("%s\n", fileLines[start-1])
+			start = pf.FileSet.Position(x.Lbrace).Line
+			blockDeclaration := fmt.Sprintf("%s\n", pf.Lines[start-1])
 
 			if strings.Contains(blockDeclaration, search) {
-				end = fset.Position(x.Rbrace).Line - 1
+				end = pf.FileSet.Position(x.Rbrace).Line - 1
 			}
 
 		}
 		return true
 	})
 
-	return end
+	return start, end
 }

@@ -26,6 +26,22 @@ func Test_AddInsideBlock(t *testing.T) {
 	r.Equal(appAfter, string(b))
 }
 
+func Test_AddInsideBlock_Struct(t *testing.T) {
+	r := require.New(t)
+
+	path := filepath.Join("actions", "app.go")
+	f := genny.NewFile(path, strings.NewReader(modelBefore))
+
+	f, err := AddInsideBlock(f, "type Something struct {", "Name string")
+	r.NoError(err)
+
+	b, err := ioutil.ReadAll(f)
+	r.NoError(err)
+
+	r.Equal(path, f.Name())
+	r.Equal(modelAfter, string(b))
+}
+
 func Test_AddInsideBlock_NoFound(t *testing.T) {
 	r := require.New(t)
 
@@ -90,4 +106,19 @@ func App() *buffalo.App {
 	}
 
 	return app
+}`
+
+const modelBefore = `
+package models
+
+type Something struct {
+	ID uuid.UUID
+}`
+
+const modelAfter = `
+package models
+
+type Something struct {
+	ID uuid.UUID
+		Name string
 }`
