@@ -10,13 +10,19 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_ReplaceBlockContent(t *testing.T) {
+func Test_ReplaceBlockBody(t *testing.T) {
 	r := require.New(t)
 
 	path := filepath.Join("actions", "app.go")
 	f := genny.NewFile(path, strings.NewReader(modelBeforeBodyReplace))
 
-	f, err := ReplaceBlockContent(f, "type X struct {", "Name string")
+	f, err := ReplaceBlockBody(f, "func (u *User) ValidateUpdate(tx *pop.Connection) (*validate.Errors, error) {", `
+var err error
+return validate.Validate(
+	&validators.StringIsPresent{Field: u.Password, Name: "Password"},
+	&validators.StringsMatch{Name: "Password", Field: u.Password, Field2: u.PasswordConfirmation, Message: "Password does not match confirmation"},
+), err`)
+
 	r.NoError(err)
 
 	b, err := ioutil.ReadAll(f)
@@ -29,14 +35,58 @@ func Test_ReplaceBlockContent(t *testing.T) {
 const modelBeforeBodyReplace = `
 package models
 
-type X struct {
-	ID int
-	Something string
+import (
+	"encoding/json"
+	"time"
+
+	"github.com/gobuffalo/pop"
+	"github.com/gobuffalo/uuid"
+	"github.com/gobuffalo/validate"
+	"github.com/gobuffalo/validate/validators"
+)
+
+type User struct {
+	ID           uuid.UUID
+	CreatedAt    time.Time 
+	UpdatedAt    time.Time 
+	Email        string    
+	PasswordHash string    
+}
+
+// ValidateUpdate gets run every time you call "pop.ValidateAndUpdate" method.
+// This method is not required and may be deleted.
+func (u *User) ValidateUpdate(tx *pop.Connection) (*validate.Errors, error) {
+	return validate.NewErrors(), nil
 }`
 
 const modelAfterBodyReplace = `
 package models
 
-type X struct {
-Name string
+import (
+	"encoding/json"
+	"time"
+
+	"github.com/gobuffalo/pop"
+	"github.com/gobuffalo/uuid"
+	"github.com/gobuffalo/validate"
+	"github.com/gobuffalo/validate/validators"
+)
+
+type User struct {
+	ID           uuid.UUID
+	CreatedAt    time.Time 
+	UpdatedAt    time.Time 
+	Email        string    
+	PasswordHash string    
+}
+
+// ValidateUpdate gets run every time you call "pop.ValidateAndUpdate" method.
+// This method is not required and may be deleted.
+func (u *User) ValidateUpdate(tx *pop.Connection) (*validate.Errors, error) {
+
+var err error
+return validate.Validate(
+	&validators.StringIsPresent{Field: u.Password, Name: "Password"},
+	&validators.StringsMatch{Name: "Password", Field: u.Password, Field2: u.PasswordConfirmation, Message: "Password does not match confirmation"},
+), err
 }`
