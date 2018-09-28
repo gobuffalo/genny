@@ -22,6 +22,8 @@ func AddInsideBlock(gf genny.File, search string, expressions ...string) (genny.
 		return gf, errors.Errorf("could not find desired block in %s", gf.Name())
 	}
 
+	end = end - 1
+
 	el := pf.Lines[end:]
 	sl := []string{}
 	sf := []string{}
