@@ -19,7 +19,7 @@ func Run(args ...string) genny.RunFn {
 		cmd.Stderr = bb
 		err := r.Exec(cmd)
 		if err != nil {
-			if strings.Contains(err.Error(), "working tree clean") {
+			if strings.Contains(bb.String(), "working tree clean") {
 				return ErrWorkingTreeClean
 			}
 			return errors.WithStack(err)
