@@ -7,6 +7,9 @@ import (
 	"github.com/pkg/errors"
 )
 
+//ErrRepeatedAttr is returned when parsing an array with repeated names
+const ErrRepeatedAttr = "duplicate attr name"
+
 func Parse(arg string) (Attr, error) {
 	arg = strings.TrimSpace(arg)
 	attr := Attr{
@@ -30,14 +33,23 @@ func Parse(arg string) (Attr, error) {
 	return attr, nil
 }
 
+//ParseArgs parses passed string args into Attrs
 func ParseArgs(args ...string) (Attrs, error) {
 	var attrs Attrs
+	parsed := map[string]string{}
 
 	for _, arg := range args {
 		a, err := Parse(arg)
 		if err != nil {
 			return attrs, errors.WithStack(err)
 		}
+
+		key := a.Name.Underscore().String()
+		if parsed[key] != "" {
+			return attrs, errors.New(ErrRepeatedAttr)
+		}
+
+		parsed[key] = arg
 		attrs = append(attrs, a)
 	}
 

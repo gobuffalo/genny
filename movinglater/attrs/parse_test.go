@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/gobuffalo/flect/name"
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 )
 
@@ -24,6 +25,45 @@ func Test_Parse(t *testing.T) {
 			r.Equal(a.goType, attr.GoType())
 			r.Equal(a.commonType, attr.CommonType())
 			r.Equal(a.Name, attr.Name)
+		})
+	}
+}
+
+func Test_ParseArgs(t *testing.T) {
+	tcases := []struct {
+		name string
+		args []string
+		err  error
+	}{
+		{
+			name: "All Good!",
+			args: []string{
+				"name",
+				"profile:text",
+			},
+			err: nil,
+		},
+
+		{
+			name: "Repeated arg",
+			args: []string{
+				"name",
+				"profile:text",
+				"profile",
+			},
+			err: errors.New(ErrRepeatedAttr),
+		},
+	}
+
+	for _, tcase := range tcases {
+		t.Run(tcase.name, func(st *testing.T) {
+			r := require.New(st)
+			_, err := ParseArgs(tcase.args...)
+
+			if tcase.err != nil {
+				r.NotNil(err)
+				r.Equal(tcase.err.Error(), err.Error())
+			}
 		})
 	}
 }
