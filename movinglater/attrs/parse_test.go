@@ -45,7 +45,7 @@ func Test_ParseArgs(t *testing.T) {
 		},
 
 		{
-			name: "All Good!",
+			name: "Repeated arg",
 			args: []string{
 				"name",
 				"profile:text",
