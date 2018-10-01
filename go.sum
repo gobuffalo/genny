@@ -37,8 +37,8 @@ github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORN
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
-github.com/markbates/inflect v1.0.0 h1:gTffXSQCc+WaIvBcI/IItJQMOemietXr5EIKLXDYqI4=
-github.com/markbates/inflect v1.0.0/go.mod h1:oTeZL2KHA7CUX6X+fovmK9OvIOFuqu0TwdQrZjLTh88=
+github.com/markbates/inflect v1.0.1 h1:t3WOiMLsNqn0Vvw87evC70WSawzHZcwMETn53rL1bBw=
+github.com/markbates/inflect v1.0.1/go.mod h1:uv3UVNBe5qBIfCm8O8Q+DW+S1EopeyINj+Ikhc7rnCk=
 github.com/markbates/oncer v0.0.0-20180924034138-723ad0170a46 h1:hE7AFWf+YsdjT67d8uMxhirH3FG5Up2ovbwFWjamdt4=
 github.com/markbates/oncer v0.0.0-20180924034138-723ad0170a46/go.mod h1:Ld9puTsIW75CHf65OeIOkyKbteujpZVXDpWK6YGZbxE=
 github.com/microcosm-cc/bluemonday v1.0.1 h1:SIYunPjnlXcW+gVfvm0IlSeR5U3WZUOLfVmqg85Go44=
