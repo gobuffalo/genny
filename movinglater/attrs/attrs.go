@@ -49,10 +49,37 @@ func (a Attr) GoType() string {
 }
 
 func (a Attr) CommonType() string {
-	if a.commonType != "" {
-		return a.commonType
+	return fizzColType(a.commonType)
+}
+
+func fizzColType(s string) string {
+	switch strings.ToLower(s) {
+	case "int":
+		return "integer"
+	case "time", "datetime":
+		return "timestamp"
+	case "uuid.uuid", "uuid":
+		return "uuid"
+	case "nulls.float32", "nulls.float64":
+		return "float"
+	case "slices.string", "slices.uuid", "[]string":
+		return "varchar[]"
+	case "slices.float", "[]float", "[]float32", "[]float64":
+		return "numeric[]"
+	case "slices.int":
+		return "int[]"
+	case "slices.map":
+		return "jsonb"
+	case "float32", "float64", "float":
+		return "decimal"
+	case "blob", "[]byte":
+		return "blob"
+	default:
+		if strings.HasPrefix(s, "nulls.") {
+			return fizzColType(strings.Replace(s, "nulls.", "", -1))
+		}
+		return strings.ToLower(s)
 	}
-	return a.commonType
 }
 
 type Attrs []Attr

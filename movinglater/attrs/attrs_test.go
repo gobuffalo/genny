@@ -42,5 +42,40 @@ func Test_Attr_GoType(t *testing.T) {
 			r.Equal(test.gt, a.GoType())
 		})
 	}
+}
+
+func Test_Attr_CommonType(t *testing.T) {
+
+	tt := []struct {
+		pt string
+		ct string
+	}{
+		{"timestamp", "timestamp"},
+		{"datetime", "timestamp"},
+		{"date", "date"},
+		{"time", "timestamp"},
+		{"text", "text"},
+		{"Text", "text"},
+		{"nulls.text", "text"},
+		{"nulls.Text", "text"},
+		{"uuid", "uuid"},
+		{"slices.Map", "jsonb"},
+		{"slices.String", "varchar[]"},
+		{"slices.Int", "int[]"},
+		{"slices.float", "numeric[]"},
+		{"slices.Float", "numeric[]"},
+		{"[]float64", "numeric[]"},
+		{"float64", "decimal"},
+		{"float", "decimal"},
+		{"[]byte", "blob"},
+	}
+
+	for _, test := range tt {
+		t.Run(test.pt+"/"+test.ct, func(st *testing.T) {
+			r := require.New(st)
+			a := Attr{commonType: test.pt}
+			r.Equal(test.ct, a.CommonType())
+		})
+	}
 
 }
