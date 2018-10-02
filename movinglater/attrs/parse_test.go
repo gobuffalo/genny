@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/gobuffalo/flect/name"
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 )
 
@@ -51,7 +50,7 @@ func Test_ParseArgs(t *testing.T) {
 				"profile:text",
 				"profile",
 			},
-			err: errors.New(ErrRepeatedAttr),
+			err: ErrRepeatedAttr,
 		},
 	}
 
