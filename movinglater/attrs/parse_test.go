@@ -10,7 +10,7 @@ import (
 func Test_Parse(t *testing.T) {
 	attrs := Attrs{
 		{Original: "foo", goType: "string", commonType: "string", Name: name.New("foo")},
-		{Original: "foo:int", goType: "int", commonType: "int", Name: name.New("foo")},
+		{Original: "foo:int", goType: "int", commonType: "integer", Name: name.New("foo")},
 		{Original: "foo:timestamp", goType: "time.Time", commonType: "timestamp", Name: name.New("foo")},
 		{Original: "foo:text:exec.Command", goType: "exec.Command", commonType: "text", Name: name.New("foo")},
 	}
