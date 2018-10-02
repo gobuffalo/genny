@@ -1,6 +1,10 @@
 package attrs
 
-import "github.com/gobuffalo/flect/name"
+import (
+	"strings"
+
+	"github.com/gobuffalo/flect/name"
+)
 
 type Attr struct {
 	Original   string
@@ -18,7 +22,7 @@ func (a Attr) GoType() string {
 		return a.goType
 	}
 
-	switch a.commonType {
+	switch strings.ToLower(a.commonType) {
 	case "text":
 		return "string"
 	case "timestamp", "datetime", "date", "time":
