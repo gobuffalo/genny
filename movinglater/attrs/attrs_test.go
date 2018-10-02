@@ -16,6 +16,21 @@ func Test_Attr_GoType(t *testing.T) {
 		{"datetime", "time.Time"},
 		{"date", "time.Time"},
 		{"time", "time.Time"},
+		{"text", "string"},
+		{"nulls.text", "nulls.String"},
+		{"uuid", "uuid.UUID"},
+		{"json", "slices.Map"},
+		{"jsonb", "slices.Map"},
+		{"[]string", "slices.String"},
+		{"[]int", "slices.Int"},
+		{"slices.float", "slices.Float"},
+		{"[]float", "slices.Float"},
+		{"[]float32", "slices.Float"},
+		{"[]float64", "slices.Float"},
+		{"decimal", "float64"},
+		{"float", "float64"},
+		{"[]byte", "[]byte"},
+		{"blob", "[]byte"},
 	}
 
 	for _, test := range tt {
