@@ -49,10 +49,10 @@ func (a Attr) GoType() string {
 }
 
 func (a Attr) CommonType() string {
-	return fizzColType(a.commonType)
+	return commonType(a.commonType)
 }
 
-func fizzColType(s string) string {
+func commonType(s string) string {
 	switch strings.ToLower(s) {
 	case "int":
 		return "integer"
@@ -63,20 +63,20 @@ func fizzColType(s string) string {
 	case "nulls.float32", "nulls.float64":
 		return "float"
 	case "slices.string", "slices.uuid", "[]string":
-		return "varchar[]"
+		return "[]string"
 	case "slices.float", "[]float", "[]float32", "[]float64":
-		return "numeric[]"
+		return "[]float"
 	case "slices.int":
-		return "int[]"
+		return "[]int"
 	case "slices.map":
-		return "jsonb"
+		return "json"
 	case "float32", "float64", "float":
 		return "decimal"
 	case "blob", "[]byte":
-		return "blob"
+		return "[]byte"
 	default:
 		if strings.HasPrefix(s, "nulls.") {
-			return fizzColType(strings.Replace(s, "nulls.", "", -1))
+			return commonType(strings.Replace(s, "nulls.", "", -1))
 		}
 		return strings.ToLower(s)
 	}

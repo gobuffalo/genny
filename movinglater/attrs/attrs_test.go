@@ -59,15 +59,15 @@ func Test_Attr_CommonType(t *testing.T) {
 		{"nulls.text", "text"},
 		{"nulls.Text", "text"},
 		{"uuid", "uuid"},
-		{"slices.Map", "jsonb"},
-		{"slices.String", "varchar[]"},
-		{"slices.Int", "int[]"},
-		{"slices.float", "numeric[]"},
-		{"slices.Float", "numeric[]"},
-		{"[]float64", "numeric[]"},
+		{"slices.Map", "json"},
+		{"slices.String", "[]string"},
+		{"slices.Int", "[]int"},
+		{"slices.float", "[]float"},
+		{"slices.Float", "[]float"},
+		{"[]float64", "[]float"},
 		{"float64", "decimal"},
 		{"float", "decimal"},
-		{"[]byte", "blob"},
+		{"[]byte", "[]byte"},
 	}
 
 	for _, test := range tt {
