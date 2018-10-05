@@ -10,6 +10,7 @@ import (
 //ErrRepeatedAttr is returned when parsing an array with repeated names
 var ErrRepeatedAttr = errors.New("duplicate attr name")
 
+//Parse takes a string like name:commonType:goType and turns it into an Attr
 func Parse(arg string) (Attr, error) {
 	arg = strings.TrimSpace(arg)
 	attr := Attr{
