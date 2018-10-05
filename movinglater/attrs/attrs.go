@@ -6,6 +6,7 @@ import (
 	"github.com/gobuffalo/flect/name"
 )
 
+//Attr is buffalo's implementation for model attributes
 type Attr struct {
 	Original   string
 	Name       name.Ident
@@ -17,6 +18,7 @@ func (a Attr) String() string {
 	return a.Original
 }
 
+//GoType returns the Go type for an Attr based on its commonType
 func (a Attr) GoType() string {
 	if a.goType != "" {
 		return a.goType
@@ -48,6 +50,9 @@ func (a Attr) GoType() string {
 	return a.commonType
 }
 
+//CommonType returns the common type of an attribute,
+//this common type is used later for things like determining
+//the database column type depending on the database.
 func (a Attr) CommonType() string {
 	return commonType(a.commonType)
 }
@@ -82,4 +87,5 @@ func commonType(s string) string {
 	}
 }
 
+//Attrs is a slice of Attr
 type Attrs []Attr
