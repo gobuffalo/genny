@@ -6,9 +6,7 @@
 <a href="https://goreportcard.com/report/github.com/gobuffalo/genny"><img src="https://goreportcard.com/badge/github.com/gobuffalo/genny" alt="Go Report Card" /></a>
 </p>
 
-# Genny [EXPERIMENTAL]
-
-**EXPERIMENTAL** - APIs can change without notice. You've been warned.
+# Genny
 
 ## What Is Genny?
 
