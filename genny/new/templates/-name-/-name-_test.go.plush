@@ -14,7 +14,7 @@ func Test_New(t *testing.T) {
 	r.NoError(err)
 
 	run := gentest.NewRunner()
-	run.WithGroup(g)
+	run.With(g)
 
 	r.NoError(run.Run())
 
