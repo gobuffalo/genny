@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -175,12 +174,6 @@ func (r *Runner) Chdir(path string, fn func() error) error {
 		return r.ChdirFn(path, fn)
 	}
 
-	pwd, _ := os.Getwd()
-	defer os.Chdir(pwd)
-	os.MkdirAll(path, 0755)
-	if err := os.Chdir(path); err != nil {
-		return errors.WithStack(err)
-	}
 	if err := fn(); err != nil {
 		return errors.WithStack(err)
 	}
