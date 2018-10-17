@@ -28,7 +28,7 @@ func New(name string, path string) (*genny.Group, error) {
 }
 
 func Init(name string, path string) (*genny.Generator, error) {
-	if len(name) == 0 {
+	if len(name) == 0 || name == "." {
 		name = path
 		c := build.Default
 		for _, s := range c.SrcDirs() {
