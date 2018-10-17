@@ -11,6 +11,7 @@ import (
 // Generator is the basic type for generators to use
 type Generator struct {
 	Should       func(*Runner) bool
+	Root         string
 	runners      []RunFn
 	transformers []Transformer
 	moot         *sync.RWMutex

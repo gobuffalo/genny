@@ -100,10 +100,16 @@ func (r *Runner) Run() error {
 				continue
 			}
 		}
-		for _, fn := range g.runners {
-			if err := fn(r); err != nil {
-				return errors.WithStack(err)
+		err := r.Chdir(r.Root, func() error {
+			for _, fn := range g.runners {
+				if err := fn(r); err != nil {
+					return errors.WithStack(err)
+				}
 			}
+			return nil
+		})
+		if err != nil {
+			return errors.WithStack(err)
 		}
 	}
 	return nil
