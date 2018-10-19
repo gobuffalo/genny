@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/gobuffalo/genny"
+	"github.com/markbates/safe"
 )
 
 const (
@@ -48,7 +49,9 @@ func (l *Logger) log(lvl string, args ...interface{}) {
 	l.Log[lvl] = m
 	l.moot.Unlock()
 	if l.PrintFn != nil {
-		l.PrintFn(args...)
+		safe.Run(func() {
+			l.PrintFn(args...)
+		})
 	}
 }
 
