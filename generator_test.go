@@ -69,3 +69,44 @@ func Test_Command(t *testing.T) {
 	c := res.Commands[0]
 	r.Equal("echo hello", strings.Join(c.Args, " "))
 }
+
+func Test_Merge(t *testing.T) {
+	r := require.New(t)
+
+	g1 := New()
+	g1.Root = "one"
+	g1.RunFn(func(r *Runner) error {
+		return r.File(NewFileS("a.txt", "a"))
+	})
+	g1.RunFn(func(r *Runner) error {
+		return r.File(NewFileS("b.txt", "b"))
+	})
+	g1.Transformer(NewTransformer("*", func(f File) (File, error) {
+		return NewFileS(f.Name(), strings.ToUpper(f.String())), nil
+	}))
+
+	g2 := New()
+	g2.Root = "two"
+	g2.RunFn(func(r *Runner) error {
+		return r.File(NewFileS("c.txt", "c"))
+	})
+	g2.Transformer(NewTransformer("*", func(f File) (File, error) {
+		return NewFileS(f.Name(), f.String()+"g2"), nil
+	}))
+
+	g1.RunFn(func(r *Runner) error {
+		return r.File(NewFileS("d.txt", "d"))
+	})
+	g1.Transformer(NewTransformer("*", func(f File) (File, error) {
+		return NewFileS(f.Name(), f.String()+"g1"), nil
+	}))
+
+	g1.Merge(g2)
+
+	run := DryRunner(context.Background())
+	run.With(g1)
+	r.NoError(run.Run())
+
+	res := run.Results()
+	r.Len(res.Files, 4)
+}

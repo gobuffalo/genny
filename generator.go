@@ -77,3 +77,12 @@ func (g *Generator) RunFn(fn RunFn) {
 	defer g.moot.Unlock()
 	g.runners = append(g.runners, fn)
 }
+
+func (g1 *Generator) Merge(g2 *Generator) {
+	g2.moot.Lock()
+	g1.moot.Lock()
+	g1.runners = append(g1.runners, g2.runners...)
+	g1.transformers = append(g1.transformers, g2.transformers...)
+	g1.moot.Unlock()
+	g2.moot.Unlock()
+}
