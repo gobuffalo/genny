@@ -28,5 +28,8 @@ func Test_HasExt(t *testing.T) {
 	f := NewFile("foo.bar.baz.biz", nil)
 	r.True(HasExt(f, ".bar"))
 	r.True(HasExt(f, ".baz"))
+	r.True(HasExt(f, ".boz", ".baz", ".boz"))
+	r.True(HasExt(f))
 	r.False(HasExt(f, ".boz"))
+	r.False(HasExt(f, ".boz", ".bzo"))
 }
