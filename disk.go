@@ -8,6 +8,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/gobuffalo/packr"
 	"github.com/pkg/errors"
 )
 
@@ -18,6 +19,13 @@ type Disk struct {
 	Runner *Runner
 	files  map[string]File
 	moot   *sync.RWMutex
+}
+
+func (d *Disk) AddBox(box packr.Box) error {
+	return box.Walk(func(path string, file packr.File) error {
+		d.Add(NewFile(path, file))
+		return nil
+	})
 }
 
 // Files returns a sorted list of all the files in the disk

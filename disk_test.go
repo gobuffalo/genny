@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"testing"
 
+	"github.com/gobuffalo/packr"
 	"github.com/stretchr/testify/require"
 )
 
@@ -85,4 +86,23 @@ func Test_Disk_FindFile_DoesntExist(t *testing.T) {
 
 	_, err := run.Disk.Find("idontexist")
 	r.Error(err)
+}
+
+func Test_Disk_AddBox(t *testing.T) {
+	r := require.New(t)
+
+	box := packr.NewBox("./fixtures")
+
+	run := DryRunner(context.Background())
+	d := run.Disk
+	err := d.AddBox(box)
+	r.NoError(err)
+
+	f, err := d.Find("foo.txt")
+	r.NoError(err)
+	r.Equal("foo.txt", f.Name())
+
+	f, err = d.Find("bar/baz.txt")
+	r.NoError(err)
+	r.Equal("bar/baz.txt", f.Name())
 }
