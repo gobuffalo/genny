@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"strings"
 )
 
 // File interface for working with files
@@ -59,4 +60,12 @@ func NewFile(name string, r io.Reader) File {
 		Reader: r,
 		name:   name,
 	}
+}
+
+func NewFileS(name string, s string) File {
+	return NewFile(name, strings.NewReader(s))
+}
+
+func NewFileB(name string, s []byte) File {
+	return NewFile(name, bytes.NewReader(s))
 }
