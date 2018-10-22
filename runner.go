@@ -5,33 +5,36 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"os/exec"
 	"path/filepath"
+	"sort"
 	"strings"
 	"sync"
 
 	"github.com/markbates/oncer"
 	"github.com/markbates/safe"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 type RunFn func(r *Runner) error
 
 // Runner will run the generators
 type Runner struct {
-	Logger     Logger                                                    // Logger to use for the run
-	Context    context.Context                                           // context to use for the run
-	ExecFn     func(*exec.Cmd) error                                     // function to use when executing files
-	FileFn     func(File) (File, error)                                  // function to use when writing files
-	ChdirFn    func(string, func() error) error                          // function to use when changing directories
-	DeleteFn   func(string) error                                        // function used to delete files/folders
-	RequestFn  func(*http.Request, *http.Client) (*http.Response, error) // function used to make http requests
-	Root       string                                                    // the root of the write path
-	Disk       *Disk
-	generators []*Generator
-	moot       *sync.RWMutex
-	results    Results
-	curGen     *Generator
+	Logger    Logger                                                    // Logger to use for the run
+	Context   context.Context                                           // context to use for the run
+	ExecFn    func(*exec.Cmd) error                                     // function to use when executing files
+	FileFn    func(File) (File, error)                                  // function to use when writing files
+	ChdirFn   func(string, func() error) error                          // function to use when changing directories
+	DeleteFn  func(string) error                                        // function used to delete files/folders
+	RequestFn func(*http.Request, *http.Client) (*http.Response, error) // function used to make http requests
+	Root      string                                                    // the root of the write path
+	Disk      *Disk
+	steps     map[string]*Step
+	moot      *sync.RWMutex
+	results   Results
+	curGen    *Generator
 }
 
 func (r *Runner) Results() Results {
@@ -48,10 +51,18 @@ func (r *Runner) WithRun(fn RunFn) {
 }
 
 // With adds a Generator to the Runner
-func (r *Runner) With(g *Generator) {
+func (r *Runner) With(g *Generator) error {
 	r.moot.Lock()
-	defer r.moot.Unlock()
-	r.generators = append(r.generators, g)
+	step, ok := r.steps[g.StepName]
+	if !ok {
+		var err error
+		step, err = NewStep(g, len(r.steps))
+		if err != nil {
+			return errors.WithStack(err)
+		}
+	}
+	r.moot.Unlock()
+	return r.WithStep(g.StepName, step)
 }
 
 func (r *Runner) WithGroup(gg *Group) {
@@ -91,37 +102,42 @@ func (r *Runner) WithFn(fn func() (*Generator, error)) error {
 	})
 }
 
-// Run all of the generators!
-func (r *Runner) Run() error {
+func (r *Runner) WithStep(name string, step *Step) error {
 	r.moot.Lock()
 	defer r.moot.Unlock()
-	for _, g := range r.generators {
-		r.curGen = g
-		if g.Should != nil {
-			err := safe.RunE(func() error {
-				if !g.Should(r) {
-					return io.EOF
-				}
-				return nil
-			})
-			if err != nil {
-				r.Logger.Debugf("skipping step %s", g.StepName)
-				continue
-			}
-		}
-		r.Logger.Debugf("running step %s", g.StepName)
-		err := r.Chdir(r.Root, func() error {
-			for _, fn := range g.runners {
-				err := safe.RunE(func() error {
-					return fn(r)
-				})
-				if err != nil {
-					return errors.WithStack(err)
-				}
-			}
-			return nil
-		})
-		if err != nil {
+	if len(name) == 0 {
+		name = stepName()
+	}
+	r.steps[name] = step
+	return nil
+}
+
+func (r *Runner) Steps() []*Step {
+	r.moot.RLock()
+
+	var steps []*Step
+
+	for _, step := range r.steps {
+		steps = append(steps, step)
+	}
+
+	sort.Slice(steps, func(a, b int) bool {
+		return steps[a].index < steps[b].index
+	})
+
+	r.moot.RUnlock()
+	return steps
+}
+
+// Run all of the generators!
+func (r *Runner) Run() error {
+	steps := r.Steps()
+
+	r.moot.Lock()
+	defer r.moot.Unlock()
+
+	for _, step := range steps {
+		if err := step.Run(r); err != nil {
 			return errors.WithStack(err)
 		}
 	}
@@ -247,4 +263,23 @@ func (r *Runner) RequestWithClient(req *http.Request, c *http.Client) (*http.Res
 		return nil
 	})
 	return store(res, err)
+}
+
+// NewRunner will NOT execute commands and write files
+// it is NOT destructive it is just the most basic Runner
+// you can have.
+func NewRunner(ctx context.Context) *Runner {
+	pwd, _ := os.Getwd()
+	l := logrus.New()
+	l.Out = os.Stdout
+	l.SetLevel(logrus.DebugLevel)
+	r := &Runner{
+		Logger:  l,
+		Context: ctx,
+		Root:    pwd,
+		moot:    &sync.RWMutex{},
+		steps:   map[string]*Step{},
+	}
+	r.Disk = newDisk(r)
+	return r
 }
