@@ -105,9 +105,11 @@ func (r *Runner) Run() error {
 				return nil
 			})
 			if err != nil {
+				r.Logger.Debugf("skipping step %s", g.StepName)
 				continue
 			}
 		}
+		r.Logger.Debugf("running step %s", g.StepName)
 		err := r.Chdir(r.Root, func() error {
 			for _, fn := range g.runners {
 				err := safe.RunE(func() error {

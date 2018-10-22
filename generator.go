@@ -1,8 +1,10 @@
 package genny
 
 import (
+	"fmt"
 	"os/exec"
 	"sync"
+	"time"
 
 	"github.com/gobuffalo/packr"
 	"github.com/pkg/errors"
@@ -10,6 +12,7 @@ import (
 
 // Generator is the basic type for generators to use
 type Generator struct {
+	StepName     string
 	Should       func(*Runner) bool
 	Root         string
 	runners      []RunFn
@@ -20,6 +23,7 @@ type Generator struct {
 // New, well-formed, generator
 func New() *Generator {
 	g := &Generator{
+		StepName:     fmt.Sprint(time.Now().UnixNano()),
 		runners:      []RunFn{},
 		moot:         &sync.RWMutex{},
 		transformers: []Transformer{},
