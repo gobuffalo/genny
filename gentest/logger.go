@@ -15,6 +15,7 @@ const (
 	WARN         = "WARN"
 	ERROR        = "ERRO"
 	FATAL        = "FATA"
+	PANIC        = "PANI"
 	PRINT        = "PRIN"
 )
 
@@ -101,4 +102,12 @@ func (l *Logger) Fatalf(s string, args ...interface{}) {
 
 func (l *Logger) Fatal(args ...interface{}) {
 	l.log(FATAL, args...)
+}
+
+func (l *Logger) Panicf(s string, args ...interface{}) {
+	l.logf(PANIC, s, args...)
+}
+
+func (l *Logger) Panic(args ...interface{}) {
+	l.log(PANIC, args...)
 }
