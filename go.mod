@@ -23,4 +23,5 @@ require (
 	github.com/stretchr/testify v1.2.2
 	golang.org/x/net v0.0.0-20181017193950-04a2e542c03f // indirect
 	golang.org/x/tools v0.0.0-20181022171610-6fe81c087942
+	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 )
