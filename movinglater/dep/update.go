@@ -8,13 +8,16 @@ import (
 
 func Update(verbose bool) (*genny.Generator, error) {
 	g := genny.New()
-	if _, err := exec.LookPath("dep"); err != nil {
-		return g, nil
-	}
-	cmd := exec.Command("dep", "ensure", "-update")
+	var args []string
 	if verbose {
-		cmd.Args = append(cmd.Args, "-v")
+		args = append(args, "-v")
 	}
-	g.Command(cmd)
+
+	g.RunFn(InstallDep(args...))
+	cmd := exec.Command("dep", "ensure")
+	args = append(args, "-update")
+	if verbose {
+		cmd.Args = append(cmd.Args, args...)
+	}
 	return g, nil
 }

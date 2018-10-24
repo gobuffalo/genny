@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"runtime"
 	"strings"
 )
 
@@ -50,6 +51,11 @@ func (s simpleFile) Seek(offset int64, whence int) (int64, error) {
 // NewFile takes the name of the file you want to
 // write to and a reader to reader from
 func NewFile(name string, r io.Reader) File {
+	osname := name
+	if runtime.GOOS == "windows" {
+		osname = strings.Replace(osname, "\\", "/", -1)
+	}
+
 	if r == nil {
 		r = &bytes.Buffer{}
 	}
@@ -58,7 +64,7 @@ func NewFile(name string, r io.Reader) File {
 	}
 	return &simpleFile{
 		Reader: r,
-		name:   name,
+		name:   osname,
 	}
 }
 

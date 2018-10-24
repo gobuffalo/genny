@@ -36,6 +36,7 @@ func WetRunner(ctx context.Context) *Runner {
 		}
 		return fn()
 	}
+	r.LookPathFn = exec.LookPath
 	return r
 }
 
