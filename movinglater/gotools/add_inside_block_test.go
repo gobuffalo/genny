@@ -2,7 +2,6 @@ package gotools
 
 import (
 	"io/ioutil"
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -13,7 +12,7 @@ import (
 func Test_AddInsideBlock(t *testing.T) {
 	r := require.New(t)
 
-	path := filepath.Join("actions", "app.go")
+	path := "actions/app.go"
 	f := genny.NewFile(path, strings.NewReader(appBefore))
 
 	f, err := AddInsideBlock(f, "if app == nil {", "app.Use(Foo)")
@@ -29,7 +28,7 @@ func Test_AddInsideBlock(t *testing.T) {
 func Test_AddInsideBlock_Struct(t *testing.T) {
 	r := require.New(t)
 
-	path := filepath.Join("actions", "app.go")
+	path := "actions/app.go"
 	f := genny.NewFile(path, strings.NewReader(modelBefore))
 
 	f, err := AddInsideBlock(f, "type Something struct {", "Name string")
@@ -45,7 +44,7 @@ func Test_AddInsideBlock_Struct(t *testing.T) {
 func Test_AddInsideBlock_NoFound(t *testing.T) {
 	r := require.New(t)
 
-	path := filepath.Join("actions", "app.go")
+	path := "actions/app.go"
 	f := genny.NewFile(path, strings.NewReader(appBefore))
 	_, err := AddInsideBlock(f, "idontexist", "app.Use(Foo)")
 	r.Error(err)

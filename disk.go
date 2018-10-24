@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"os"
+	"runtime"
 	"sort"
 	"strings"
 	"sync"
@@ -77,6 +78,7 @@ func (d *Disk) Add(f File) {
 // Find a file from the virtual disk. If the file doesn't
 // exist it will try to read the file from the physical disk.
 func (d *Disk) Find(name string) (File, error) {
+
 	d.moot.RLock()
 	if f, ok := d.files[name]; ok {
 		if seek, ok := f.(io.Seeker); ok {
@@ -88,7 +90,12 @@ func (d *Disk) Find(name string) (File, error) {
 	d.moot.RUnlock()
 
 	gf := NewFile(name, bytes.NewReader([]byte("")))
-	f, err := os.Open(name)
+
+	osname := name
+	if runtime.GOOS == "windows" {
+		osname = strings.Replace(osname, "/", "\\", -1)
+	}
+	f, err := os.Open(osname)
 	if err != nil {
 		return gf, errors.WithStack(err)
 	}
