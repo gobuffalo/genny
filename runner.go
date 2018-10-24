@@ -160,7 +160,7 @@ func (r *Runner) File(f File) error {
 	if !filepath.IsAbs(name) {
 		name = filepath.Join(r.Root, name)
 	}
-	r.Logger.Infof("File: ", name)
+	r.Logger.Info("File: ", name)
 	if r.FileFn != nil {
 		err := safe.RunE(func() error {
 			var e error
