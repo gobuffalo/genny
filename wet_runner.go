@@ -18,7 +18,7 @@ import (
 // it is DESTRUCTIVE
 func WetRunner(ctx context.Context) *Runner {
 	r := DryRunner(ctx)
-	l := logger.New(logger.InfoLevel)
+	l := logger.New(DefaultLogLvl)
 	r.Logger = l
 
 	r.ExecFn = wetExecFn
