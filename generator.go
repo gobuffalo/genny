@@ -4,7 +4,7 @@ import (
 	"os/exec"
 	"sync"
 
-	"github.com/gobuffalo/packr"
+	"github.com/gobuffalo/packd"
 	"github.com/pkg/errors"
 )
 
@@ -64,8 +64,8 @@ func (g *Generator) Command(cmd *exec.Cmd) {
 
 // Box walks through a packr.Box and adds Files for each entry
 // in the box.
-func (g *Generator) Box(box packr.Box) error {
-	return box.Walk(func(path string, f packr.File) error {
+func (g *Generator) Box(box packd.Walkable) error {
+	return box.Walk(func(path string, f packd.File) error {
 		g.File(NewFile(path, f))
 		return nil
 	})

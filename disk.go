@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/gobuffalo/packr"
+	"github.com/gobuffalo/packd"
 	"github.com/pkg/errors"
 )
 
@@ -22,8 +22,8 @@ type Disk struct {
 	moot   *sync.RWMutex
 }
 
-func (d *Disk) AddBox(box packr.Box) error {
-	return box.Walk(func(path string, file packr.File) error {
+func (d *Disk) AddBox(box packd.Walkable) error {
+	return box.Walk(func(path string, file packd.File) error {
 		d.Add(NewFile(path, file))
 		return nil
 	})
