@@ -130,7 +130,7 @@ func (r *Runner) Run() error {
 // Exec can be used inside of Generators to run commands
 func (r *Runner) Exec(cmd *exec.Cmd) error {
 	r.results.Commands = append(r.results.Commands, cmd)
-	r.Logger.Info("Exec: ", strings.Join(cmd.Args, " "))
+	r.Logger.Debug("Exec: ", strings.Join(cmd.Args, " "))
 	if r.ExecFn == nil {
 		return nil
 	}
@@ -140,7 +140,7 @@ func (r *Runner) Exec(cmd *exec.Cmd) error {
 }
 
 func (r *Runner) LookPath(s string) (string, error) {
-	r.Logger.Info("LookPath: ", s)
+	r.Logger.Debug("LookPath: ", s)
 	if r.LookPathFn != nil {
 		return r.LookPathFn(s)
 	}
@@ -160,7 +160,7 @@ func (r *Runner) File(f File) error {
 	if !filepath.IsAbs(name) {
 		name = filepath.Join(r.Root, name)
 	}
-	r.Logger.Info("File: ", name)
+	r.Logger.Debug("File: ", name)
 	if r.FileFn != nil {
 		err := safe.RunE(func() error {
 			var e error
@@ -197,7 +197,7 @@ func (r *Runner) Chdir(path string, fn func() error) error {
 	if len(path) == 0 {
 		return fn()
 	}
-	r.Logger.Info("Chdir: ", path)
+	r.Logger.Debug("Chdir: ", path)
 
 	if r.ChdirFn != nil {
 		return safe.RunE(func() error {
@@ -212,7 +212,7 @@ func (r *Runner) Chdir(path string, fn func() error) error {
 }
 
 func (r *Runner) Delete(path string) error {
-	r.Logger.Info("Delete: ", path)
+	r.Logger.Debug("Delete: ", path)
 
 	defer r.Disk.Remove(path)
 	if r.DeleteFn != nil {
@@ -229,7 +229,7 @@ func (r *Runner) Request(req *http.Request) (*http.Response, error) {
 
 func (r *Runner) RequestWithClient(req *http.Request, c *http.Client) (*http.Response, error) {
 	key := fmt.Sprintf("[%s] %s\n", strings.ToUpper(req.Method), req.URL)
-	r.Logger.Info("Request: ", key)
+	r.Logger.Debug("Request: ", key)
 	store := func(res *http.Response, err error) (*http.Response, error) {
 		r.moot.Lock()
 		r.results.Requests = append(r.results.Requests, RequestResult{
