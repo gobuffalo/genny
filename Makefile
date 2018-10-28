@@ -36,6 +36,7 @@ lint:
 	gometalinter --vendor ./... --deadline=1m --skip=internal
 
 update:
+	packr clean
 	$(GO_BIN) get -u -tags ${TAGS}
 	make tidy
 	packr

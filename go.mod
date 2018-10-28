@@ -4,7 +4,7 @@ require (
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gobuffalo/envy v1.6.7
 	github.com/gobuffalo/flect v0.0.0-20181024204909-8f6be1a8c6c2
-	github.com/gobuffalo/github_flavored_markdown v1.0.6 // indirect
+	github.com/gobuffalo/github_flavored_markdown v1.0.7 // indirect
 	github.com/gobuffalo/logger v0.0.0-20181027193913-9cf4dd0efe46
 	github.com/gobuffalo/packd v0.0.0-20181028162033-6d52e0eabf41
 	github.com/gobuffalo/packr v1.16.0
