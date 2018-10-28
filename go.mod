@@ -4,10 +4,10 @@ require (
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gobuffalo/envy v1.6.7
 	github.com/gobuffalo/flect v0.0.0-20181024204909-8f6be1a8c6c2
-	github.com/gobuffalo/github_flavored_markdown v1.0.5 // indirect
+	github.com/gobuffalo/github_flavored_markdown v1.0.6 // indirect
 	github.com/gobuffalo/logger v0.0.0-20181027193913-9cf4dd0efe46
-	github.com/gobuffalo/packd v0.0.0-20181028161306-2235389ae052
-	github.com/gobuffalo/packr v1.15.1
+	github.com/gobuffalo/packd v0.0.0-20181028162033-6d52e0eabf41
+	github.com/gobuffalo/packr v1.16.0
 	github.com/gobuffalo/plush v3.7.21+incompatible
 	github.com/gobuffalo/tags v2.0.11+incompatible // indirect
 	github.com/gobuffalo/uuid v2.0.5+incompatible // indirect
@@ -19,8 +19,6 @@ require (
 	github.com/onsi/gomega v1.4.2 // indirect
 	github.com/pkg/errors v0.8.0
 	github.com/serenize/snaker v0.0.0-20171204205717-a683aaf2d516 // indirect
-	github.com/shurcooL/highlight_go v0.0.0-20181028015643-3820d2d9b7c7 // indirect
-	github.com/shurcooL/octicon v0.0.0-20181028054416-fa4f57f9efb2 // indirect
 	github.com/spf13/cobra v0.0.3
 	github.com/stretchr/testify v1.2.2
 	golang.org/x/tools v0.0.0-20181026183834-f60e5f99f081
