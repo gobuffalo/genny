@@ -6,7 +6,7 @@ require (
 	github.com/gobuffalo/flect v0.0.0-20181024204909-8f6be1a8c6c2
 	github.com/gobuffalo/github_flavored_markdown v1.0.7 // indirect
 	github.com/gobuffalo/logger v0.0.0-20181027193913-9cf4dd0efe46
-	github.com/gobuffalo/packd v0.0.0-20181028162033-6d52e0eabf41
+	github.com/gobuffalo/packd v0.0.0-20181029140631-cf76bd87a5a6
 	github.com/gobuffalo/packr v1.16.0
 	github.com/gobuffalo/plush v3.7.21+incompatible
 	github.com/gobuffalo/tags v2.0.11+incompatible // indirect
@@ -21,6 +21,8 @@ require (
 	github.com/serenize/snaker v0.0.0-20171204205717-a683aaf2d516 // indirect
 	github.com/spf13/cobra v0.0.3
 	github.com/stretchr/testify v1.2.2
+	golang.org/x/crypto v0.0.0-20181029103014-dab2b1051b5d // indirect
+	golang.org/x/net v0.0.0-20181029044818-c44066c5c816 // indirect
 	golang.org/x/tools v0.0.0-20181026183834-f60e5f99f081
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 )
