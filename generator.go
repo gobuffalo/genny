@@ -13,6 +13,7 @@ import (
 type Generator struct {
 	Should       func(*Runner) bool
 	Root         string
+	ErrorFn      func(error)
 	runners      []RunFn
 	transformers []Transformer
 	moot         *sync.RWMutex

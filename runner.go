@@ -108,6 +108,9 @@ func (r *Runner) Run() error {
 				return nil
 			})
 			if err != nil {
+				if g.ErrorFn != nil {
+					g.ErrorFn(err)
+				}
 				continue
 			}
 		}
@@ -117,14 +120,20 @@ func (r *Runner) Run() error {
 					return fn(r)
 				})
 				if err != nil {
-					events.EmitError("genny:runner:stop:err", err, events.Payload{"runner": r})
+					events.EmitError("genny:runner:stop:err", err, events.Payload{"runner": r, "generator": g})
+					if g.ErrorFn != nil {
+						g.ErrorFn(err)
+					}
 					return errors.WithStack(err)
 				}
 			}
 			return nil
 		})
 		if err != nil {
-			events.EmitError("genny:runner:stop:err", err, events.Payload{"runner": r})
+			events.EmitError("genny:runner:stop:err", err, events.Payload{"runner": r, "generator": g})
+			if g.ErrorFn != nil {
+				g.ErrorFn(err)
+			}
 			return errors.WithStack(err)
 		}
 	}
