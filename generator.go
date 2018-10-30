@@ -4,6 +4,7 @@ import (
 	"os/exec"
 	"sync"
 
+	"github.com/gobuffalo/events"
 	"github.com/gobuffalo/packd"
 	"github.com/pkg/errors"
 )
@@ -25,6 +26,12 @@ func New() *Generator {
 		transformers: []Transformer{},
 	}
 	return g
+}
+
+func (g *Generator) Event(kind string, payload events.Payload) {
+	g.RunFn(func(r *Runner) error {
+		return events.EmitPayload(kind, payload)
+	})
 }
 
 // File adds a file to be run when the generator is run

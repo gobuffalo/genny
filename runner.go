@@ -10,6 +10,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/gobuffalo/events"
 	"github.com/markbates/oncer"
 	"github.com/markbates/safe"
 	"github.com/pkg/errors"
@@ -96,6 +97,7 @@ func (r *Runner) WithFn(fn func() (*Generator, error)) error {
 func (r *Runner) Run() error {
 	r.moot.Lock()
 	defer r.moot.Unlock()
+	events.EmitPayload("genny:runner:start", events.Payload{"runner": r})
 	for _, g := range r.generators {
 		r.curGen = g
 		if g.Should != nil {
@@ -115,15 +117,18 @@ func (r *Runner) Run() error {
 					return fn(r)
 				})
 				if err != nil {
+					events.EmitError("genny:runner:stop:err", err, events.Payload{"runner": r})
 					return errors.WithStack(err)
 				}
 			}
 			return nil
 		})
 		if err != nil {
+			events.EmitError("genny:runner:stop:err", err, events.Payload{"runner": r})
 			return errors.WithStack(err)
 		}
 	}
+	events.EmitPayload("genny:runner:stop", events.Payload{"runner": r})
 	return nil
 }
 
