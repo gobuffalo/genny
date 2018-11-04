@@ -2,6 +2,7 @@ package genny
 
 import (
 	"context"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -128,4 +129,71 @@ func Test_Runner_Request(t *testing.T) {
 
 		})
 	}
+}
+
+func Test_Runner_Cleanup(t *testing.T) {
+	r := require.New(t)
+
+	run := DryRunner(context.Background())
+	run.Disk.Add(NewFileS("foo.txt", "foo"))
+	run.Disk.Add(NewFileS("bar.txt", "bar"))
+
+	g1 := New()
+	g1.TeardownFn = func(r *Runner) error {
+		r.Disk.Delete("foo.txt")
+		return nil
+	}
+
+	run.With(g1)
+
+	r.NoError(run.Run())
+
+	res := run.Results()
+	r.Len(res.Files, 1)
+	r.Equal("bar.txt", res.Files[0].Name())
+}
+
+func Test_Runner_Cleanup_Run_Error(t *testing.T) {
+	r := require.New(t)
+
+	run := DryRunner(context.Background())
+	run.Disk.Add(NewFileS("foo.txt", "foo"))
+	run.Disk.Add(NewFileS("bar.txt", "bar"))
+
+	g1 := New()
+	g1.RunFn(func(r *Runner) error {
+		return errors.New("boom")
+	})
+	g1.TeardownFn = func(r *Runner) error {
+		r.Disk.Delete("foo.txt")
+		return nil
+	}
+
+	run.With(g1)
+
+	r.Error(run.Run())
+
+	res := run.Results()
+	r.Len(res.Files, 1)
+	r.Equal("bar.txt", res.Files[0].Name())
+}
+
+func Test_Runner_Cleanup_Error(t *testing.T) {
+	r := require.New(t)
+
+	run := DryRunner(context.Background())
+	run.Disk.Add(NewFileS("foo.txt", "foo"))
+	run.Disk.Add(NewFileS("bar.txt", "bar"))
+
+	g1 := New()
+	g1.TeardownFn = func(r *Runner) error {
+		return errors.New("boom")
+	}
+
+	run.With(g1)
+
+	r.Error(run.Run())
+
+	res := run.Results()
+	r.Len(res.Files, 2)
 }

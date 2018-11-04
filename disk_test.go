@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/gobuffalo/packr"
+	"github.com/gobuffalo/packd"
 	"github.com/stretchr/testify/require"
 )
 
@@ -91,9 +91,12 @@ func Test_Disk_FindFile_DoesntExist(t *testing.T) {
 func Test_Disk_AddBox(t *testing.T) {
 	r := require.New(t)
 
-	box := packr.NewBox("./fixtures")
+	box := packd.NewMemoryBox()
+	box.AddString("foo.txt", "foo")
+	box.AddString("bar/bar.txt", "bar")
 
 	run := DryRunner(context.Background())
+
 	d := run.Disk
 	err := d.AddBox(box)
 	r.NoError(err)
@@ -102,7 +105,38 @@ func Test_Disk_AddBox(t *testing.T) {
 	r.NoError(err)
 	r.Equal("foo.txt", f.Name())
 
-	f, err = d.Find("bar/baz.txt")
+	f, err = d.Find("bar/bar.txt")
 	r.NoError(err)
-	r.Equal("bar/baz.txt", f.Name())
+	r.Equal("bar/bar.txt", f.Name())
+}
+
+func Test_Disk_Rollback(t *testing.T) {
+	r := require.New(t)
+
+	run := DryRunner(context.Background())
+
+	g := New()
+	g.File(NewFileS("foo.txt", "FOO"))
+	g.File(NewFileS("oops/oops.txt", "oops"))
+	run.With(g)
+
+	d := run.Disk
+	box := packd.NewMemoryBox()
+	box.AddString("foo.txt", "foo")
+	box.AddString("bar/bar.txt", "bar")
+
+	err := d.AddBox(box)
+	r.NoError(err)
+
+	r.NoError(run.Run())
+	r.NoError(d.Rollback())
+
+	f, err := d.Find("foo.txt")
+	r.NoError(err)
+	r.Equal("foo", f.String())
+
+	f, err = d.Find("bar/bar.txt")
+	r.NoError(err)
+	r.Equal("bar", f.String())
+
 }

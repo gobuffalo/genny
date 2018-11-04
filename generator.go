@@ -14,6 +14,7 @@ type Generator struct {
 	Should       func(*Runner) bool
 	Root         string
 	ErrorFn      func(error)
+	TeardownFn   func(*Runner) error
 	runners      []RunFn
 	transformers []Transformer
 	moot         *sync.RWMutex

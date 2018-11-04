@@ -17,12 +17,12 @@ import (
 // with both dry and wet runners. Perfect for seeding
 // Files or non-destructively deleting files
 type Disk struct {
-	Runner *Runner
-	files  map[string]File
-	moot   *sync.RWMutex
+	Runner   *Runner
+	files    *sync.Map
+	original *sync.Map
 }
 
-func (d *Disk) AddBox(box packd.Walkable) error {
+func (d *Disk) AddBox(box packd.Walker) error {
 	return box.Walk(func(path string, file packd.File) error {
 		d.Add(NewFile(path, file))
 		return nil
@@ -32,12 +32,19 @@ func (d *Disk) AddBox(box packd.Walkable) error {
 // Files returns a sorted list of all the files in the disk
 func (d *Disk) Files() []File {
 	var files []File
-	for _, f := range d.files {
+
+	d.files.Range(func(k, v interface{}) bool {
+		f, ok := v.(File)
+		if !ok {
+			return false
+		}
 		if s, ok := f.(io.Seeker); ok {
 			s.Seek(0, 0)
 		}
 		files = append(files, f)
-	}
+		return true
+	})
+
 	sort.Slice(files, func(i, j int) bool {
 		return files[i].Name() < files[j].Name()
 	})
@@ -46,21 +53,15 @@ func (d *Disk) Files() []File {
 
 func newDisk(r *Runner) *Disk {
 	return &Disk{
-		Runner: r,
-		files:  map[string]File{},
-		moot:   &sync.RWMutex{},
+		Runner:   r,
+		files:    &sync.Map{},
+		original: &sync.Map{},
 	}
 }
 
 // Remove a file(s) from the virtual disk.
 func (d *Disk) Remove(name string) {
-	d.moot.Lock()
-	defer d.moot.Unlock()
-	for f, _ := range d.files {
-		if strings.HasPrefix(f, name) {
-			delete(d.files, f)
-		}
-	}
+	d.files.Delete(name)
 }
 
 // Delete calls the Runner#Delete function
@@ -70,24 +71,20 @@ func (d *Disk) Delete(name string) error {
 
 // Add file to the virtual disk
 func (d *Disk) Add(f File) {
-	d.moot.Lock()
-	defer d.moot.Unlock()
-	d.files[f.Name()] = f
+	d.files.Store(f.Name(), f)
+	d.original.LoadOrStore(f.Name(), f)
 }
 
 // Find a file from the virtual disk. If the file doesn't
 // exist it will try to read the file from the physical disk.
 func (d *Disk) Find(name string) (File, error) {
-
-	d.moot.RLock()
-	if f, ok := d.files[name]; ok {
-		if seek, ok := f.(io.Seeker); ok {
-			seek.Seek(0, 0)
+	ff, ok := d.files.Load(name)
+	if ok {
+		if f, ok := ff.(File); ok {
+			return f, nil
 		}
-		d.moot.RUnlock()
-		return f, nil
+		return nil, errors.Errorf("expected File got %T", ff)
 	}
-	d.moot.RUnlock()
 
 	gf := NewFile(name, bytes.NewReader([]byte("")))
 
@@ -95,18 +92,50 @@ func (d *Disk) Find(name string) (File, error) {
 	if runtime.GOOS == "windows" {
 		osname = strings.Replace(osname, "/", "\\", -1)
 	}
-	f, err := os.Open(osname)
+	of, err := os.Open(osname)
 	if err != nil {
 		return gf, errors.WithStack(err)
 	}
-	defer f.Close()
+	defer of.Close()
 
 	bb := &bytes.Buffer{}
 
-	if _, err := io.Copy(bb, f); err != nil {
+	if _, err := io.Copy(bb, of); err != nil {
 		return gf, errors.WithStack(err)
 	}
 	gf = NewFile(name, bb)
 	d.Add(gf)
 	return gf, nil
+}
+
+func (d *Disk) Rollback() error {
+	d.Runner.Logger.Debug("rolling back disk")
+	var err error
+	d.files.Range(func(k, v interface{}) bool {
+		s, ok := k.(string)
+		if !ok {
+			return false
+		}
+		if err = d.Delete(s); err != nil {
+			return false
+		}
+		return true
+	})
+
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	d.original.Range(func(k, v interface{}) bool {
+		f, ok := v.(File)
+		if !ok {
+			return false
+		}
+		if err = d.Runner.File(f); err != nil {
+			return false
+		}
+		return true
+	})
+
+	return err
 }

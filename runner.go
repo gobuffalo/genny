@@ -95,49 +95,78 @@ func (r *Runner) WithFn(fn func() (*Generator, error)) error {
 
 // Run all of the generators!
 func (r *Runner) Run() error {
-	r.moot.Lock()
-	defer r.moot.Unlock()
-	events.EmitPayload("genny:runner:start", events.Payload{"runner": r})
-	for _, g := range r.generators {
-		r.curGen = g
-		if g.Should != nil {
-			err := safe.RunE(func() error {
-				if !g.Should(r) {
-					return io.EOF
+	defer r.cleanup()
+	err := safe.RunE(func() error {
+		r.moot.Lock()
+		defer r.moot.Unlock()
+		events.EmitPayload("genny:runner:start", events.Payload{"runner": r})
+		for _, g := range r.generators {
+			r.curGen = g
+			if g.Should != nil {
+				err := safe.RunE(func() error {
+					if !g.Should(r) {
+						return io.EOF
+					}
+					return nil
+				})
+				if err != nil {
+					if g.ErrorFn != nil {
+						g.ErrorFn(err)
+					}
+					continue
+				}
+			}
+			err := r.Chdir(r.Root, func() error {
+				for _, fn := range g.runners {
+					err := safe.RunE(func() error {
+						return fn(r)
+					})
+					if err != nil {
+						events.EmitError("genny:runner:stop:err", err, events.Payload{"runner": r, "generator": g})
+						if g.ErrorFn != nil {
+							g.ErrorFn(err)
+						}
+						return errors.WithStack(err)
+					}
 				}
 				return nil
 			})
 			if err != nil {
+				events.EmitError("genny:runner:stop:err", err, events.Payload{"runner": r, "generator": g})
 				if g.ErrorFn != nil {
 					g.ErrorFn(err)
 				}
-				continue
+				return errors.WithStack(err)
 			}
 		}
-		err := r.Chdir(r.Root, func() error {
-			for _, fn := range g.runners {
-				err := safe.RunE(func() error {
-					return fn(r)
-				})
-				if err != nil {
-					events.EmitError("genny:runner:stop:err", err, events.Payload{"runner": r, "generator": g})
-					if g.ErrorFn != nil {
-						g.ErrorFn(err)
-					}
-					return errors.WithStack(err)
-				}
-			}
-			return nil
-		})
+		events.EmitPayload("genny:runner:stop", events.Payload{"runner": r})
+		return nil
+	})
+	if err != nil {
+		if cerr := r.cleanup(); cerr != nil {
+			return errors.WithMessage(err, fmt.Sprintf("error cleaning up running after error: %s", cerr))
+		}
+		if cerr := r.Disk.Rollback(); cerr != nil {
+			return errors.WithMessage(err, fmt.Sprintf("error rolling back disk after error: %s", cerr))
+		}
+		return errors.WithStack(err)
+	}
+	return r.cleanup()
+}
+
+func (r *Runner) cleanup() (err error) {
+	defer func() {
 		if err != nil {
-			events.EmitError("genny:runner:stop:err", err, events.Payload{"runner": r, "generator": g})
-			if g.ErrorFn != nil {
-				g.ErrorFn(err)
+			r.Disk.Rollback()
+		}
+	}()
+	for _, g := range r.generators {
+		if g.TeardownFn != nil {
+			if err := g.TeardownFn(r); err != nil {
+				return errors.WithStack(err)
 			}
-			return errors.WithStack(err)
 		}
 	}
-	events.EmitPayload("genny:runner:stop", events.Payload{"runner": r})
 	return nil
 }
 
