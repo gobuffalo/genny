@@ -121,12 +121,8 @@ func Test_Disk_Rollback(t *testing.T) {
 	run.With(g)
 
 	d := run.Disk
-	box := packd.NewMemoryBox()
-	box.AddString("foo.txt", "foo")
-	box.AddString("bar/bar.txt", "bar")
-
-	err := d.AddBox(box)
-	r.NoError(err)
+	run.Disk.original.Store("foo.txt", NewFileS("foo.txt", "foo"))
+	run.Disk.original.Store("bar.txt", NewFileS("bar.txt", "bar"))
 
 	r.NoError(run.Run())
 	r.NoError(d.Rollback())
@@ -135,8 +131,11 @@ func Test_Disk_Rollback(t *testing.T) {
 	r.NoError(err)
 	r.Equal("foo", f.String())
 
-	f, err = d.Find("bar/bar.txt")
+	f, err = d.Find("bar.txt")
 	r.NoError(err)
 	r.Equal("bar", f.String())
+
+	_, err = d.Find("oops/oops.txt")
+	r.Error(err)
 
 }

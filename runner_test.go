@@ -157,8 +157,8 @@ func Test_Runner_Cleanup_Run_Error(t *testing.T) {
 	r := require.New(t)
 
 	run := DryRunner(context.Background())
-	run.Disk.Add(NewFileS("foo.txt", "foo"))
-	run.Disk.Add(NewFileS("bar.txt", "bar"))
+	run.Disk.original.Store("foo.txt", NewFileS("foo.txt", "foo"))
+	run.Disk.original.Store("bar.txt", NewFileS("bar.txt", "bar"))
 
 	g1 := New()
 	g1.RunFn(func(r *Runner) error {
@@ -182,8 +182,8 @@ func Test_Runner_Cleanup_Error(t *testing.T) {
 	r := require.New(t)
 
 	run := DryRunner(context.Background())
-	run.Disk.Add(NewFileS("foo.txt", "foo"))
-	run.Disk.Add(NewFileS("bar.txt", "bar"))
+	run.Disk.original.Store("foo.txt", NewFileS("foo.txt", "foo"))
+	run.Disk.original.Store("bar.txt", NewFileS("bar.txt", "bar"))
 
 	g1 := New()
 	g1.TeardownFn = func(r *Runner) error {

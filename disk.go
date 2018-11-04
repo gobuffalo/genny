@@ -72,7 +72,6 @@ func (d *Disk) Delete(name string) error {
 // Add file to the virtual disk
 func (d *Disk) Add(f File) {
 	d.files.Store(f.Name(), f)
-	d.original.LoadOrStore(f.Name(), f)
 }
 
 // Find a file from the virtual disk. If the file doesn't
@@ -104,6 +103,7 @@ func (d *Disk) Find(name string) (File, error) {
 		return gf, errors.WithStack(err)
 	}
 	gf = NewFile(name, bb)
+	d.original.LoadOrStore(gf.Name(), gf)
 	d.Add(gf)
 	return gf, nil
 }
