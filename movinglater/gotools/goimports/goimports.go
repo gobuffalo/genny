@@ -98,13 +98,13 @@ func buildFiles(paths ...string) ([]File, error) {
 			if !isGoFile(info) {
 				return nil
 			}
-			f, err := os.Open(path)
+			b, err := ioutil.ReadFile(path)
 			if err != nil {
 				return errors.WithStack(err)
 			}
 			files = append(files, File{
 				Name: path,
-				In:   f,
+				In:   bytes.NewReader(b),
 			})
 			return nil
 		})

@@ -22,7 +22,7 @@ type Disk struct {
 	moot   *sync.RWMutex
 }
 
-func (d *Disk) AddBox(box packd.Walkable) error {
+func (d *Disk) AddBox(box packd.Walker) error {
 	return box.Walk(func(path string, file packd.File) error {
 		d.Add(NewFile(path, file))
 		return nil

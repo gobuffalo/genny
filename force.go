@@ -9,7 +9,7 @@ import (
 )
 
 // ForceBox will mount each file in the box and wrap it with ForceFile
-func ForceBox(g *Generator, box packd.Walkable, force bool) error {
+func ForceBox(g *Generator, box packd.Walker, force bool) error {
 	return box.Walk(func(path string, bf packd.File) error {
 		f := NewFile(path, bf)
 		ff := ForceFile(f, force)

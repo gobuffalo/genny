@@ -72,7 +72,7 @@ func (g *Generator) Command(cmd *exec.Cmd) {
 
 // Box walks through a packr.Box and adds Files for each entry
 // in the box.
-func (g *Generator) Box(box packd.Walkable) error {
+func (g *Generator) Box(box packd.Walker) error {
 	return box.Walk(func(path string, f packd.File) error {
 		g.File(NewFile(path, f))
 		return nil
