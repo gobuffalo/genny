@@ -18,5 +18,6 @@ func Init(path string, verbose bool) (*genny.Generator, error) {
 	if verbose {
 		cmd.Args = append(cmd.Args, args...)
 	}
+	g.Command(cmd)
 	return g, nil
 }
