@@ -132,6 +132,16 @@ func (r *Runner) Steps() []*Step {
 	return steps
 }
 
+func (r *Runner) FindStep(name string) (*Step, error) {
+	r.moot.RLock()
+	s, ok := r.steps[name]
+	r.moot.RUnlock()
+	if !ok {
+		return nil, errors.Errorf("could not find step %s", name)
+	}
+	return s, nil
+}
+
 func (r *Runner) Run() error {
 	steps := r.Steps()
 
