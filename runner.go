@@ -154,7 +154,10 @@ func (r *Runner) Run() error {
 
 	for _, step := range steps {
 		if err := step.Run(r); err != nil {
-			payload["step"] = step
+			payload = events.Payload{
+				"runner": r,
+				"step":   step,
+			}
 			events.EmitError(EvtFinishedErr, err, payload)
 			return errors.WithStack(err)
 		}
