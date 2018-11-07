@@ -27,10 +27,16 @@ type Step struct {
 
 func (s *Step) Before(g *Generator) DeleteFn {
 	s.moot.Lock()
-	xi := len(s.before)
 	df := func() {
+		var a []*Generator
 		s.moot.Lock()
-		s.before = append(s.before[:xi+1], s.before[:xi+1]...)
+		for _, b := range s.before {
+			if g.StepName == b.StepName {
+				continue
+			}
+			a = append(a, b)
+		}
+		s.before = a
 		s.moot.Unlock()
 	}
 	s.before = append(s.before, g)
@@ -40,10 +46,16 @@ func (s *Step) Before(g *Generator) DeleteFn {
 
 func (s *Step) After(g *Generator) DeleteFn {
 	s.moot.Lock()
-	xi := len(s.after)
 	df := func() {
+		var a []*Generator
 		s.moot.Lock()
-		s.after = append(s.after[:xi+1], s.after[:xi+1]...)
+		for _, b := range s.after {
+			if g.StepName == b.StepName {
+				continue
+			}
+			a = append(a, b)
+		}
+		s.after = a
 		s.moot.Unlock()
 	}
 	s.after = append(s.after, g)
@@ -129,6 +141,7 @@ func stepName() string {
 		}
 		bb.WriteString(fmt.Sprintf("%s:%d:%d\n", file, line, mod.UnixNano()))
 	}
+	bb.WriteString(fmt.Sprint(time.Now().UnixNano()))
 	h := sha1.New()
 	h.Write(bb.Bytes())
 	return fmt.Sprintf("%x", h.Sum(nil))[:8]
