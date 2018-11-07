@@ -135,18 +135,22 @@ func (r *Runner) Steps() []*Step {
 func (r *Runner) Run() error {
 	steps := r.Steps()
 
-	r.moot.Lock()
-	defer r.moot.Unlock()
+	payload := events.Payload{
+		"runner": r,
+		"steps":  steps,
+	}
 
-	events.EmitPayload("genny:runner:started", events.Payload{"runner": r})
+	events.EmitPayload(EvtStarted, payload)
+
 	for _, step := range steps {
 		if err := step.Run(r); err != nil {
-			events.EmitError("genny:runner:stop:err", err, events.Payload{"runner": r, "step": step})
+			payload["step"] = step
+			events.EmitError(EvtFinishedErr, err, payload)
 			return errors.WithStack(err)
 		}
 	}
+	events.EmitPayload(EvtFinished, payload)
 
-	events.EmitPayload("genny:runner:finished", events.Payload{"runner": r})
 	return nil
 }
 
