@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os/exec"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -128,4 +129,20 @@ func Test_Runner_Request(t *testing.T) {
 
 		})
 	}
+}
+
+func Test_Runner_FindStep(t *testing.T) {
+	r := require.New(t)
+
+	run := DryRunner(context.Background())
+
+	for i := 0; i < 3; i++ {
+		s, err := NewStep(New(), i)
+		r.NoError(err)
+		run.WithStep("step "+strconv.Itoa(i+1), s)
+	}
+
+	s, err := run.FindStep("step 2")
+	r.NoError(err)
+	r.NotZero(s)
 }

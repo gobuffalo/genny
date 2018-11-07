@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"os/exec"
 	"path/filepath"
+	"sort"
 	"strings"
 	"sync"
 
@@ -14,6 +16,7 @@ import (
 	"github.com/markbates/oncer"
 	"github.com/markbates/safe"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 type RunFn func(r *Runner) error
@@ -30,6 +33,7 @@ type Runner struct {
 	LookPathFn func(string) (string, error)                              // function used to make exec.LookPath lookups
 	Root       string                                                    // the root of the write path
 	Disk       *Disk
+	steps      map[string]*Step
 	generators []*Generator
 	moot       *sync.RWMutex
 	results    Results
@@ -50,10 +54,18 @@ func (r *Runner) WithRun(fn RunFn) {
 }
 
 // With adds a Generator to the Runner
-func (r *Runner) With(g *Generator) {
+func (r *Runner) With(g *Generator) error {
 	r.moot.Lock()
-	defer r.moot.Unlock()
-	r.generators = append(r.generators, g)
+	step, ok := r.steps[g.StepName]
+	if !ok {
+		var err error
+		step, err = NewStep(g, len(r.steps))
+		if err != nil {
+			return errors.WithStack(err)
+		}
+	}
+	r.moot.Unlock()
+	return r.WithStep(g.StepName, step)
 }
 
 func (r *Runner) WithGroup(gg *Group) {
@@ -93,51 +105,62 @@ func (r *Runner) WithFn(fn func() (*Generator, error)) error {
 	})
 }
 
-// Run all of the generators!
-func (r *Runner) Run() error {
+func (r *Runner) WithStep(name string, step *Step) error {
 	r.moot.Lock()
 	defer r.moot.Unlock()
-	events.EmitPayload("genny:runner:start", events.Payload{"runner": r})
-	for _, g := range r.generators {
-		r.curGen = g
-		if g.Should != nil {
-			err := safe.RunE(func() error {
-				if !g.Should(r) {
-					return io.EOF
-				}
-				return nil
-			})
-			if err != nil {
-				if g.ErrorFn != nil {
-					g.ErrorFn(err)
-				}
-				continue
-			}
-		}
-		err := r.Chdir(r.Root, func() error {
-			for _, fn := range g.runners {
-				err := safe.RunE(func() error {
-					return fn(r)
-				})
-				if err != nil {
-					events.EmitError("genny:runner:stop:err", err, events.Payload{"runner": r, "generator": g})
-					if g.ErrorFn != nil {
-						g.ErrorFn(err)
-					}
-					return errors.WithStack(err)
-				}
-			}
-			return nil
-		})
-		if err != nil {
-			events.EmitError("genny:runner:stop:err", err, events.Payload{"runner": r, "generator": g})
-			if g.ErrorFn != nil {
-				g.ErrorFn(err)
-			}
+	if len(name) == 0 {
+		name = stepName()
+	}
+	r.steps[name] = step
+	return nil
+}
+
+func (r *Runner) Steps() []*Step {
+	r.moot.RLock()
+
+	var steps []*Step
+
+	for _, step := range r.steps {
+		steps = append(steps, step)
+	}
+
+	sort.Slice(steps, func(a, b int) bool {
+		return steps[a].index < steps[b].index
+	})
+
+	r.moot.RUnlock()
+	return steps
+}
+
+func (r *Runner) FindStep(name string) (*Step, error) {
+	r.moot.RLock()
+	s, ok := r.steps[name]
+	r.moot.RUnlock()
+	if !ok {
+		return nil, errors.Errorf("could not find step %s", name)
+	}
+	return s, nil
+}
+
+func (r *Runner) Run() error {
+	steps := r.Steps()
+
+	payload := events.Payload{
+		"runner": r,
+		"steps":  steps,
+	}
+
+	events.EmitPayload(EvtStarted, payload)
+
+	for _, step := range steps {
+		if err := step.Run(r); err != nil {
+			payload["step"] = step
+			events.EmitError(EvtFinishedErr, err, payload)
 			return errors.WithStack(err)
 		}
 	}
-	events.EmitPayload("genny:runner:stop", events.Payload{"runner": r})
+	events.EmitPayload(EvtFinished, payload)
+
 	return nil
 }
 
@@ -268,4 +291,23 @@ func (r *Runner) RequestWithClient(req *http.Request, c *http.Client) (*http.Res
 		return nil
 	})
 	return store(res, err)
+}
+
+// NewRunner will NOT execute commands and write files
+// it is NOT destructive it is just the most basic Runner
+// you can have.
+func NewRunner(ctx context.Context) *Runner {
+	pwd, _ := os.Getwd()
+	l := logrus.New()
+	l.Out = os.Stdout
+	l.SetLevel(logrus.DebugLevel)
+	r := &Runner{
+		Logger:  l,
+		Context: ctx,
+		Root:    pwd,
+		moot:    &sync.RWMutex{},
+		steps:   map[string]*Step{},
+	}
+	r.Disk = newDisk(r)
+	return r
 }

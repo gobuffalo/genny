@@ -6,9 +6,16 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gobuffalo/packr"
+	"github.com/gobuffalo/packd"
 	"github.com/stretchr/testify/require"
 )
+
+var fixtures = func() packd.Box {
+	box := packd.NewMemoryBox()
+	box.AddString("foo.txt", "foo!")
+	box.AddString("bar/baz.txt", "baz!")
+	return box
+}()
 
 func Test_Generator_File(t *testing.T) {
 	r := require.New(t)
@@ -33,7 +40,7 @@ func Test_Generator_Box(t *testing.T) {
 	r := require.New(t)
 
 	g := New()
-	r.NoError(g.Box(packr.NewBox("./fixtures")))
+	r.NoError(g.Box(fixtures))
 
 	run := DryRunner(context.Background())
 	run.With(g)
@@ -45,11 +52,11 @@ func Test_Generator_Box(t *testing.T) {
 
 	f := res.Files[0]
 	r.Equal("bar/baz.txt", f.Name())
-	r.Equal("baz!\n", f.String())
+	r.Equal("baz!", f.String())
 
 	f = res.Files[1]
 	r.Equal("foo.txt", f.Name())
-	r.Equal("foo!\n", f.String())
+	r.Equal("foo!", f.String())
 }
 
 func Test_Command(t *testing.T) {

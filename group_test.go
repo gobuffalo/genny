@@ -21,13 +21,13 @@ func Test_Group_With(t *testing.T) {
 	r := require.New(t)
 
 	gg := &Group{}
-	gg.Add(&Generator{})
-	gg.Add(&Generator{})
+	gg.Add(&Generator{StepName: "one"})
+	gg.Add(&Generator{StepName: "two"})
 
 	r.Len(gg.Generators, 2)
 
 	run := DryRunner(context.Background())
-	r.Len(run.generators, 0)
+	r.Len(run.Steps(), 0)
 	gg.With(run)
-	r.Len(run.generators, 2)
+	r.Len(run.Steps(), 2)
 }
