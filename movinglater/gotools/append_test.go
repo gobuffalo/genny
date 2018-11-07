@@ -2,7 +2,6 @@ package gotools
 
 import (
 	"io/ioutil"
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -13,7 +12,7 @@ import (
 func Test_Append(t *testing.T) {
 	r := require.New(t)
 
-	path := filepath.Join("models", "xq.go")
+	path := "models/xq.go"
 	f := genny.NewFile(path, strings.NewReader(beforeAppend))
 
 	expressions := strings.Split(`

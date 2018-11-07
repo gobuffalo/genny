@@ -2,7 +2,6 @@ package gotools
 
 import (
 	"io/ioutil"
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -13,7 +12,7 @@ import (
 func Test_ReplaceBlockBody(t *testing.T) {
 	r := require.New(t)
 
-	path := filepath.Join("actions", "app.go")
+	path := "actions/app.go"
 	f := genny.NewFile(path, strings.NewReader(modelBeforeBodyReplace))
 
 	f, err := ReplaceBlockBody(f, "func (u *User) ValidateUpdate(tx *pop.Connection) (*validate.Errors, error) {", `

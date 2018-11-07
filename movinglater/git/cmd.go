@@ -13,13 +13,10 @@ var ErrWorkingTreeClean = errors.New("working tree clean")
 
 func Run(args ...string) genny.RunFn {
 	return func(r *genny.Runner) error {
-		bb := &bytes.Buffer{}
 		cmd := exec.Command("git", args...)
-		cmd.Stdout = bb
-		cmd.Stderr = bb
 		err := r.Exec(cmd)
 		if err != nil {
-			if strings.Contains(bb.String(), "working tree clean") {
+			if workingDirIsClean() {
 				return ErrWorkingTreeClean
 			}
 			return errors.WithStack(err)
@@ -27,4 +24,15 @@ func Run(args ...string) genny.RunFn {
 		return nil
 	}
 
+}
+
+func workingDirIsClean() bool {
+	bb := &bytes.Buffer{}
+	cmd := exec.Command("git", "status", "--porcelain")
+	cmd.Stdout = bb
+	err := cmd.Run()
+	if err != nil {
+		return false
+	}
+	return strings.TrimSpace(bb.String()) == ""
 }

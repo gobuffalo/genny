@@ -11,7 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gobuffalo/packr"
+	"github.com/gobuffalo/events"
+	"github.com/gobuffalo/packd"
 	"github.com/pkg/errors"
 )
 
@@ -24,6 +25,7 @@ type Generator struct {
 	StepName     string
 	Should       func(*Runner) bool
 	Root         string
+	ErrorFn      func(error)
 	runners      []RunFn
 	transformers []Transformer
 	moot         *sync.RWMutex
@@ -53,6 +55,12 @@ func New() *Generator {
 		transformers: []Transformer{},
 	}
 	return g
+}
+
+func (g *Generator) Event(kind string, payload events.Payload) {
+	g.RunFn(func(r *Runner) error {
+		return events.EmitPayload(kind, payload)
+	})
 }
 
 // File adds a file to be run when the generator is run
@@ -92,8 +100,8 @@ func (g *Generator) Command(cmd *exec.Cmd) {
 
 // Box walks through a packr.Box and adds Files for each entry
 // in the box.
-func (g *Generator) Box(box packr.Box) error {
-	return box.Walk(func(path string, f packr.File) error {
+func (g *Generator) Box(box packd.Walker) error {
+	return box.Walk(func(path string, f packd.File) error {
 		g.File(NewFile(path, f))
 		return nil
 	})
