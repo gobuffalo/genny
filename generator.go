@@ -1,13 +1,8 @@
 package genny
 
 import (
-	"bytes"
-	"crypto/sha1"
-	"fmt"
 	"math/rand"
-	"os"
 	"os/exec"
-	"runtime"
 	"sync"
 	"time"
 
@@ -29,21 +24,6 @@ type Generator struct {
 	runners      []RunFn
 	transformers []Transformer
 	moot         *sync.RWMutex
-}
-
-func stepName() string {
-	bb := &bytes.Buffer{}
-	for i := 0; i < 5; i++ {
-		_, file, line, _ := runtime.Caller(i)
-		mod := time.Now()
-		if info, err := os.Stat(file); err == nil {
-			mod = info.ModTime()
-		}
-		bb.WriteString(fmt.Sprintf("%s:%d:%d\n", file, line, mod.UnixNano()))
-	}
-	h := sha1.New()
-	h.Write(bb.Bytes())
-	return fmt.Sprintf("%x", h.Sum(nil))[:8]
 }
 
 // New, well-formed, generator

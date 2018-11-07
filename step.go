@@ -1,8 +1,14 @@
 package genny
 
 import (
+	"bytes"
+	"crypto/sha1"
+	"fmt"
 	"io"
+	"os"
+	"runtime"
 	"sync"
+	"time"
 
 	"github.com/gobuffalo/events"
 	"github.com/markbates/safe"
@@ -46,7 +52,26 @@ func (s *Step) After(g *Generator) DeleteFn {
 }
 
 func (s *Step) Run(r *Runner) error {
-	g := s.as
+	for _, b := range s.before {
+		if err := s.runGenerator(r, b); err != nil {
+			return errors.WithStack(err)
+		}
+	}
+
+	if err := s.runGenerator(r, s.as); err != nil {
+		return errors.WithStack(err)
+	}
+
+	for _, b := range s.after {
+		if err := s.runGenerator(r, b); err != nil {
+			return errors.WithStack(err)
+		}
+	}
+
+	return nil
+}
+
+func (s *Step) runGenerator(r *Runner, g *Generator) error {
 	r.curGen = g
 
 	payload := events.Payload{
@@ -92,4 +117,19 @@ func NewStep(g *Generator, index int) (*Step, error) {
 		index: index,
 		moot:  &sync.RWMutex{},
 	}, nil
+}
+
+func stepName() string {
+	bb := &bytes.Buffer{}
+	for i := 0; i < 5; i++ {
+		_, file, line, _ := runtime.Caller(i)
+		mod := time.Now()
+		if info, err := os.Stat(file); err == nil {
+			mod = info.ModTime()
+		}
+		bb.WriteString(fmt.Sprintf("%s:%d:%d\n", file, line, mod.UnixNano()))
+	}
+	h := sha1.New()
+	h.Write(bb.Bytes())
+	return fmt.Sprintf("%x", h.Sum(nil))[:8]
 }
