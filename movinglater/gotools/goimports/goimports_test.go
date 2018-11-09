@@ -24,15 +24,15 @@ func Test_processFile(t *testing.T) {
 const tmpl = `package foo
 
 func init() {
-	packr.NewBox("")
+	fmt.Println("foo")
 }
 `
 
 const actual = `package foo
 
-import "github.com/gobuffalo/packr"
+import "fmt"
 
 func init() {
-	packr.NewBox("")
+	fmt.Println("foo")
 }
 `
