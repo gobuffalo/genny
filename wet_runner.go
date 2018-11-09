@@ -73,6 +73,13 @@ func wetExecFn(cmd *exec.Cmd) error {
 }
 
 func wetFileFn(r *Runner, f File) (File, error) {
+	if d, ok := f.(Dir); ok {
+		if err := os.MkdirAll(d.Name(), d.Perm); err != nil {
+			return f, errors.WithStack(err)
+		}
+		return d, nil
+	}
+
 	name := f.Name()
 	if !filepath.IsAbs(name) {
 		name = filepath.Join(r.Root, name)
