@@ -5,8 +5,8 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"io"
-	"os"
-	"runtime"
+	"math/rand"
+	"strconv"
 	"sync"
 	"time"
 
@@ -26,7 +26,6 @@ type Step struct {
 }
 
 func (s *Step) Before(g *Generator) DeleteFn {
-	s.moot.Lock()
 	df := func() {
 		var a []*Generator
 		s.moot.Lock()
@@ -39,13 +38,13 @@ func (s *Step) Before(g *Generator) DeleteFn {
 		s.before = a
 		s.moot.Unlock()
 	}
+	s.moot.Lock()
 	s.before = append(s.before, g)
 	s.moot.Unlock()
 	return df
 }
 
 func (s *Step) After(g *Generator) DeleteFn {
-	s.moot.Lock()
 	df := func() {
 		var a []*Generator
 		s.moot.Lock()
@@ -58,6 +57,7 @@ func (s *Step) After(g *Generator) DeleteFn {
 		s.after = a
 		s.moot.Unlock()
 	}
+	s.moot.Lock()
 	s.after = append(s.after, g)
 	s.moot.Unlock()
 	return df
@@ -131,17 +131,15 @@ func NewStep(g *Generator, index int) (*Step, error) {
 	}, nil
 }
 
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
 func stepName() string {
 	bb := &bytes.Buffer{}
-	for i := 0; i < 5; i++ {
-		_, file, line, _ := runtime.Caller(i)
-		mod := time.Now()
-		if info, err := os.Stat(file); err == nil {
-			mod = info.ModTime()
-		}
-		bb.WriteString(fmt.Sprintf("%s:%d:%d\n", file, line, mod.UnixNano()))
-	}
 	bb.WriteString(fmt.Sprint(time.Now().UnixNano()))
+	bb.WriteString(strconv.Itoa(rand.Int()))
+	bb.WriteString(strconv.Itoa(rand.Int()))
 	h := sha1.New()
 	h.Write(bb.Bytes())
 	return fmt.Sprintf("%x", h.Sum(nil))[:8]

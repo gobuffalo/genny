@@ -56,17 +56,20 @@ func (r Runner) processFile(file File) error {
 	var err error
 	if file.In == nil {
 		src, err = ioutil.ReadFile(file.Name)
-		if err != nil {
-			return errors.WithStack(err)
-		}
 	} else {
 		src, err = ioutil.ReadAll(file.In)
+	}
+	if err != nil {
+		return errors.WithStack(err)
 	}
 	res, err := imports.Process(file.Name, src, nil)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 	if bytes.Equal(src, res) {
+		if s, ok := file.In.(io.Seeker); ok {
+			s.Seek(0, 0)
+		}
 		return nil
 	}
 	if file.Out == nil {
@@ -76,6 +79,9 @@ func (r Runner) processFile(file File) error {
 		return nil
 	}
 	_, err = file.Out.Write(res)
+	if c, ok := file.Out.(io.Closer); ok {
+		c.Close()
+	}
 	return err
 }
 
