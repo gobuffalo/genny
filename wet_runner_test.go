@@ -53,7 +53,7 @@ func Test_WetRunner(t *testing.T) {
 	r.NoError(err)
 	r.Equal("foo!", string(b))
 
-	_, err = res.Find(dp)
+	_, err = res.Find("a/b/c")
 	r.NoError(err)
 
 	_, err = os.Stat(filepath.Join(run.Root, dp))
