@@ -36,7 +36,7 @@ func Test_WetRunner(t *testing.T) {
 	c := res.Commands[0]
 	r.Equal("echo hello", strings.Join(c.Args, " "))
 
-	expected := []string{dp, "foo.txt"}
+	expected := []string{"a/b/c", "foo.txt"}
 
 	for i, f := range res.Files {
 		r.Equal(expected[i], f.Name())
