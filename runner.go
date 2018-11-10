@@ -200,7 +200,14 @@ func (r *Runner) File(f File) error {
 	if !filepath.IsAbs(name) {
 		name = filepath.Join(r.Root, name)
 	}
-	r.Logger.Debug("File: ", name)
+
+	_, isDir := f.(Dir)
+	if isDir {
+		r.Logger.Debug("Dir: ", name)
+	} else {
+		r.Logger.Debug("File: ", name)
+	}
+
 	if r.FileFn != nil {
 		err := safe.RunE(func() error {
 			var e error

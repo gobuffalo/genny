@@ -1,7 +1,0 @@
-package models
-
-type <%= model.Name.Model() %> struct {
-  <%= for (a) in model.Attrs { %>
-  <%= a.Name.Camel() %> <%= a.GoType() %>
-  <% } %>
-}
