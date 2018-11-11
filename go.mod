@@ -2,10 +2,10 @@ module github.com/gobuffalo/genny
 
 require (
 	github.com/gobuffalo/envy v1.6.8
-	github.com/gobuffalo/events v1.1.6
+	github.com/gobuffalo/events v1.1.7
 	github.com/gobuffalo/flect v0.0.0-20181109221320-179d36177b5b
 	github.com/gobuffalo/logger v0.0.0-20181109185836-3feeab578c17
-	github.com/gobuffalo/packd v0.0.0-20181111192404-28ebe6889d82
+	github.com/gobuffalo/packd v0.0.0-20181111195323-b2e760a5f0ff
 	github.com/gobuffalo/packr v1.19.0
 	github.com/gobuffalo/plush v3.7.22+incompatible
 	github.com/markbates/inflect v1.0.4 // indirect
