@@ -9,7 +9,7 @@ import (
 func Tidy(path string, verbose bool) (*genny.Generator, error) {
 	g := genny.New()
 	g.RunFn(func(r *genny.Runner) error {
-		if !modsOn {
+		if !On() {
 			return nil
 		}
 		return r.Chdir(path, func() error {
