@@ -63,7 +63,7 @@ func (r Runner) processFile(file File) error {
 		return errors.WithStack(err)
 	}
 	res, err := imports.Process(file.Name, src, nil)
-	if err != nil {
+	if err != nil && err != io.EOF {
 		return errors.WithStack(err)
 	}
 	if bytes.Equal(src, res) {
