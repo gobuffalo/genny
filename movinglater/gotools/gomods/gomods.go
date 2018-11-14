@@ -12,10 +12,10 @@ var ErrModsOff = errors.New("go mods are turned off")
 
 func Force(b bool) {
 	if b {
-		envy.Set(ENV, "on")
+		envy.MustSet(ENV, "on")
 		return
 	}
-	envy.Set(ENV, "off")
+	envy.MustSet(ENV, "off")
 }
 
 func On() bool {
@@ -23,10 +23,10 @@ func On() bool {
 }
 
 func Disable(fn func() error) error {
-	var err error
-	envy.Temp(func() {
-		envy.MustSet(ENV, "off")
-		err = safe.RunE(fn)
-	})
+	oe := envy.Get(ENV, "off")
+	envy.MustSet(ENV, "off")
+
+	err := safe.RunE(fn)
+	envy.MustSet(ENV, oe)
 	return err
 }

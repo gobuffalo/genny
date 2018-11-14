@@ -1,7 +1,7 @@
 module github.com/gobuffalo/genny
 
 require (
-	github.com/gobuffalo/envy v1.6.8
+	github.com/gobuffalo/envy v1.6.9
 	github.com/gobuffalo/events v1.1.7
 	github.com/gobuffalo/flect v0.0.0-20181114183036-47375f6d8328
 	github.com/gobuffalo/logger v0.0.0-20181109185836-3feeab578c17
