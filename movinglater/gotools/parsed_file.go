@@ -6,6 +6,7 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -36,7 +37,7 @@ func ParseFileMode(gf genny.File, mode parser.Mode) (ParsedFile, error) {
 
 	src := gf.String()
 	f, err := parser.ParseFile(pf.FileSet, gf.Name(), src, mode)
-	if err != nil {
+	if err != nil && errors.Cause(err) != io.EOF {
 		return pf, errors.WithStack(err)
 	}
 	pf.Ast = f
