@@ -58,12 +58,15 @@ func Force(path string, force bool) RunFn {
 		if err != nil {
 			return errors.WithStack(err)
 		}
-		_, err = os.Stat(path)
+		fi, err := os.Stat(path)
 		if err != nil {
 			// path doesn't exist. move on.
 			return nil
 		}
 		if !force {
+			if !fi.IsDir() {
+				return errors.Errorf("path %s already exists", path)
+			}
 			files, err := ioutil.ReadDir(path)
 			if err != nil {
 				return errors.WithStack(err)
