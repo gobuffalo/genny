@@ -1,6 +1,7 @@
 package genny
 
 import (
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -63,7 +64,13 @@ func Force(path string, force bool) RunFn {
 			return nil
 		}
 		if !force {
-			return errors.Errorf("path %s already exists", path)
+			files, err := ioutil.ReadDir(path)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+			if len(files) > 0 {
+				return errors.Errorf("path %s already exists", path)
+			}
 		}
 		if err := os.RemoveAll(path); err != nil {
 			return errors.WithStack(err)
