@@ -74,6 +74,7 @@ func Force(path string, force bool) RunFn {
 			if len(files) > 0 {
 				return errors.Errorf("path %s already exists", path)
 			}
+			return nil
 		}
 		if err := os.RemoveAll(path); err != nil {
 			return errors.WithStack(err)
