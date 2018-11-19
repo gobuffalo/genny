@@ -59,15 +59,9 @@ func Test_New_With_Modules(t *testing.T) {
 				path: strings.ToLower(src),
 				mod:  "coke",
 			})
-
 			table = append(table, ts{
 				name: "",
 				path: filepath.Join(src, "github.com", "gobuffalo", "coke"),
-				mod:  "github.com/gobuffalo/coke",
-			})
-			table = append(table, ts{
-				name: "",
-				path: strings.ToLower(filepath.Join(src, "github.com", "gobuffalo", "coke")),
 				mod:  "github.com/gobuffalo/coke",
 			})
 		}
@@ -88,7 +82,11 @@ func Test_New_With_Modules(t *testing.T) {
 				r.Len(res.Commands, 2)
 
 				c := res.Commands[0]
-				r.Equal([]string{genny.GoBin(), "mod", "init", tt.mod}, c.Args)
+				args := []string{genny.GoBin(), "mod", "init"}
+				if len(tt.mod) > 0 {
+					args = append(args, tt.mod)
+				}
+				r.Equal(args, c.Args)
 
 				c = res.Commands[1]
 				r.Equal([]string{genny.GoBin(), "mod", "tidy"}, c.Args)

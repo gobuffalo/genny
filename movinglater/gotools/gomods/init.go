@@ -37,10 +37,9 @@ func Init(name string, path string) (*genny.Generator, error) {
 	}
 
 	if len(name) == 0 && path != "." {
-		name = strings.ToLower(path)
+		name = path
 		c := build.Default
 		for _, s := range c.SrcDirs() {
-			s = strings.ToLower(s)
 			name = strings.TrimPrefix(name, s)
 		}
 	}
@@ -54,7 +53,11 @@ func Init(name string, path string) (*genny.Generator, error) {
 			return nil
 		}
 		return r.Chdir(path, func() error {
-			cmd := exec.Command(genny.GoBin(), "mod", "init", name)
+			args := []string{"mod", "init"}
+			if len(name) > 0 {
+				args = append(args, name)
+			}
+			cmd := exec.Command(genny.GoBin(), args...)
 			return r.Exec(cmd)
 		})
 	})
