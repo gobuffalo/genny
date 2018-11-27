@@ -6,7 +6,7 @@ import (
 	"github.com/gobuffalo/flect/name"
 	"github.com/gobuffalo/genny"
 	"github.com/gobuffalo/genny/movinglater/plushgen"
-	"github.com/gobuffalo/packr"
+	"github.com/gobuffalo/packr/v2"
 	"github.com/gobuffalo/plush"
 	"github.com/pkg/errors"
 )
@@ -18,7 +18,7 @@ func New(opts *Options) (*genny.Generator, error) {
 		return g, errors.WithStack(err)
 	}
 
-	if err := g.Box(packr.NewBox("../new/templates")); err != nil {
+	if err := g.Box(packr.New("genny:new", "../new/templates")); err != nil {
 		return g, errors.WithStack(err)
 	}
 	name := name.New(opts.Name)
