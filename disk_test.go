@@ -1,20 +1,21 @@
-package genny
+package genny_test
 
 import (
 	"context"
 	"io/ioutil"
 	"testing"
 
-	"github.com/gobuffalo/packr"
+	"github.com/gobuffalo/genny"
+	"github.com/gobuffalo/packr/v2"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_Disk_Files(t *testing.T) {
 	r := require.New(t)
-	run := DryRunner(context.Background())
+	run := genny.DryRunner(context.Background())
 	d := run.Disk
-	d.Add(NewFile("foo.txt", nil))
-	d.Add(NewFile("bar.txt", nil))
+	d.Add(genny.NewFile("foo.txt", nil))
+	d.Add(genny.NewFile("bar.txt", nil))
 
 	files := d.Files()
 	r.Len(files, 2)
@@ -24,10 +25,10 @@ func Test_Disk_Files(t *testing.T) {
 
 func Test_Disk_Remove(t *testing.T) {
 	r := require.New(t)
-	run := DryRunner(context.Background())
+	run := genny.DryRunner(context.Background())
 	d := run.Disk
-	d.Add(NewFile("foo.txt", nil))
-	d.Add(NewFile("bar.txt", nil))
+	d.Add(genny.NewFile("foo.txt", nil))
+	d.Add(genny.NewFile("bar.txt", nil))
 	d.Remove("foo.txt")
 
 	files := d.Files()
@@ -37,10 +38,10 @@ func Test_Disk_Remove(t *testing.T) {
 
 func Test_Disk_Delete(t *testing.T) {
 	r := require.New(t)
-	run := DryRunner(context.Background())
+	run := genny.DryRunner(context.Background())
 	d := run.Disk
-	d.Add(NewFile("foo.txt", nil))
-	d.Add(NewFile("bar.txt", nil))
+	d.Add(genny.NewFile("foo.txt", nil))
+	d.Add(genny.NewFile("bar.txt", nil))
 	d.Delete("foo.txt")
 
 	files := d.Files()
@@ -51,10 +52,10 @@ func Test_Disk_Delete(t *testing.T) {
 func Test_Disk_Find(t *testing.T) {
 	r := require.New(t)
 
-	run := DryRunner(context.Background())
+	run := genny.DryRunner(context.Background())
 	d := run.Disk
-	d.Add(NewFile("foo.txt", nil))
-	d.Add(NewFile("foo.txt", nil))
+	d.Add(genny.NewFile("foo.txt", nil))
+	d.Add(genny.NewFile("foo.txt", nil))
 
 	f, err := d.Find("foo.txt")
 	r.NoError(err)
@@ -64,7 +65,7 @@ func Test_Disk_Find(t *testing.T) {
 func Test_Disk_Find_FromDisk(t *testing.T) {
 	r := require.New(t)
 
-	run := DryRunner(context.Background())
+	run := genny.DryRunner(context.Background())
 
 	d := run.Disk
 	f, err := d.Find("fixtures/foo.txt")
@@ -82,7 +83,7 @@ func Test_Disk_Find_FromDisk(t *testing.T) {
 func Test_Disk_FindFile_DoesntExist(t *testing.T) {
 	r := require.New(t)
 
-	run := DryRunner(context.Background())
+	run := genny.DryRunner(context.Background())
 
 	_, err := run.Disk.Find("idontexist")
 	r.Error(err)
@@ -91,9 +92,9 @@ func Test_Disk_FindFile_DoesntExist(t *testing.T) {
 func Test_Disk_AddBox(t *testing.T) {
 	r := require.New(t)
 
-	box := packr.NewBox("./fixtures")
+	box := packr.New("./fixtures", "./fixtures")
 
-	run := DryRunner(context.Background())
+	run := genny.DryRunner(context.Background())
 	d := run.Disk
 	err := d.AddBox(box)
 	r.NoError(err)
