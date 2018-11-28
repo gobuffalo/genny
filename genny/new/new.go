@@ -1,8 +1,10 @@
 package new
 
 import (
+	"path"
 	"path/filepath"
 
+	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/flect/name"
 	"github.com/gobuffalo/genny"
 	"github.com/gobuffalo/packr/v2"
@@ -24,6 +26,11 @@ func New(opts *Options) (*genny.Generator, error) {
 	name := name.New(opts.Name)
 	ctx := plush.NewContext()
 	ctx.Set("name", name)
+	pkg, err := envy.CurrentModule()
+	if err != nil {
+		return g, errors.WithStack(err)
+	}
+	ctx.Set("boxName", path.Join(pkg, opts.Prefix, opts.Name))
 	g.Transformer(plushgen.Transformer(ctx))
 	g.Transformer(genny.Replace("-name-", name.File().String()))
 	g.Transformer(genny.Dot())
