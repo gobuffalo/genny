@@ -25,7 +25,7 @@ var _ = func() error {
 	g.DefaultResolver = hgr
 
 	func() {
-		b := packr.New("genny:new", "../new/templates")
+		b := packr.New("genny:genny:new", "../new/templates")
 		b.SetResolver("-name-/-name-.go.plush", packr.Pointer{ForwardBox: gk, ForwardPath: "bb890f3a8aa56c497012afb45b9738ad"})
 		b.SetResolver("-name-/-name-_test.go.plush", packr.Pointer{ForwardBox: gk, ForwardPath: "be63988dd6aff95c2a1ff130f81faee9"})
 		b.SetResolver("-name-/options.go.plush", packr.Pointer{ForwardBox: gk, ForwardPath: "56a843f683c28af8d3acb35582da637c"})

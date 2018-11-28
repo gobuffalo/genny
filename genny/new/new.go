@@ -18,7 +18,7 @@ func New(opts *Options) (*genny.Generator, error) {
 		return g, errors.WithStack(err)
 	}
 
-	if err := g.Box(packr.New("genny:new", "../new/templates")); err != nil {
+	if err := g.Box(packr.New("genny:genny:new", "../new/templates")); err != nil {
 		return g, errors.WithStack(err)
 	}
 	name := name.New(opts.Name)
