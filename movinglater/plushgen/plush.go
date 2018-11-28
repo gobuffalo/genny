@@ -1,27 +1,13 @@
 package plushgen
 
 import (
-	"io/ioutil"
-	"strings"
-
-	"github.com/gobuffalo/genny"
-	"github.com/gobuffalo/plush"
-	"github.com/pkg/errors"
+	"github.com/gobuffalo/plushgen"
+	"github.com/markbates/oncer"
 )
 
-// Transformer will plushify any file that has a ".plush" extension
-func Transformer(ctx *plush.Context) genny.Transformer {
-	t := genny.NewTransformer(".plush", func(f genny.File) (genny.File, error) {
-		b, err := ioutil.ReadAll(f)
-		if err != nil {
-			return f, errors.WithStack(err)
-		}
-		s, err := plush.Render(string(b), ctx)
-		if err != nil {
-			return f, errors.WithStack(err)
-		}
-		return genny.NewFile(f.Name(), strings.NewReader(s)), nil
-	})
-	t.StripExt = true
-	return t
+func init() {
+	oncer.Deprecate(0, "github.com/gobuffalo/genny/movinglater/plushgen", "Use github.com/gobuffalo/plushgen instead.")
 }
+
+// Transformer will plushify any file that has a ".plush" extension
+var Transformer = plushgen.Transformer
