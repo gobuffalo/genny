@@ -89,3 +89,11 @@ func commonType(s string) string {
 
 //Attrs is a slice of Attr
 type Attrs []Attr
+
+func (ats Attrs) Slice() []string {
+	var x []string
+	for _, a := range ats {
+		x = append(x, a.Original)
+	}
+	return x
+}
