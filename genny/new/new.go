@@ -24,6 +24,7 @@ func New(opts *Options) (*genny.Generator, error) {
 	name := name.New(opts.Name)
 	ctx := plush.NewContext()
 	ctx.Set("name", name)
+	ctx.Set("boxName", opts.BoxName)
 	g.Transformer(plushgen.Transformer(ctx))
 	g.Transformer(genny.Replace("-name-", name.File().String()))
 	g.Transformer(genny.Dot())
