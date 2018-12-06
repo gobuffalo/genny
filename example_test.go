@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go/build"
 	"log"
+	"os/exec"
 	"strings"
 
 	"github.com/gobuffalo/genny"
@@ -34,7 +35,33 @@ func exampleLogger(l *gentest.Logger) genny.Logger {
 	return l
 }
 
-func ExampleGenerator() {
+func ExampleGenerator_withCommand() {
+	// create a new `*genny.Generator`
+	g := genny.New()
+
+	g.Command(exec.Command("go", "version"))
+
+	// create a new `*genny.Runner`
+	r := genny.DryRunner(context.Background())
+
+	// add a new logger to clean and dump output
+	// for the example tests
+	r.Logger = exampleLogger(gentest.NewLogger())
+
+	// add the generator to the `*genny.Runner`.
+	r.With(g)
+
+	// run the runner
+	if err := r.Run(); err != nil {
+		log.Fatal(err)
+	}
+	// Output:
+	// [DEBU] Step: 1
+	// [DEBU] Chdir: /go/src/github.com/gobuffalo/genny
+	// [DEBU] Exec: go version
+}
+
+func ExampleGenerator_withFile() {
 	// create a new `*genny.Generator`
 	g := genny.New()
 
