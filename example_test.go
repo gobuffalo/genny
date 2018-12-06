@@ -42,7 +42,7 @@ func ExampleGenerator_withCommand() {
 	g.Command(exec.Command("go", "version"))
 
 	// create a new `*genny.Runner`
-	r := genny.DryRunner(context.Background())
+	r := genny.NewRunner(context.Background())
 
 	// add a new logger to clean and dump output
 	// for the example tests
@@ -70,7 +70,7 @@ func ExampleGenerator_withFile() {
 	g.File(genny.NewFileS("index.html", "Hello\n"))
 
 	// create a new `*genny.Runner`
-	r := genny.DryRunner(context.Background())
+	r := genny.NewRunner(context.Background())
 
 	// add a new logger to clean and dump output
 	// for the example tests
