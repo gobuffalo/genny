@@ -38,6 +38,7 @@ type Logger struct {
 	moot    *sync.Mutex
 }
 
+// Close ...
 func (l *Logger) Close() error {
 	if l.CloseFn == nil {
 		return nil
