@@ -8,6 +8,7 @@ import (
 	"github.com/gobuffalo/genny/movinglater/gotools"
 )
 
+// New ...
 func New() *genny.Generator {
 	g := genny.New()
 
