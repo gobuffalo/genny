@@ -17,21 +17,26 @@ import (
 func do(fn func(r *genny.Runner)) {
 	run := genny.DryRunner(context.Background())
 	l := gentest.NewLogger()
+	l.CloseFn = func() error {
+		s := l.Stream.String()
+		c := build.Default
+		for _, src := range c.SrcDirs() {
+			s = strings.Replace(s, src, "/go/src", -1)
+		}
+		s = strings.Replace(s, "\\", "/", -1)
+
+		for i, line := range strings.Split(s, "\n") {
+			if strings.Contains(line, "Step:") {
+				s = strings.Replace(s, line, fmt.Sprintf("[DEBU] Step: %d", i+1), 1)
+			}
+		}
+		fmt.Print(s)
+		return nil
+	}
+
 	run.Logger = l
 	fn(run)
 
-	s := l.Stream.String()
-	c := build.Default
-	for _, src := range c.SrcDirs() {
-		s = strings.Replace(s, src, "/go/src", -1)
-	}
-
-	for i, line := range strings.Split(s, "\n") {
-		if strings.Contains(line, "Step:") {
-			s = strings.Replace(s, line, fmt.Sprintf("[DEBU] Step: %d", i+1), 1)
-		}
-	}
-	fmt.Print(s)
 }
 
 func ExampleGenerator() {

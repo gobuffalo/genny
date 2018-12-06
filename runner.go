@@ -143,6 +143,9 @@ func (r *Runner) FindStep(name string) (*Step, error) {
 }
 
 func (r *Runner) Run() error {
+	if f, ok := r.Logger.(io.Closer); ok {
+		defer f.Close()
+	}
 	steps := r.Steps()
 
 	payload := events.Payload{
