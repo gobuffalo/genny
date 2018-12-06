@@ -110,14 +110,14 @@ Use the [`github.com/gobuffalo/genny#WetRunner`](https://godoc.org/github.com/go
 
 ```go
 func main() {
-	run := genny.WetRunner(context.Background())
+  run := genny.WetRunner(context.Background())
 
-	g := simple.New()
-	run.With(g)
+  g := simple.New()
+  run.With(g)
 
-	if err := run.Run(); err != nil {
-		log.Fatal(err)
-	}
+  if err := run.Run(); err != nil {
+    log.Fatal(err)
+  }
 }
 ```
 

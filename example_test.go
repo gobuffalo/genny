@@ -88,3 +88,20 @@ func ExampleGenerator_withFile() {
 	// [DEBU] Chdir: /go/src/github.com/gobuffalo/genny
 	// [DEBU] File: /go/src/github.com/gobuffalo/genny/index.html
 }
+
+func ExampleRunner() {
+	// create a new `*genny.Runner`
+	r := genny.NewRunner(context.Background())
+
+	// add a new logger to clean and dump output
+	// for the example tests
+	r.Logger = exampleLogger(gentest.NewLogger())
+
+	// add the generator(s) to the `*genny.Runner`.
+	// r.With(g)
+
+	// run the runner
+	if err := r.Run(); err != nil {
+		log.Fatal(err)
+	}
+}
