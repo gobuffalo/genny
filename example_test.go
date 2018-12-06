@@ -11,12 +11,10 @@ import (
 	"github.com/gobuffalo/genny/gentest"
 )
 
-// do just cleans up variable log content
+// exampleLogger just cleans up variable log content
 // such as GOPATH, step names, etc....
 // without this Go Example tests won't work.
-func do(fn func(r *genny.Runner)) {
-	run := genny.DryRunner(context.Background())
-	l := gentest.NewLogger()
+func exampleLogger(l *gentest.Logger) genny.Logger {
 	l.CloseFn = func() error {
 		s := l.Stream.String()
 		c := build.Default
@@ -33,29 +31,31 @@ func do(fn func(r *genny.Runner)) {
 		fmt.Print(s)
 		return nil
 	}
-
-	run.Logger = l
-	fn(run)
-
+	return l
 }
 
 func ExampleGenerator() {
-	do(func(r *genny.Runner) {
-		// create a new `*genny.Generator`
-		g := genny.New()
+	// create a new `*genny.Generator`
+	g := genny.New()
 
-		// add a file named `index.html` that has a body of `Hello\n`
-		// to the generator
-		g.File(genny.NewFileS("index.html", "Hello\n"))
+	// add a file named `index.html` that has a body of `Hello\n`
+	// to the generator
+	g.File(genny.NewFileS("index.html", "Hello\n"))
 
-		// add the generator to the `*genny.Runner`.
-		r.With(g)
+	// create a new `*genny.Runner`
+	r := genny.DryRunner(context.Background())
 
-		// run the runner
-		if err := r.Run(); err != nil {
-			log.Fatal(err)
-		}
-	})
+	// add a new logger to clean and dump output
+	// for the example tests
+	r.Logger = exampleLogger(gentest.NewLogger())
+
+	// add the generator to the `*genny.Runner`.
+	r.With(g)
+
+	// run the runner
+	if err := r.Run(); err != nil {
+		log.Fatal(err)
+	}
 	// Output:
 	// [DEBU] Step: 1
 	// [DEBU] Chdir: /go/src/github.com/gobuffalo/genny
