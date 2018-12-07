@@ -7,6 +7,7 @@ import (
 	"github.com/gobuffalo/genny"
 )
 
+// CompareFiles ...
 func CompareFiles(exp []string, act []genny.File) error {
 	if len(exp) != len(act) {
 		return fmt.Errorf("len(exp) != len(act) [%d != %d]", len(exp), len(act))
