@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// CompareCommands ...
 func CompareCommands(exp []string, act []*exec.Cmd) error {
 	if len(exp) != len(act) {
 		return fmt.Errorf("len(exp) != len(act) [%d != %d]", len(exp), len(act))
