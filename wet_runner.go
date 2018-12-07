@@ -1,7 +1,6 @@
 package genny
 
 import (
-	"bytes"
 	"context"
 	"io"
 	"net/http"
@@ -93,10 +92,8 @@ func wetFileFn(r *Runner, f File) (File, error) {
 		return f, errors.WithStack(err)
 	}
 	defer ff.Close()
-	bb := &bytes.Buffer{}
-	mw := io.MultiWriter(bb, ff)
-	if _, err := io.Copy(mw, f); err != nil {
+	if _, err := io.Copy(ff, f); err != nil {
 		return f, errors.WithStack(err)
 	}
-	return NewFile(f.Name(), bb), nil
+	return f, nil
 }

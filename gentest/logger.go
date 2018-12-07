@@ -34,7 +34,16 @@ type Logger struct {
 	Stream  *bytes.Buffer
 	Log     map[string][]string
 	PrintFn func(...interface{})
+	CloseFn func() error
 	moot    *sync.Mutex
+}
+
+// Close ...
+func (l *Logger) Close() error {
+	if l.CloseFn == nil {
+		return nil
+	}
+	return l.CloseFn()
 }
 
 func (l *Logger) logf(lvl string, s string, args ...interface{}) {
