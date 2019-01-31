@@ -6,7 +6,11 @@ import (
 	"strings"
 )
 
-// CompareCommands ...
+// CompareCommands asserts that the expected commands match the actual commands
+// executed. The expected commands should be the commands, with arguments, as
+// you would type them on the command line. In typical usage, the actual
+// commands can be extracted from a genny#Generator.Results under the Commands
+// key
 func CompareCommands(exp []string, act []*exec.Cmd) error {
 	if len(exp) != len(act) {
 		return fmt.Errorf("len(exp) != len(act) [%d != %d]", len(exp), len(act))

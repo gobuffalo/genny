@@ -14,12 +14,12 @@ func NewRunner() *genny.Runner {
 	return r
 }
 
-// Run the generator and return results or an error
+// Run executes the generator and returns results or an error
 func Run(g *genny.Generator) (genny.Results, error) {
 	return RunNew(g, nil)
 }
 
-// RunNew the generator and return results or an error
+// RunNew executes the generator and returns results or an error
 func RunNew(g *genny.Generator, err error) (genny.Results, error) {
 	if err != nil {
 		return genny.Results{}, errors.WithStack(err)
