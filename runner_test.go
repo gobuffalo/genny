@@ -2,6 +2,7 @@ package genny
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -145,4 +146,31 @@ func Test_Runner_FindStep(t *testing.T) {
 	s, err := run.FindStep("step 2")
 	r.NoError(err)
 	r.NotZero(s)
+}
+
+func Test_Runner_ReplaceStep(t *testing.T) {
+	r := require.New(t)
+
+	run := DryRunner(context.Background())
+
+	for i := 0; i < 3; i++ {
+		g := New()
+		g.File(NewFileS(fmt.Sprintf("%d.txt", i), strconv.Itoa(i)))
+		s, err := NewStep(g, i)
+		r.NoError(err)
+		run.WithStep("step "+strconv.Itoa(i), s)
+	}
+
+	gx := New()
+	gx.File(NewFileS("2.txt", "replaced"))
+	s, err := NewStep(gx, 0)
+	r.NoError(err)
+	err = run.ReplaceStep("step 2", s)
+	r.NoError(err)
+
+	r.NoError(run.Run())
+	res := run.Results()
+	f, err := res.Find("2.txt")
+	r.NoError(err)
+	r.Equal("replaced", f.String())
 }
