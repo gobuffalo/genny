@@ -19,7 +19,7 @@ func CompareCommands(exp []string, act []*exec.Cmd) error {
 		e := exp[i]
 		a := strings.Join(c.Args, " ")
 		if a != e {
-			return fmt.Errorf("expect %q got %q", a, e)
+			return fmt.Errorf("expect %q got %q", e, a)
 		}
 	}
 	return nil
