@@ -7,7 +7,10 @@ import (
 	"github.com/gobuffalo/genny"
 )
 
-// CompareFiles ...
+// CompareFiles compares a slice of expected filenames to a slice of
+// genny.Files. Expected files can be listed in any order. An excellent choice
+// for the actual files can be found in genny#Generator.Results under the Files
+// attribute
 func CompareFiles(exp []string, act []genny.File) error {
 	if len(exp) != len(act) {
 		return fmt.Errorf("len(exp) != len(act) [%d != %d]", len(exp), len(act))
