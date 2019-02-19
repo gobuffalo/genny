@@ -1,4 +1,4 @@
-package <%= name.Package() %>
+package {{ .name.Package }}
 
 import (
   "github.com/gobuffalo/genny"
@@ -15,7 +15,7 @@ func New(opts *Options) (*genny.Generator, error) {
     return g, errors.WithStack(err)
   }
 
-  if err := g.Box(packr.New("<%= boxName %>", "../<%= name.File() %>/templates")); err != nil {
+  if err := g.Box(packr.New("{{ .boxName }}", "../{{ .name.File }}/templates")); err != nil {
     return g, errors.WithStack(err)
   }
   ctx := plush.NewContext()

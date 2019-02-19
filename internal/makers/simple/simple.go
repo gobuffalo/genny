@@ -5,7 +5,7 @@ import (
 	"os/exec"
 
 	"github.com/gobuffalo/genny"
-	"github.com/gobuffalo/genny/movinglater/gotools"
+	"github.com/gobuffalo/gogen"
 )
 
 // New ...
@@ -23,7 +23,8 @@ func New() *genny.Generator {
 		// look for the `genny` executable
 		if _, err := r.LookPath("genny"); err != nil {
 			// it wasn't found, so install it
-			if err := gotools.Get("github.com/gobuffalo/genny/genny")(r); err != nil {
+			c := gogen.Get("github.com/gobuffalo/genny/genny")
+			if err := r.Exec(c); err != nil {
 				return err
 			}
 		}
