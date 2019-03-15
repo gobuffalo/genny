@@ -12,7 +12,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/gobuffalo/events"
 	"github.com/markbates/oncer"
 	"github.com/markbates/safe"
 	"github.com/pkg/errors"
@@ -157,24 +156,24 @@ func (r *Runner) Run() error {
 	}
 	steps := r.Steps()
 
-	payload := events.Payload{
-		"runner": r,
-		"steps":  steps,
-	}
+	// payload := events.Payload{
+	// 	"runner": r,
+	// 	"steps":  steps,
+	// }
 
-	events.EmitPayload(EvtStarted, payload)
+	// events.EmitPayload(EvtStarted, payload)
 
 	for _, step := range steps {
 		if err := step.Run(r); err != nil {
-			payload = events.Payload{
-				"runner": r,
-				"step":   step,
-			}
-			events.EmitError(EvtFinishedErr, err, payload)
+			// payload = events.Payload{
+			// 	"runner": r,
+			// 	"step":   step,
+			// }
+			// events.EmitError(EvtFinishedErr, err, payload)
 			return errors.WithStack(err)
 		}
 	}
-	events.EmitPayload(EvtFinished, payload)
+	// events.EmitPayload(EvtFinished, payload)
 
 	return nil
 }
