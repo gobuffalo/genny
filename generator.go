@@ -1,6 +1,7 @@
 package genny
 
 import (
+	"fmt"
 	"math/rand"
 	"os/exec"
 	"sync"
@@ -37,7 +38,9 @@ func New() *Generator {
 	return g
 }
 
+// Event has been deprecated and does nothing.
 func (g *Generator) Event(kind string, payload mapi.Mapi) {
+	fmt.Println("Events have been deprecated. Please manually trigger events if needed.")
 	// g.RunFn(func(r *Runner) error {
 	// 	return events.EmitPayload(kind, payload)
 	// })
