@@ -2,6 +2,7 @@ package gentest
 
 import (
 	"fmt"
+	"path/filepath"
 	"sort"
 	"strings"
 
@@ -37,6 +38,9 @@ func CompareFiles(exp []string, act []genny.File) error {
 // the results of a genny.Runner
 func CompareBox(exp packd.Walkable, res genny.Results) error {
 	return exp.Walk(func(path string, file packd.File) error {
+		if filepath.Base(path) == ".DS_Store" {
+			return nil
+		}
 		f, err := res.Find(path)
 		if err != nil {
 			return err
@@ -52,6 +56,9 @@ func CompareBox(exp packd.Walkable, res genny.Results) error {
 // the results of a genny.Runner by removing any whitespaces, tabs, or newlines.
 func CompareBoxStripped(exp packd.Walkable, res genny.Results) error {
 	return exp.Walk(func(path string, file packd.File) error {
+		if filepath.Base(path) == ".DS_Store" {
+			return nil
+		}
 		f, err := res.Find(path)
 		if err != nil {
 			return err

@@ -21,7 +21,7 @@ func (opts *Options) Validate() error {
 	if len(opts.BoxName) == 0 {
 		pkg, err := envy.CurrentModule()
 		if err != nil {
-			return errors.WithStack(err)
+			pkg = envy.CurrentPackage()
 		}
 		opts.BoxName = path.Join(pkg, opts.Prefix, opts.Name, "templates")
 	}

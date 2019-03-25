@@ -1,0 +1,7 @@
+package main
+
+import "<%= cmdPkg %>"
+
+func main() {
+	cmd.Execute()
+}
