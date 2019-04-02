@@ -7,24 +7,23 @@ import (
 	"github.com/gobuffalo/genny"
 	"github.com/gobuffalo/gogen"
 	"github.com/gobuffalo/packr/v2"
-	"github.com/pkg/errors"
 )
 
 func New(opts *Options) (*genny.Generator, error) {
 	g := genny.New()
 
 	if err := opts.Validate(); err != nil {
-		return g, errors.WithStack(err)
+		return g, err
 	}
 
 	if err := g.Box(packr.New("github.com/gobuffalo/genny/genny/new", "../new/templates")); err != nil {
-		return g, errors.WithStack(err)
+		return g, err
 	}
 	name := name.New(opts.Name)
 
 	ctx := map[string]interface{}{
 		"name":    name,
-		"BoxName": opts.BoxName,
+		"boxName": opts.BoxName,
 	}
 	g.Transformer(gogen.TemplateTransformer(ctx, nil))
 	g.Transformer(genny.Replace("-name-", name.File().String()))

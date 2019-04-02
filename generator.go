@@ -9,7 +9,6 @@ import (
 
 	"github.com/gobuffalo/mapi"
 	"github.com/gobuffalo/packd"
-	"github.com/pkg/errors"
 )
 
 func init() {
@@ -60,7 +59,7 @@ func (g *Generator) Transform(f File) (File, error) {
 	for _, t := range g.transformers {
 		f, err = t.Transform(f)
 		if err != nil {
-			return f, errors.WithStack(err)
+			return f, err
 		}
 	}
 
