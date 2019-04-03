@@ -5,7 +5,6 @@ import (
 
 	"github.com/gobuffalo/genny"
 	"github.com/gobuffalo/genny/genny/new"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -35,7 +34,7 @@ var newCmd = &cobra.Command{
 		opts.Name = name
 		g, err := new.New(opts)
 		if err != nil {
-			return errors.WithStack(err)
+			return err
 		}
 
 		r.With(g)

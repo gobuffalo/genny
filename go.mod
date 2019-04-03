@@ -1,7 +1,5 @@
 module github.com/gobuffalo/genny
 
-go 1.12
-
 require (
 	github.com/gobuffalo/attrs v0.0.0-20190224210810-a9411de4debd
 	github.com/gobuffalo/depgen v0.0.0-20190329151759-d478694a28d3
@@ -15,8 +13,7 @@ require (
 	github.com/gobuffalo/packr/v2 v2.0.9
 	github.com/markbates/oncer v0.0.0-20181203154359-bf2de49a0be2
 	github.com/markbates/safe v1.0.1
-	github.com/pkg/errors v0.8.1
-	github.com/sirupsen/logrus v1.4.0
+	github.com/sirupsen/logrus v1.4.1
 	github.com/spf13/cobra v0.0.3
 	github.com/stretchr/testify v1.3.0
 )

@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/gobuffalo/genny"
-	"github.com/pkg/errors"
 )
 
 // NewRunner is a dry runner with gentest.NewLogger()
@@ -22,7 +21,7 @@ func Run(g *genny.Generator) (genny.Results, error) {
 // RunNew executes the generator and returns results or an error
 func RunNew(g *genny.Generator, err error) (genny.Results, error) {
 	if err != nil {
-		return genny.Results{}, errors.WithStack(err)
+		return genny.Results{}, err
 	}
 
 	r := NewRunner()
@@ -40,7 +39,7 @@ func RunGroup(gg *genny.Group) (genny.Results, error) {
 
 func sprint(r *genny.Runner) (genny.Results, error) {
 	if err := r.Run(); err != nil {
-		return r.Results(), errors.WithStack(err)
+		return r.Results(), err
 	}
 	return r.Results(), nil
 }

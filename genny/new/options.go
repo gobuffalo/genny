@@ -1,10 +1,10 @@
 package new
 
 import (
+	"errors"
 	"path"
 
 	"github.com/gobuffalo/envy"
-	"github.com/pkg/errors"
 )
 
 type Options struct {

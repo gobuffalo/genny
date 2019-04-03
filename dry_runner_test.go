@@ -2,10 +2,10 @@ package genny
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"testing"
 
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 )
 
@@ -33,7 +33,7 @@ func Test_DryRunner_Request(t *testing.T) {
 
 			run.RequestFn = func(req *http.Request, c *http.Client) (*http.Response, error) {
 				if tt.boom {
-					return nil, errors.Errorf("error %d", tt.code)
+					return nil, fmt.Errorf("error %d", tt.code)
 				}
 				return &http.Response{StatusCode: tt.code}, nil
 			}
