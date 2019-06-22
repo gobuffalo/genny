@@ -1,11 +1,19 @@
-# github.com/gobuffalo/genny Stands on the Shoulders of Giants
+# `github.com/gobuffalo/genny` Stands on the Shoulders of Giants
 
-github.com/gobuffalo/genny does not try to reinvent the wheel! Instead, it uses the already great wheels developed by the Go community and puts them all together in the best way possible. Without these giants, this project would not be possible. Please make sure to check them out and thank them for all of their hard work.
+`github.com/gobuffalo/genny` does not try to reinvent the wheel! Instead, it uses the already great wheels developed by the Go community and puts them all together in the best way possible. Without these giants, this project would not be possible. Please make sure to check them out and thank them for all of their hard work.
 
 Thank you to the following **GIANTS**:
 
 
+* [github.com/gobuffalo/attrs](https://godoc.org/github.com/gobuffalo/attrs)
+
 * [github.com/gobuffalo/envy](https://godoc.org/github.com/gobuffalo/envy)
+
+* [github.com/gobuffalo/flect](https://godoc.org/github.com/gobuffalo/flect)
+
+* [github.com/gobuffalo/github_flavored_markdown](https://godoc.org/github.com/gobuffalo/github_flavored_markdown)
+
+* [github.com/gobuffalo/helpers](https://godoc.org/github.com/gobuffalo/helpers)
 
 * [github.com/gobuffalo/logger](https://godoc.org/github.com/gobuffalo/logger)
 
@@ -13,24 +21,18 @@ Thank you to the following **GIANTS**:
 
 * [github.com/gobuffalo/packd](https://godoc.org/github.com/gobuffalo/packd)
 
-* [github.com/gobuffalo/syncx](https://godoc.org/github.com/gobuffalo/syncx)
+* [github.com/gobuffalo/packr/v2](https://godoc.org/github.com/gobuffalo/packr/v2)
 
-* [github.com/joho/godotenv](https://godoc.org/github.com/joho/godotenv)
+* [github.com/gobuffalo/plush](https://godoc.org/github.com/gobuffalo/plush)
 
 * [github.com/markbates/oncer](https://godoc.org/github.com/markbates/oncer)
 
 * [github.com/markbates/safe](https://godoc.org/github.com/markbates/safe)
 
-* [github.com/pkg/errors](https://godoc.org/github.com/pkg/errors)
-
-* [github.com/rogpeppe/go-internal/modfile](https://godoc.org/github.com/rogpeppe/go-internal/modfile)
-
-* [github.com/rogpeppe/go-internal/module](https://godoc.org/github.com/rogpeppe/go-internal/module)
-
-* [github.com/rogpeppe/go-internal/semver](https://godoc.org/github.com/rogpeppe/go-internal/semver)
-
 * [github.com/sirupsen/logrus](https://godoc.org/github.com/sirupsen/logrus)
 
-* [golang.org/x/crypto/ssh/terminal](https://godoc.org/golang.org/x/crypto/ssh/terminal)
+* [github.com/spf13/cobra](https://godoc.org/github.com/spf13/cobra)
 
-* [golang.org/x/sys/unix](https://godoc.org/golang.org/x/sys/unix)
+* [github.com/stretchr/testify](https://godoc.org/github.com/stretchr/testify)
+
+* [golang.org/x/tools](https://godoc.org/golang.org/x/tools)

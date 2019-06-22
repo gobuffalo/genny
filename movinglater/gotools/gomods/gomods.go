@@ -4,7 +4,7 @@ This package has moved to github.com/gobuffalo/gogen/gomods
 package gomods
 
 import (
-	"github.com/gobuffalo/gogen/gomods"
+	"github.com/gobuffalo/genny/gogen/gomods"
 )
 
 const ENV = "GO111MODULE"

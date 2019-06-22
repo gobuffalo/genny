@@ -4,7 +4,7 @@ This package has moved to github.com/gobuffalo/gogen/goimports
 package goimports
 
 import (
-	"github.com/gobuffalo/gogen/goimports"
+	"github.com/gobuffalo/genny/gogen/goimports"
 )
 
 type File = goimports.File
