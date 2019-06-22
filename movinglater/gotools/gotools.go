@@ -1,6 +1,6 @@
 package gotools
 
-import "github.com/gobuffalo/gogen"
+import "github.com/gobuffalo/genny/gogen"
 
 var TemplateHelpers = gogen.TemplateHelpers
 var TemplateTransformer = gogen.TemplateTransformer

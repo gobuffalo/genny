@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/gobuffalo/genny"
-	"github.com/gobuffalo/gogen/gomods"
+	"github.com/gobuffalo/genny/gogen/gomods"
 	"github.com/stretchr/testify/require"
 )
 

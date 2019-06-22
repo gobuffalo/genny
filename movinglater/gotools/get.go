@@ -2,7 +2,7 @@ package gotools
 
 import (
 	"github.com/gobuffalo/genny"
-	"github.com/gobuffalo/gogen"
+	"github.com/gobuffalo/genny/gogen"
 )
 
 // Get is deprecated. Use github.com/gobuffalo/gogen#Get instead.
