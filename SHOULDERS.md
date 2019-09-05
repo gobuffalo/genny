@@ -5,29 +5,21 @@ github.com/gobuffalo/genny does not try to reinvent the wheel! Instead, it uses 
 Thank you to the following **GIANTS**:
 
 
-* [github.com/gobuffalo/attrs](https://godoc.org/github.com/gobuffalo/attrs)
+* [github.com/gobuffalo/clara](https://godoc.org/github.com/gobuffalo/clara)
 
 * [github.com/gobuffalo/envy](https://godoc.org/github.com/gobuffalo/envy)
 
 * [github.com/gobuffalo/flect](https://godoc.org/github.com/gobuffalo/flect)
 
-* [github.com/gobuffalo/github_flavored_markdown](https://godoc.org/github.com/gobuffalo/github_flavored_markdown)
-
 * [github.com/gobuffalo/helpers](https://godoc.org/github.com/gobuffalo/helpers)
 
 * [github.com/gobuffalo/logger](https://godoc.org/github.com/gobuffalo/logger)
-
-* [github.com/gobuffalo/mapi](https://godoc.org/github.com/gobuffalo/mapi)
 
 * [github.com/gobuffalo/packd](https://godoc.org/github.com/gobuffalo/packd)
 
 * [github.com/gobuffalo/packr/v2](https://godoc.org/github.com/gobuffalo/packr/v2)
 
 * [github.com/gobuffalo/plush](https://godoc.org/github.com/gobuffalo/plush)
-
-* [github.com/markbates/oncer](https://godoc.org/github.com/markbates/oncer)
-
-* [github.com/markbates/safe](https://godoc.org/github.com/markbates/safe)
 
 * [github.com/sirupsen/logrus](https://godoc.org/github.com/sirupsen/logrus)
 

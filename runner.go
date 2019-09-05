@@ -12,8 +12,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/markbates/oncer"
-	"github.com/markbates/safe"
+	"github.com/gobuffalo/genny/internal/takeon/github.com/markbates/oncer"
+	"github.com/gobuffalo/genny/internal/takeon/github.com/markbates/safe"
 	"github.com/sirupsen/logrus"
 )
 

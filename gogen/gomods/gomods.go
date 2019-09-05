@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/gobuffalo/envy"
-	"github.com/markbates/safe"
+	"github.com/gobuffalo/genny/internal/takeon/github.com/markbates/safe"
 )
 
 const ENV = "GO111MODULE"
