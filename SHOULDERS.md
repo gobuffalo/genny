@@ -5,8 +5,6 @@ github.com/gobuffalo/genny does not try to reinvent the wheel! Instead, it uses 
 Thank you to the following **GIANTS**:
 
 
-* [github.com/gobuffalo/clara](https://godoc.org/github.com/gobuffalo/clara)
-
 * [github.com/gobuffalo/envy](https://godoc.org/github.com/gobuffalo/envy)
 
 * [github.com/gobuffalo/flect](https://godoc.org/github.com/gobuffalo/flect)
