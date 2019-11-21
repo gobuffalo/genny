@@ -21,6 +21,8 @@ github.com/gobuffalo/github_flavored_markdown v1.1.0 h1:8Zzj4fTRl/OP2R7sGerzSf6g
 github.com/gobuffalo/github_flavored_markdown v1.1.0/go.mod h1:TSpTKWcRTI0+v7W3x8dkSKMLJSUpuVitlptCkpeY8ic=
 github.com/gobuffalo/helpers v0.4.0 h1:DR/iYihrVCXv1cYeIGSK3EZz2CljO+DqDLQPWZAod9c=
 github.com/gobuffalo/helpers v0.4.0/go.mod h1:2q/ZnVxCehM4/y1bNz3+wXsvWvWUY+iTUr7mPC6QqGQ=
+github.com/gobuffalo/here v0.4.1 h1:FrUR3cnluI+abLkk0/CizdOLHnnpLCRBgITKj8kO1nY=
+github.com/gobuffalo/here v0.4.1/go.mod h1:bTNk/uKZgycuB358iR0D32dI9kHBClBGpXjW2HVHkNo=
 github.com/gobuffalo/logger v1.0.1 h1:ZEgyRGgAm4ZAhAO45YXMs5Fp+bzGLESFewzAVBMKuTg=
 github.com/gobuffalo/logger v1.0.1/go.mod h1:2zbswyIUa45I+c+FLXuWl9zSWEiVuthsk8ze5s8JvPs=
 github.com/gobuffalo/packd v0.3.0 h1:eMwymTkA1uXsqxS0Tpoop3Lc0u3kTfiMBE6nKtQU4g4=
@@ -143,3 +145,5 @@ gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7/go.mod h1:dt/ZhP58zS4L8KSrWD
 gopkg.in/yaml.v2 v2.2.1/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
 gopkg.in/yaml.v2 v2.2.2 h1:ZCJp+EgiOT7lHqUV2J862kp8Qj64Jo6az82+3Td9dZw=
 gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
+gopkg.in/yaml.v2 v2.2.4 h1:/eiJrUcujPVeJ3xlSWaiNi3uSVmDGBK1pDHUHAnao1I=
+gopkg.in/yaml.v2 v2.2.4/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=

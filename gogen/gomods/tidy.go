@@ -11,7 +11,7 @@ func Tidy(path string, verbose bool) (*genny.Generator, error) {
 	g.StepName = "go:mod:tidy:" + path
 	g.RunFn(func(r *genny.Runner) error {
 		return r.Chdir(path, func() error {
-			cmd := exec.Command(genny.GoBin(), "mod", "tidy")
+			cmd := exec.Command("go", "mod", "tidy")
 			if verbose {
 				cmd.Args = append(cmd.Args, "-v")
 			}

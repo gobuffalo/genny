@@ -9,7 +9,7 @@ import (
 func Get(pkg string, args ...string) *exec.Cmd {
 	args = append([]string{"get"}, args...)
 	args = append(args, pkg)
-	cmd := exec.Command(genny.GoBin(), args...)
+	cmd := exec.Command("go", args...)
 	return cmd
 }
 
