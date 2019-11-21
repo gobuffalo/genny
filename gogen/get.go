@@ -4,7 +4,6 @@ import (
 	"os/exec"
 
 	"github.com/gobuffalo/genny"
-	"github.com/gobuffalo/genny/gogen/gomods"
 )
 
 func Get(pkg string, args ...string) *exec.Cmd {
@@ -16,9 +15,7 @@ func Get(pkg string, args ...string) *exec.Cmd {
 
 func Install(pkg string, args ...string) genny.RunFn {
 	return func(r *genny.Runner) error {
-		return gomods.Disable(func() error {
-			cmd := Get(pkg, args...)
-			return r.Exec(cmd)
-		})
+		cmd := Get(pkg, args...)
+		return r.Exec(cmd)
 	}
 }
