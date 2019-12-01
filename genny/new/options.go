@@ -23,7 +23,7 @@ func (opts *Options) Validate() error {
 		if err != nil {
 			return err
 		}
-		opts.BoxName = path.Join(info.Dir, opts.Prefix, opts.Name, "templates")
+		opts.BoxName = path.Join(info.ImportPath, opts.Prefix, opts.Name, "templates")
 	}
 	return nil
 }
