@@ -1,10 +1,9 @@
 package genny
 
 import (
+	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/gobuffalo/envy"
 )
 
 func exts(f File) []string {
@@ -50,5 +49,8 @@ func StripExt(f File, ext string) File {
 }
 
 func GoBin() string {
-	return envy.Get("GO_BIN", "go")
+	if bin := os.Getenv("GO_BIN"); bin != "" {
+		return bin
+	}
+	return "go"
 }

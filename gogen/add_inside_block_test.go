@@ -53,8 +53,9 @@ func Test_AddInsideBlock_NoFound(t *testing.T) {
 const appBefore = `package actions
 
 import (
+	"os"
+
 	"github.com/gobuffalo/buffalo"
-	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/mw-paramlogger"
 
 	"github.com/gobuffalo/mw-csrf"
@@ -62,7 +63,10 @@ import (
 	"github.com/markbates/coke/models"
 )
 
-var ENV = envy.Get("GO_ENV", "development")
+var ENV = os.Getenv("GO_ENV")
+if ENV == "" {
+	ENV = "development"
+}
 var app *buffalo.App
 
 func App() *buffalo.App {
@@ -81,8 +85,9 @@ func App() *buffalo.App {
 const appAfter = `package actions
 
 import (
+	"os"
+
 	"github.com/gobuffalo/buffalo"
-	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/mw-paramlogger"
 
 	"github.com/gobuffalo/mw-csrf"
@@ -90,7 +95,10 @@ import (
 	"github.com/markbates/coke/models"
 )
 
-var ENV = envy.Get("GO_ENV", "development")
+var ENV = os.Getenv("GO_ENV")
+if ENV == "" {
+	ENV = "development"
+}
 var app *buffalo.App
 
 func App() *buffalo.App {

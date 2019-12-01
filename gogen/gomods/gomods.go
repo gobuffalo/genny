@@ -2,9 +2,10 @@ package gomods
 
 import (
 	"errors"
+	"os"
 
-	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/genny/internal/takeon/github.com/markbates/safe"
+	"github.com/gobuffalo/here"
 )
 
 const ENV = "GO111MODULE"
@@ -13,21 +14,31 @@ var ErrModsOff = errors.New("go mods are turned off")
 
 func Force(b bool) {
 	if b {
-		envy.MustSet(ENV, "on")
+		os.Setenv(ENV, "on")
 		return
 	}
-	envy.MustSet(ENV, "off")
+	os.Setenv(ENV, "off")
 }
 
 func On() bool {
-	return envy.Mods()
+	oe := os.Getenv(ENV)
+	if oe == "off" {
+		return false
+	}
+
+	info, _ := here.Current()
+	return !info.Module.IsZero()
 }
 
 func Disable(fn func() error) error {
-	oe := envy.Get(ENV, "off")
-	envy.MustSet(ENV, "off")
+	oe := os.Getenv(ENV)
+	if oe == "" {
+		oe = "off"
+	}
+
+	os.Setenv(ENV, "off")
 
 	err := safe.RunE(fn)
-	envy.MustSet(ENV, oe)
+	os.Setenv(ENV, oe)
 	return err
 }

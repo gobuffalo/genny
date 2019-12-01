@@ -29,7 +29,6 @@ const importBefore = `package actions
 
 import (
 	"github.com/gobuffalo/buffalo"
-	"github.com/gobuffalo/envy"
 )
 `
 
@@ -37,7 +36,6 @@ const importAfter = `package actions
 
 import (
 	"github.com/gobuffalo/buffalo"
-	"github.com/gobuffalo/envy"
 
 
 	"foo/bar"

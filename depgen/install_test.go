@@ -2,15 +2,15 @@ package depgen
 
 import (
 	"errors"
+	"os"
 	"testing"
 
-	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/genny/gentest"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_InstallDep_NotInstalled(t *testing.T) {
-	envy.Set("GO_BIN", "go")
+	os.Setenv("GO_BIN", "go")
 	r := require.New(t)
 
 	run := gentest.NewRunner()
@@ -27,7 +27,7 @@ func Test_InstallDep_NotInstalled(t *testing.T) {
 }
 
 func Test_InstallDep_Installed(t *testing.T) {
-	envy.Set("GO_BIN", "go")
+	os.Setenv("GO_BIN", "go")
 	r := require.New(t)
 
 	run := gentest.NewRunner()
