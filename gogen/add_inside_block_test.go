@@ -64,12 +64,12 @@ import (
 )
 
 var ENV = os.Getenv("GO_ENV")
-if ENV == "" {
-	ENV = "development"
-}
 var app *buffalo.App
 
 func App() *buffalo.App {
+	if ENV == "" {
+		ENV = "development"
+	}
 	if app == nil {
 		app = buffalo.New(buffalo.Options{})
 		app.Use(paramlogger.ParameterLogger)
@@ -96,12 +96,12 @@ import (
 )
 
 var ENV = os.Getenv("GO_ENV")
-if ENV == "" {
-	ENV = "development"
-}
 var app *buffalo.App
 
 func App() *buffalo.App {
+	if ENV == "" {
+		ENV = "development"
+	}
 	if app == nil {
 		app = buffalo.New(buffalo.Options{})
 		app.Use(paramlogger.ParameterLogger)
