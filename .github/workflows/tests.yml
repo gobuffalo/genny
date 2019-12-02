@@ -2,7 +2,7 @@ name: Tests
 on: [push]
 jobs:
 
-​  tests-on:
+  tests-on:
     name: ${{matrix.go-version}} ${{matrix.os}}
     runs-on: ${{ matrix.os }}
     strategy:
