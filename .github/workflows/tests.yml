@@ -1,8 +1,8 @@
 name: Tests
 on: [push]
 jobs:
-​
-  tests_on:
+
+​  tests-on:
     name: ${{matrix.go-version}} ${{matrix.os}}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -18,8 +18,8 @@ jobs:
       run: |
         go mod tidy -v
         go test -race ./...
-​
-  tests_off:
+
+  tests-off:
     name: (GOPATH) ${{matrix.go-version}} ${{matrix.os}}
     runs-on: ${{ matrix.os }}
     strategy:
