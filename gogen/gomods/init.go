@@ -49,15 +49,12 @@ func Init(name string, path string) (*genny.Generator, error) {
 	g := genny.New()
 	g.StepName = "go:mod:init:" + name
 	g.RunFn(func(r *genny.Runner) error {
-		if !On() {
-			return nil
-		}
 		return r.Chdir(path, func() error {
 			args := []string{"mod", "init"}
 			if len(name) > 0 {
 				args = append(args, name)
 			}
-			cmd := exec.Command(genny.GoBin(), args...)
+			cmd := exec.Command("go", args...)
 			return r.Exec(cmd)
 		})
 	})
