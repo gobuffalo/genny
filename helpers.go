@@ -3,8 +3,6 @@ package genny
 import (
 	"path/filepath"
 	"strings"
-
-	"github.com/gobuffalo/envy"
 )
 
 func exts(f File) []string {
@@ -47,8 +45,4 @@ func StripExt(f File, ext string) File {
 	name := f.Name()
 	name = strings.Replace(name, ext, "", -1)
 	return NewFile(name, f)
-}
-
-func GoBin() string {
-	return envy.Get("GO_BIN", "go")
 }
