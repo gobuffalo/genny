@@ -19,7 +19,7 @@ func (opts *Options) Validate() error {
 		return errors.New("you must provide a Name")
 	}
 	if len(opts.BoxName) == 0 {
-		info, err := here.Dir(".")
+		info, err := here.Current()
 		if err != nil {
 			return err
 		}
