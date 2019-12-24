@@ -1,21 +1,66 @@
 TAGS ?= ""
+GO_BIN ?= "go"
 
 install: packr
-	cd ./genny && go install -tags ${TAGS} -v .
+	$(GO_BIN) install -tags ${TAGS} -v ./genny
 	make tidy
 
 tidy:
-	go mod tidy
+ifeq ($(GO111MODULE),on)
+	$(GO_BIN) mod tidy
+else
+	echo skipping go mod tidy
+endif
+
+deps:
+	$(GO_BIN) get -tags ${TAGS} -t ./...
+	make tidy
 
 build: packr
-	go build -v .
+	$(GO_BIN) build -v .
 	make tidy
 
 test: packr
-	go test -cover -tags ${TAGS} ./...
+	$(GO_BIN) test -cover -tags ${TAGS} ./...
+	make tidy
+
+ci-deps: packr
+	$(GO_BIN) get -tags ${TAGS} -t ./...
+
+ci-test: packr
+	$(GO_BIN) test -tags ${TAGS} -race ./...
+
+lint:
+	go get github.com/golangci/golangci-lint/cmd/golangci-lint
+	golangci-lint run --enable-all
+	make tidy
+
+update:
+ifeq ($(GO111MODULE),on)
+	rm go.*
+	$(GO_BIN) mod init
+	$(GO_BIN) mod tidy
+else
+	$(GO_BIN) get -u -tags ${TAGS}
+endif
+	make test
+	make install
+	make tidy
+
+release-test: packr
+	$(GO_BIN) test -tags ${TAGS} -race ./...
+	make tidy
+
+release:
+	$(GO_BIN) get github.com/gobuffalo/release
+	make tidy
+	release -y -f version.go 
 	make tidy
 
 packr:
-	go get github.com/gobuffalo/packr/v2/packr2
+	$(GO_BIN) get github.com/gobuffalo/packr/v2/packr2
 	packr2
 	make tidy
+
+
+
