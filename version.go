@@ -1,3 +1,3 @@
 package genny
 
-var Version = ""
+const Version = "v0.4.1"

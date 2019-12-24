@@ -5,4 +5,4 @@
 // and any other packr generated files.
 package new
 
-import _ "github.com/gobuffalo/genny/packrd"
+import _ "github.com/gobuffalo/genny/v2/packrd"
