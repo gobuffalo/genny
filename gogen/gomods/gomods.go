@@ -12,15 +12,10 @@ const ENV = "GO111MODULE"
 var ErrModsOff = errors.New("go mods are turned off")
 
 func Force(b bool) {
-	if b {
-		envy.MustSet(ENV, "on")
-		return
-	}
-	envy.MustSet(ENV, "off")
 }
 
 func On() bool {
-	return envy.Mods()
+	return true
 }
 
 func Disable(fn func() error) error {

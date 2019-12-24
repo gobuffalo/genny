@@ -1,12 +1,13 @@
 package gomods
 
 import (
-	"go/build"
 	"os"
 	"os/exec"
+	"path"
 	"strings"
 
 	"github.com/gobuffalo/genny"
+	"github.com/gobuffalo/here"
 )
 
 func New(name string, path string) (*genny.Group, error) {
@@ -26,20 +27,19 @@ func New(name string, path string) (*genny.Group, error) {
 	return g, nil
 }
 
-func Init(name string, path string) (*genny.Generator, error) {
-	if len(name) == 0 && len(path) == 0 {
+func Init(name string, root string) (*genny.Generator, error) {
+	if len(root) == 0 || root == "." {
 		pwd, err := os.Getwd()
 		if err != nil {
 			return nil, err
 		}
-		path = pwd
+		root = pwd
 	}
 
-	if len(name) == 0 && path != "." {
-		name = path
-		c := build.Default
-		for _, s := range c.SrcDirs() {
-			name = strings.TrimPrefix(name, s)
+	if len(name) == 0 {
+		name = path.Base(root)
+		if info, err := here.Dir(root); err == nil {
+			name = info.ImportPath
 		}
 	}
 
@@ -49,10 +49,7 @@ func Init(name string, path string) (*genny.Generator, error) {
 	g := genny.New()
 	g.StepName = "go:mod:init:" + name
 	g.RunFn(func(r *genny.Runner) error {
-		if !On() {
-			return nil
-		}
-		return r.Chdir(path, func() error {
+		return r.Chdir(root, func() error {
 			args := []string{"mod", "init"}
 			if len(name) > 0 {
 				args = append(args, name)
