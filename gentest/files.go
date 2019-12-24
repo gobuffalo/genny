@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/gobuffalo/genny"
+	"github.com/gobuffalo/genny/v2"
 	"github.com/gobuffalo/packd"
 )
 

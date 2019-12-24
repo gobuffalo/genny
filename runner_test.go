@@ -63,10 +63,10 @@ func Test_Runner_FindFile_FromDisk(t *testing.T) {
 
 	run := DryRunner(context.Background())
 
-	exp, err := ioutil.ReadFile("./fixtures/foo.txt")
+	exp, err := ioutil.ReadFile("./internal/testdata/foo.txt")
 	r.NoError(err)
 
-	f, err := run.FindFile("fixtures/foo.txt")
+	f, err := run.FindFile("internal/testdata/foo.txt")
 	r.NoError(err)
 	act, err := ioutil.ReadAll(f)
 	r.NoError(err)

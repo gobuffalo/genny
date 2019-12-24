@@ -6,7 +6,7 @@ import (
 	"go/token"
 	"strings"
 
-	"github.com/gobuffalo/genny"
+	"github.com/gobuffalo/genny/v2"
 )
 
 // AddImport adds n number of import statements into the path provided

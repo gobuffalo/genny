@@ -3,7 +3,7 @@ package gogen
 import (
 	"strings"
 
-	"github.com/gobuffalo/genny"
+	"github.com/gobuffalo/genny/v2"
 )
 
 // Append allows to append source into a go file
