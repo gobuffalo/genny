@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gobuffalo/genny"
+	"github.com/gobuffalo/genny/v2"
 	"github.com/stretchr/testify/require"
 )
 

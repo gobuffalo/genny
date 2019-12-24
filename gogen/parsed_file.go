@@ -7,7 +7,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/gobuffalo/genny"
+	"github.com/gobuffalo/genny/v2"
 )
 
 type ParsedFile struct {

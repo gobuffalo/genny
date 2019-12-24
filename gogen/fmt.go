@@ -3,8 +3,8 @@ package gogen
 import (
 	"bytes"
 
-	"github.com/gobuffalo/genny"
-	"github.com/gobuffalo/genny/gogen/goimports"
+	"github.com/gobuffalo/genny/v2"
+	"github.com/gobuffalo/genny/v2/gogen/goimports"
 )
 
 func Fmt(root string) (*genny.Generator, error) {

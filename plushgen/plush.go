@@ -1,7 +1,7 @@
 package plushgen
 
 import (
-	"github.com/gobuffalo/genny"
+	"github.com/gobuffalo/genny/v2"
 	"github.com/gobuffalo/plush"
 )
 

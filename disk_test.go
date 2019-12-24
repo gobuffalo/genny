@@ -3,10 +3,13 @@ package genny_test
 import (
 	"context"
 	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 
-	"github.com/gobuffalo/genny"
-	"github.com/gobuffalo/packr/v2"
+	"github.com/gobuffalo/genny/v2"
+	"github.com/gobuffalo/packd"
 	"github.com/stretchr/testify/require"
 )
 
@@ -68,10 +71,10 @@ func Test_Disk_Find_FromDisk(t *testing.T) {
 	run := genny.DryRunner(context.Background())
 
 	d := run.Disk
-	f, err := d.Find("fixtures/foo.txt")
+	f, err := d.Find("internal/testdata/foo.txt")
 	r.NoError(err)
 
-	exp, err := ioutil.ReadFile("./fixtures/foo.txt")
+	exp, err := ioutil.ReadFile("./internal/testdata/foo.txt")
 	r.NoError(err)
 
 	act, err := ioutil.ReadAll(f)
@@ -92,11 +95,30 @@ func Test_Disk_FindFile_DoesntExist(t *testing.T) {
 func Test_Disk_AddBox(t *testing.T) {
 	r := require.New(t)
 
-	box := packr.New("./fixtures", "./fixtures")
+	box := packd.NewMemoryBox()
+
+	td := filepath.Join("internal", "testdata")
+	err := filepath.Walk(td, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+
+		b, err := ioutil.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		p := strings.TrimPrefix(path, td+string(filepath.Separator))
+		box.AddBytes(p, b)
+
+		return nil
+	})
 
 	run := genny.DryRunner(context.Background())
 	d := run.Disk
-	err := d.AddBox(box)
+	err = d.AddBox(box)
 	r.NoError(err)
 
 	f, err := d.Find("foo.txt")
