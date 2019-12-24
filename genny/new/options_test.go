@@ -15,5 +15,5 @@ func Test_Options(t *testing.T) {
 	opts.Name = "foo"
 	r.NoError(opts.Validate())
 
-	r.Equal("github.com/gobuffalo/genny/genny/new/foo/templates", opts.BoxName)
+	r.Equal("foo/templates", opts.BoxName)
 }

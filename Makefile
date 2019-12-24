@@ -1,7 +1,8 @@
 TAGS ?= ""
+GO_BIN ?= "go"
 
 install: packr
-	cd ./genny && go install -tags ${TAGS} -v .
+	go install -tags ${TAGS} -v ./genny
 	make tidy
 
 tidy:
@@ -16,6 +17,5 @@ test: packr
 	make tidy
 
 packr:
-	go get github.com/gobuffalo/packr/v2/packr2
 	packr2
 	make tidy
