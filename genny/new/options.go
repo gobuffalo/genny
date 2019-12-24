@@ -4,7 +4,7 @@ import (
 	"errors"
 	"path"
 
-	"github.com/gobuffalo/envy"
+	"github.com/gobuffalo/here"
 )
 
 type Options struct {
@@ -19,11 +19,11 @@ func (opts *Options) Validate() error {
 		return errors.New("you must provide a Name")
 	}
 	if len(opts.BoxName) == 0 {
-		pkg, err := envy.CurrentModule()
+		info, err := here.Dir(".")
 		if err != nil {
-			pkg = envy.CurrentPackage()
+			return err
 		}
-		opts.BoxName = path.Join(pkg, opts.Prefix, opts.Name, "templates")
+		opts.BoxName = path.Join(info.ImportPath, opts.Prefix, opts.Name, "templates")
 	}
 	return nil
 }
