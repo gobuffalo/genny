@@ -1,4 +1,4 @@
-module github.com/gobuffalo/genny/v2/plushgen
+module github.com/gobuffalo/genny/plushgen
 
 go 1.13
 
