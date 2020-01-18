@@ -1,3 +1,0 @@
-package genny
-
-var Version = ""
