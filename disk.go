@@ -3,6 +3,7 @@ package genny
 import (
 	"bytes"
 	"io"
+	"io/fs"
 	"os"
 	"runtime"
 	"sort"
@@ -23,6 +24,24 @@ type Disk struct {
 
 func (d *Disk) AddBox(box packd.Walker) error {
 	return box.Walk(func(path string, file packd.File) error {
+		d.Add(NewFile(path, file))
+		return nil
+	})
+}
+
+func (d *Disk) AddFS(fsys fs.FS) error {
+	return fs.WalkDir(fsys, ".", func(path string, dir fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if dir.IsDir() {
+			return nil
+		}
+
+		file, err := fsys.Open(path)
+		if err != nil {
+			return err
+		}
 		d.Add(NewFile(path, file))
 		return nil
 	})

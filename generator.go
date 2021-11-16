@@ -80,6 +80,7 @@ func (g *Generator) Box(box packd.Walker) error {
 	})
 }
 
+// FS walks through a fs.FS and adds Files for each entry.
 func (g *Generator) FS(fsys fs.FS) error {
 	return fs.WalkDir(fsys, ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {

@@ -2,6 +2,8 @@ package gentest
 
 import (
 	"fmt"
+	"io/fs"
+	"io/ioutil"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -35,7 +37,7 @@ func CompareFiles(exp []string, act []genny.File) error {
 }
 
 // CompareBox compares a packd.Walkable box of files (usually fixtures)
-// the results of a genny.Runner
+// to the results of a genny.Runner
 func CompareBox(exp packd.Walkable, res genny.Results) error {
 	return exp.Walk(func(path string, file packd.File) error {
 		if filepath.Base(path) == ".DS_Store" {
@@ -52,6 +54,43 @@ func CompareBox(exp packd.Walkable, res genny.Results) error {
 	})
 }
 
+// CompareFS compares a fs.FS of files (usually fixtures) to the results
+// of a genny.Runner
+func CompareFS(exp fs.FS, res genny.Results) error {
+	return fs.WalkDir(exp, ".", func(path string, d fs.DirEntry, err error) error {
+		if filepath.Base(path) == ".DS_Store" {
+			return nil
+		}
+
+		if err != nil {
+			return err
+		}
+		if d.IsDir() {
+			return nil
+		}
+
+		f, err := res.Find(path)
+		if err != nil {
+			return err
+		}
+
+		file, err := exp.Open(path)
+		if err != nil {
+			return err
+		}
+		b, err := ioutil.ReadAll(file)
+		if err != nil {
+			return err
+		}
+
+		if string(b) != f.String() {
+			return fmt.Errorf("[%s] expected %s to match %s", path, string(b), f)
+		}
+
+		return nil
+	})
+}
+
 // CompareBoxStripped compares a packd.Walkable box of files (usually fixtures)
 // the results of a genny.Runner by removing any whitespaces, tabs, or newlines.
 func CompareBoxStripped(exp packd.Walkable, res genny.Results) error {
@@ -64,6 +103,42 @@ func CompareBoxStripped(exp packd.Walkable, res genny.Results) error {
 			return err
 		}
 		if clean(file.String()) != clean(f.String()) {
+			return fmt.Errorf("[%s] expected %s to match %s", path, file, f)
+		}
+		return nil
+	})
+}
+
+// CompareFSStripped compares a fs.FS (usually fixtures) to the results of a
+// genny.Runner by removing any whitespaces, tabs, or newlines.
+func CompareFSStripped(exp fs.FS, res genny.Results) error {
+	return fs.WalkDir(exp, ".", func(path string, d fs.DirEntry, err error) error {
+		if filepath.Base(path) == ".DS_Store" {
+			return nil
+		}
+
+		if err != nil {
+			return err
+		}
+		if d.IsDir() {
+			return nil
+		}
+
+		f, err := res.Find(path)
+		if err != nil {
+			return err
+		}
+
+		file, err := exp.Open(path)
+		if err != nil {
+			return err
+		}
+		b, err := ioutil.ReadAll(file)
+		if err != nil {
+			return err
+		}
+
+		if clean(string(b)) != clean(f.String()) {
 			return fmt.Errorf("[%s] expected %s to match %s", path, file, f)
 		}
 		return nil

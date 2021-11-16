@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/gobuffalo/genny/v2"
+	"github.com/gobuffalo/genny/v2/internal/testdata"
 	"github.com/gobuffalo/packd"
 	"github.com/stretchr/testify/require"
 )
@@ -118,6 +119,23 @@ func Test_Disk_AddBox(t *testing.T) {
 	run := genny.DryRunner(context.Background())
 	d := run.Disk
 	err = d.AddBox(box)
+	r.NoError(err)
+
+	f, err := d.Find("foo.txt")
+	r.NoError(err)
+	r.Equal("foo.txt", f.Name())
+
+	f, err = d.Find("bar/baz.txt")
+	r.NoError(err)
+	r.Equal("bar/baz.txt", f.Name())
+}
+
+func Test_Disk_AddFS(t *testing.T) {
+	r := require.New(t)
+
+	run := genny.DryRunner(context.Background())
+	d := run.Disk
+	err := d.AddFS(testdata.Data())
 	r.NoError(err)
 
 	f, err := d.Find("foo.txt")
