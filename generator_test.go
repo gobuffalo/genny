@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/gobuffalo/genny/v2/internal/testdata"
 	"github.com/gobuffalo/packd"
 	"github.com/stretchr/testify/require"
 )
@@ -41,6 +42,29 @@ func Test_Generator_Box(t *testing.T) {
 
 	g := New()
 	r.NoError(g.Box(fixtures))
+
+	run := DryRunner(context.Background())
+	r.NoError(run.With(g))
+	r.NoError(run.Run())
+
+	res := run.Results()
+	r.Len(res.Commands, 0)
+	r.Len(res.Files, 2)
+
+	f := res.Files[0]
+	r.Equal("bar/baz.txt", f.Name())
+	r.Equal("baz!", f.String())
+
+	f = res.Files[1]
+	r.Equal("foo.txt", f.Name())
+	r.Equal("foo!", f.String())
+}
+
+func Test_Generator_FS(t *testing.T) {
+	r := require.New(t)
+
+	g := New()
+	r.NoError(g.FS(testdata.Data()))
 
 	run := DryRunner(context.Background())
 	r.NoError(run.With(g))
