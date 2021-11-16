@@ -55,7 +55,7 @@ func newDisk(r *Runner) *Disk {
 func (d *Disk) Remove(name string) {
 	d.moot.Lock()
 	defer d.moot.Unlock()
-	for f, _ := range d.files {
+	for f := range d.files {
 		if strings.HasPrefix(f, name) {
 			delete(d.files, f)
 		}
@@ -81,7 +81,10 @@ func (d *Disk) Find(name string) (File, error) {
 	d.moot.RLock()
 	if f, ok := d.files[name]; ok {
 		if seek, ok := f.(io.Seeker); ok {
-			seek.Seek(0, 0)
+			_, err := seek.Seek(0, 0)
+			if err != nil {
+				return nil, err
+			}
 		}
 		d.moot.RUnlock()
 		return f, nil

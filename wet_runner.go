@@ -29,7 +29,9 @@ func WetRunner(ctx context.Context) *Runner {
 	r.ChdirFn = func(path string, fn func() error) error {
 		pwd, _ := os.Getwd()
 		defer os.Chdir(pwd)
-		os.MkdirAll(path, 0755)
+		if err := os.MkdirAll(path, 0755); err != nil {
+			return err
+		}
 		if err := os.Chdir(path); err != nil {
 			return err
 		}

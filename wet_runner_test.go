@@ -26,7 +26,7 @@ func Test_WetRunner(t *testing.T) {
 	g.File(NewFile("foo.txt", strings.NewReader("foo!")))
 	dp := filepath.Join("a", "b", "c")
 	g.File(NewDir(dp, 0755))
-	run.With(g)
+	r.NoError(run.With(g))
 
 	r.NoError(run.Run())
 

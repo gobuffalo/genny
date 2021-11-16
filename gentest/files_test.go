@@ -23,8 +23,8 @@ func Test_CompareBox(t *testing.T) {
 	r := require.New(t)
 
 	box := packd.NewMemoryBox()
-	box.AddString("a.html", "A")
-	box.AddString("b.html", "B")
+	r.NoError(box.AddString("a.html", "A"))
+	r.NoError(box.AddString("b.html", "B"))
 
 	res := genny.Results{
 		Files: []genny.File{
@@ -40,8 +40,8 @@ func Test_CompareBox_Missing(t *testing.T) {
 	r := require.New(t)
 
 	box := packd.NewMemoryBox()
-	box.AddString("a.html", "A")
-	box.AddString("b.html", "B")
+	r.NoError(box.AddString("a.html", "A"))
+	r.NoError(box.AddString("b.html", "B"))
 
 	res := genny.Results{
 		Files: []genny.File{
@@ -56,8 +56,8 @@ func Test_CompareBox_Stripped(t *testing.T) {
 	r := require.New(t)
 
 	box := packd.NewMemoryBox()
-	box.AddString("a.html", "A\nx")
-	box.AddString("b.html", "B")
+	r.NoError(box.AddString("a.html", "A\nx"))
+	r.NoError(box.AddString("b.html", "B"))
 
 	res := genny.Results{
 		Files: []genny.File{

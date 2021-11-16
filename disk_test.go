@@ -45,7 +45,7 @@ func Test_Disk_Delete(t *testing.T) {
 	d := run.Disk
 	d.Add(genny.NewFile("foo.txt", nil))
 	d.Add(genny.NewFile("bar.txt", nil))
-	d.Delete("foo.txt")
+	r.NoError(d.Delete("foo.txt"))
 
 	files := d.Files()
 	r.Len(files, 1)
@@ -111,10 +111,9 @@ func Test_Disk_AddBox(t *testing.T) {
 			return err
 		}
 		p := strings.TrimPrefix(path, td+string(filepath.Separator))
-		box.AddBytes(p, b)
-
-		return nil
+		return box.AddBytes(p, b)
 	})
+	r.NoError(err)
 
 	run := genny.DryRunner(context.Background())
 	d := run.Disk

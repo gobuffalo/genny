@@ -45,7 +45,6 @@ func renderWithTemplate(f genny.File, data interface{}, helpers template.FuncMap
 
 	var bb bytes.Buffer
 	if err = t.Execute(&bb, data); err != nil {
-		err = err
 		return f, err
 	}
 	return genny.StripExt(genny.NewFile(path, &bb), ".tmpl"), nil

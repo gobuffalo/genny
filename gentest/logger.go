@@ -10,13 +10,13 @@ import (
 )
 
 const (
-	DEBUG string = "DEBU"
-	INFO         = "INFO"
-	WARN         = "WARN"
-	ERROR        = "ERRO"
-	FATAL        = "FATA"
-	PANIC        = "PANI"
-	PRINT        = "PRIN"
+	DEBUG = "DEBU"
+	INFO  = "INFO"
+	WARN  = "WARN"
+	ERROR = "ERRO"
+	FATAL = "FATA"
+	PANIC = "PANI"
+	PRINT = "PRIN"
 )
 
 // compile-time assertion to guarantee Logger conforms to genny.Logger

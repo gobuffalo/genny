@@ -30,5 +30,5 @@ func GoFiles(dir string) ([]string, error) {
 		}
 		return nil
 	})
-	return files, nil
+	return files, err
 }

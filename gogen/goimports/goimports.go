@@ -67,7 +67,10 @@ func (r Runner) processFile(file File) error {
 	}
 	if bytes.Equal(src, res) {
 		if s, ok := file.In.(io.Seeker); ok {
-			s.Seek(0, 0)
+			_, err := s.Seek(0, 0)
+			if err != nil {
+				return err
+			}
 		}
 		return nil
 	}

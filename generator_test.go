@@ -24,7 +24,7 @@ func Test_Generator_File(t *testing.T) {
 	g.File(NewFile("foo.txt", strings.NewReader("hello")))
 
 	run := DryRunner(context.Background())
-	run.With(g)
+	r.NoError(run.With(g))
 	r.NoError(run.Run())
 
 	res := run.Results()
@@ -43,7 +43,7 @@ func Test_Generator_Box(t *testing.T) {
 	r.NoError(g.Box(fixtures))
 
 	run := DryRunner(context.Background())
-	run.With(g)
+	r.NoError(run.With(g))
 	r.NoError(run.Run())
 
 	res := run.Results()
@@ -66,7 +66,7 @@ func Test_Command(t *testing.T) {
 	g.Command(exec.Command("echo", "hello"))
 
 	run := DryRunner(context.Background())
-	run.With(g)
+	r.NoError(run.With(g))
 	r.NoError(run.Run())
 
 	res := run.Results()
@@ -111,7 +111,7 @@ func Test_Merge(t *testing.T) {
 	g1.Merge(g2)
 
 	run := DryRunner(context.Background())
-	run.With(g1)
+	r.NoError(run.With(g1))
 	r.NoError(run.Run())
 
 	res := run.Results()

@@ -16,10 +16,8 @@ func Test_GoFmt(t *testing.T) {
 
 	g, err := Fmt("")
 	r.NoError(err)
-	run.With(g)
-
+	r.NoError(run.With(g))
 	r.NoError(run.Run())
-
 }
 
 func Test_FmtTransformer(t *testing.T) {
