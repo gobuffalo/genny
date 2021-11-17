@@ -1,6 +1,7 @@
 package genny
 
 import (
+	"io/fs"
 	"math/rand"
 	"os/exec"
 	"sync"
@@ -74,6 +75,24 @@ func (g *Generator) Command(cmd *exec.Cmd) {
 // in the box.
 func (g *Generator) Box(box packd.Walker) error {
 	return box.Walk(func(path string, f packd.File) error {
+		g.File(NewFile(path, f))
+		return nil
+	})
+}
+
+// FS walks through a fs.FS and adds Files for each entry.
+func (g *Generator) FS(fsys fs.FS) error {
+	return fs.WalkDir(fsys, ".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() {
+			return nil
+		}
+		f, err := fsys.Open(path)
+		if err != nil {
+			return err
+		}
 		g.File(NewFile(path, f))
 		return nil
 	})

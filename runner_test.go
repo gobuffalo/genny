@@ -23,8 +23,7 @@ func Test_Runner_Run(t *testing.T) {
 	g.File(NewFile("foo.txt", strings.NewReader("Hello mark")))
 
 	run := DryRunner(context.Background())
-	run.With(g)
-
+	r.NoError(run.With(g))
 	r.NoError(run.Run())
 
 	res := run.Results()
@@ -47,7 +46,7 @@ func Test_Runner_FindFile(t *testing.T) {
 	g.File(NewFile("foo.txt", strings.NewReader("Hello world")))
 
 	run := DryRunner(context.Background())
-	run.With(g)
+	r.NoError(run.With(g))
 	r.NoError(run.Run())
 
 	res := run.Results()
@@ -140,7 +139,8 @@ func Test_Runner_FindStep(t *testing.T) {
 	for i := 0; i < 3; i++ {
 		s, err := NewStep(New(), i)
 		r.NoError(err)
-		run.WithStep("step "+strconv.Itoa(i+1), s)
+		err = run.WithStep("step "+strconv.Itoa(i+1), s)
+		r.NoError(err)
 	}
 
 	s, err := run.FindStep("step 2")
@@ -158,7 +158,8 @@ func Test_Runner_ReplaceStep(t *testing.T) {
 		g.File(NewFileS(fmt.Sprintf("%d.txt", i), strconv.Itoa(i)))
 		s, err := NewStep(g, i)
 		r.NoError(err)
-		run.WithStep("step "+strconv.Itoa(i), s)
+		err = run.WithStep("step "+strconv.Itoa(i), s)
+		r.NoError(err)
 	}
 
 	gx := New()

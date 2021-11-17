@@ -32,7 +32,6 @@ type Runner struct {
 	Root       string                                                    // the root of the write path
 	Disk       *Disk
 	steps      map[string]*Step
-	generators []*Generator
 	moot       *sync.RWMutex
 	results    Results
 	curGen     *Generator
@@ -225,7 +224,10 @@ func (r *Runner) File(f File) error {
 				return e
 			}
 			if s, ok := f.(io.Seeker); ok {
-				s.Seek(0, 0)
+				_, err := s.Seek(0, 0)
+				if err != nil {
+					return err
+				}
 			}
 			return nil
 		})
@@ -235,7 +237,10 @@ func (r *Runner) File(f File) error {
 	}
 	f = NewFile(f.Name(), f)
 	if s, ok := f.(io.Seeker); ok {
-		s.Seek(0, 0)
+		_, err := s.Seek(0, 0)
+		if err != nil {
+			return err
+		}
 	}
 	r.Disk.Add(f)
 	return nil

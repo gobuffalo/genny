@@ -2,6 +2,7 @@ package genny
 
 import (
 	"fmt"
+	"io/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -15,6 +16,30 @@ func ForceBox(g *Generator, box packd.Walker, force bool) error {
 		f := NewFile(path, bf)
 		ff := ForceFile(f, force)
 		f, err := ff(f)
+		if err != nil {
+			return err
+		}
+		g.File(f)
+		return nil
+	})
+}
+
+// ForceFS will mount each file in the fs.FS and wrap it with ForceFile
+func ForceFS(g *Generator, fsys fs.FS, force bool) error {
+	return fs.WalkDir(fsys, ".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() {
+			return nil
+		}
+		r, err := fsys.Open(path)
+		if err != nil {
+			return err
+		}
+		f := NewFile(path, r)
+		ff := ForceFile(f, force)
+		f, err = ff(f)
 		if err != nil {
 			return err
 		}

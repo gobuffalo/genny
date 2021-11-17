@@ -25,7 +25,9 @@ func RunNew(g *genny.Generator, err error) (genny.Results, error) {
 	}
 
 	r := NewRunner()
-	r.With(g)
+	if err := r.With(g); err != nil {
+		return genny.Results{}, err
+	}
 
 	return sprint(r)
 }

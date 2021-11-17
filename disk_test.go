@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/gobuffalo/genny/v2"
+	"github.com/gobuffalo/genny/v2/internal/testdata"
 	"github.com/gobuffalo/packd"
 	"github.com/stretchr/testify/require"
 )
@@ -45,7 +46,7 @@ func Test_Disk_Delete(t *testing.T) {
 	d := run.Disk
 	d.Add(genny.NewFile("foo.txt", nil))
 	d.Add(genny.NewFile("bar.txt", nil))
-	d.Delete("foo.txt")
+	r.NoError(d.Delete("foo.txt"))
 
 	files := d.Files()
 	r.Len(files, 1)
@@ -111,14 +112,30 @@ func Test_Disk_AddBox(t *testing.T) {
 			return err
 		}
 		p := strings.TrimPrefix(path, td+string(filepath.Separator))
-		box.AddBytes(p, b)
-
-		return nil
+		return box.AddBytes(p, b)
 	})
+	r.NoError(err)
 
 	run := genny.DryRunner(context.Background())
 	d := run.Disk
 	err = d.AddBox(box)
+	r.NoError(err)
+
+	f, err := d.Find("foo.txt")
+	r.NoError(err)
+	r.Equal("foo.txt", f.Name())
+
+	f, err = d.Find("bar/baz.txt")
+	r.NoError(err)
+	r.Equal("bar/baz.txt", f.Name())
+}
+
+func Test_Disk_AddFS(t *testing.T) {
+	r := require.New(t)
+
+	run := genny.DryRunner(context.Background())
+	d := run.Disk
+	err := d.AddFS(testdata.Data())
 	r.NoError(err)
 
 	f, err := d.Find("foo.txt")

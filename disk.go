@@ -3,6 +3,7 @@ package genny
 import (
 	"bytes"
 	"io"
+	"io/fs"
 	"os"
 	"runtime"
 	"sort"
@@ -23,6 +24,24 @@ type Disk struct {
 
 func (d *Disk) AddBox(box packd.Walker) error {
 	return box.Walk(func(path string, file packd.File) error {
+		d.Add(NewFile(path, file))
+		return nil
+	})
+}
+
+func (d *Disk) AddFS(fsys fs.FS) error {
+	return fs.WalkDir(fsys, ".", func(path string, dir fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if dir.IsDir() {
+			return nil
+		}
+
+		file, err := fsys.Open(path)
+		if err != nil {
+			return err
+		}
 		d.Add(NewFile(path, file))
 		return nil
 	})
@@ -55,7 +74,7 @@ func newDisk(r *Runner) *Disk {
 func (d *Disk) Remove(name string) {
 	d.moot.Lock()
 	defer d.moot.Unlock()
-	for f, _ := range d.files {
+	for f := range d.files {
 		if strings.HasPrefix(f, name) {
 			delete(d.files, f)
 		}
@@ -81,7 +100,10 @@ func (d *Disk) Find(name string) (File, error) {
 	d.moot.RLock()
 	if f, ok := d.files[name]; ok {
 		if seek, ok := f.(io.Seeker); ok {
-			seek.Seek(0, 0)
+			_, err := seek.Seek(0, 0)
+			if err != nil {
+				return nil, err
+			}
 		}
 		d.moot.RUnlock()
 		return f, nil
