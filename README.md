@@ -1,6 +1,7 @@
 <p align="center"><img src="https://github.com/gobuffalo/buffalo/blob/master/logo.svg" width="360"></p>
 
 <p align="center">
+<a href="https://github.com/gobuffalo/genny/actions"><img src="https://github.com/gobuffalo/genny/workflows/Tests/badge.svg" alt="Actions Status" style="max-width: 100%;"></a>
 <a href="https://godoc.org/github.com/gobuffalo/genny"><img src="https://godoc.org/github.com/gobuffalo/genny?status.svg" alt="GoDoc" /></a>
 <a href="https://travis-ci.org/gobuffalo/genny"><img src="https://travis-ci.org/gobuffalo/genny.svg?branch=master" alt="Build Status" /></a>
 <a href="https://goreportcard.com/report/github.com/gobuffalo/genny"><img src="https://goreportcard.com/badge/github.com/gobuffalo/genny" alt="Go Report Card" /></a>
