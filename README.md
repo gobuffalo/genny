@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/gobuffalo/buffalo/blob/master/logo.svg" width="360"></p>
+<p align="center"><img src="https://github.com/gobuffalo/buffalo/blob/main/logo.svg" width="360"></p>
 
 <p align="center">
 <a href="https://github.com/gobuffalo/genny/actions"><img src="https://github.com/gobuffalo/genny/workflows/Tests/badge.svg" alt="Actions Status" style="max-width: 100%;"></a>
