@@ -5,7 +5,7 @@ import (
 	"io/fs"
 )
 
-//go:embed foo.txt bar/*
+//go:embed foo.txt bar/* sky/*
 var testdata embed.FS
 
 func Data() fs.FS {
