@@ -12,8 +12,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/markbates/oncer"
-	"github.com/markbates/safe"
+	"github.com/gobuffalo/genny/v2/internal/safe"
 	"github.com/sirupsen/logrus"
 )
 
@@ -85,21 +84,6 @@ func (r *Runner) WithNew(g *Generator, err error) error {
 	}
 	r.With(g)
 	return nil
-}
-
-// WithFn will evaluate the function and if successful it will add
-// the Generator to the Runner, otherwise it will return the error
-// Deprecated
-func (r *Runner) WithFn(fn func() (*Generator, error)) error {
-	oncer.Deprecate(5, "genny.Runner#WithFn", "")
-	return safe.RunE(func() error {
-		g, err := fn()
-		if err != nil {
-			return err
-		}
-		r.With(g)
-		return nil
-	})
 }
 
 func (r *Runner) WithStep(name string, step *Step) error {

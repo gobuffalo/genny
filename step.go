@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/markbates/safe"
+	"github.com/gobuffalo/genny/v2/internal/safe"
 )
 
 type DeleteFn func()
