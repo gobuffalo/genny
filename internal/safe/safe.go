@@ -3,11 +3,16 @@ package safe
 /* This is a copy of `gobuffalo/events/internal/safe/safe.go`, which was
    originally `markbates/safe/safe.go`. If you found any bug on this file,
    please fix the copies too.
+
+   This safeguard functions will be deprecated soon.
+   see https://github.com/gobuffalo/genny/pull/47 for more details.
 */
 
 import (
 	"errors"
 	"fmt"
+	"os"
+	"sync"
 )
 
 // Run the function safely knowing that if it panics
@@ -19,9 +24,16 @@ func Run(fn func()) (err error) {
 	})
 }
 
+var warningOnce sync.Once
+
+const warning = "WARNING! currently, genny recovers panic on the runner functions but the behavior will be dropped. please prepare your own recovery methods if you need them."
+
 // Run the function safely knowing that if it panics
 // the panic will be caught and returned as an error
 func RunE(fn func() error) (err error) {
+	warningOnce.Do(func() {
+		fmt.Fprintln(os.Stderr, warning)
+	})
 	defer func() {
 		if err != nil {
 			return
