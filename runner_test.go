@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os/exec"
+	"regexp"
 	"strconv"
 	"strings"
 	"testing"
@@ -174,4 +175,28 @@ func Test_Runner_ReplaceStep(t *testing.T) {
 	f, err := res.Find("2.txt")
 	r.NoError(err)
 	r.Equal("replaced", f.String())
+}
+
+// TODO: This test should be removed when we drop the safeguard for runner functions.
+func TestRunnerExec_NeverExecuteNever(t *testing.T) {
+	r := require.New(t)
+
+	// NewRunner returns a most basic Runner so users can customize it.
+	// This gives us flexibility, so we can extend it with our own way.
+	runner := NewRunner(context.Background())
+
+	pattern := `^danger.*(.*$` // from live user input, configs, whatever.
+	runner.ExecFn = func(cmd *exec.Cmd) error {
+		re := regexp.MustCompile(pattern)
+		if re.MatchString(cmd.Path) {
+			cmd.Path = "danger_wrapper"
+			//... do some more
+		}
+		return cmd.Run()
+	}
+
+	cmd := exec.Command("maybe")
+	err := runner.Exec(cmd)
+	r.Error(err)
+	r.Contains(err.Error(), "regexp")
 }

@@ -1,9 +1,4 @@
 TAGS ?= ""
 
-tidy:
-	go mod tidy
-
 test:
-	go test -cover -tags ${TAGS} ./...
-	make tidy
-
+	go test -cover -race -tags ${TAGS} ./...

@@ -1,7 +1,7 @@
 package genny
 
 import (
-	"github.com/markbates/safe"
+	"github.com/gobuffalo/genny/v2/internal/safe"
 )
 
 type TransformerFn func(File) (File, error)

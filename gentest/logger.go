@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/gobuffalo/genny/v2"
-	"github.com/markbates/safe"
+	"github.com/gobuffalo/genny/v2/internal/safe"
 )
 
 const (
