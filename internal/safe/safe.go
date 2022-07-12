@@ -26,19 +26,20 @@ func Run(fn func()) (err error) {
 
 var warningOnce sync.Once
 
-const warning = "WARNING! currently, genny recovers panic on the runner functions but the behavior will be dropped. please prepare your own recovery methods if you need them."
+// see discussion on PR #47
+const warning = "PANIC RECOVERED! currently, genny recovers panic on the runner functions but the behavior will be dropped. please prepare your own recovery."
 
 // Run the function safely knowing that if it panics
 // the panic will be caught and returned as an error
 func RunE(fn func() error) (err error) {
-	warningOnce.Do(func() {
-		fmt.Fprintln(os.Stderr, warning)
-	})
 	defer func() {
 		if err != nil {
 			return
 		}
 		if ex := recover(); ex != nil {
+			warningOnce.Do(func() {
+				fmt.Fprintln(os.Stderr, warning)
+			})
 			if e, ok := ex.(error); ok {
 				err = e
 				return
