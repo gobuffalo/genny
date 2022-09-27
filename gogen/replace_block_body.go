@@ -7,7 +7,7 @@ import (
 	"github.com/gobuffalo/genny/v2"
 )
 
-// ReplaceBlockBody will replace found block with expressions passed
+// ReplaceBlockBody will replace found block body with expressions passed
 func ReplaceBlockBody(gf genny.File, search string, expressions ...string) (genny.File, error) {
 	pf, err := ParseFile(gf)
 	if err != nil {
