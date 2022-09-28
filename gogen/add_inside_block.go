@@ -54,24 +54,15 @@ func findBlockCoordinates(search string, pf ParsedFile) (int, int) {
 
 	ast.Inspect(pf.Ast, func(n ast.Node) bool {
 		switch x := n.(type) {
-		case *ast.StructType:
+		case *ast.StructType, *ast.BlockStmt:
 			line := pf.FileSet.Position(x.Pos()).Line
 			structDeclaration := fmt.Sprintf("%s\n", pf.Lines[line-1])
 
 			if strings.Contains(structDeclaration, search) {
 				start = line
-				end = pf.FileSet.Position(x.End()).Line
-				return false
+				end = pf.FileSet.Position(x.End()).Line - 1
+				return false // should return false to guarantee the result
 			}
-
-		case *ast.BlockStmt:
-			start = pf.FileSet.Position(x.Lbrace).Line
-			blockDeclaration := fmt.Sprintf("%s\n", pf.Lines[start-1])
-
-			if strings.Contains(blockDeclaration, search) {
-				end = pf.FileSet.Position(x.Rbrace).Line - 1
-			}
-
 		}
 		return true
 	})
