@@ -64,9 +64,7 @@ func findLastGlobal(f *ast.File, fset *token.FileSet, fileLines []string) (int, 
 			return true // continue the block and find the last one
 
 		case *ast.FuncDecl:
-			if x.Name.String() == "main" {
-				return false // break the loop if the main function started
-			}
+			return false // break the loop if the any function started
 		}
 		return true
 	})
