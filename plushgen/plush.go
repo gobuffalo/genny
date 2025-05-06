@@ -2,7 +2,7 @@ package plushgen
 
 import (
 	"github.com/gobuffalo/genny/v2"
-	"github.com/gobuffalo/plush/v4"
+	"github.com/gobuffalo/plush/v5"
 )
 
 // Transformer will plushify any file that has a ".plush" extension

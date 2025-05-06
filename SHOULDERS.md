@@ -12,7 +12,7 @@ Thank you to the following **GIANTS**:
 * [github.com/gobuffalo/helpers](https://godoc.org/github.com/gobuffalo/helpers)
 * [github.com/gobuffalo/logger](https://godoc.org/github.com/gobuffalo/logger)
 * [github.com/gobuffalo/packd](https://godoc.org/github.com/gobuffalo/packd)
-* [github.com/gobuffalo/plush/v4](https://godoc.org/github.com/gobuffalo/plush/v4)
+* [github.com/gobuffalo/plush/v5](https://godoc.org/github.com/gobuffalo/plush/v5)
 * [github.com/gobuffalo/tags/v3](https://godoc.org/github.com/gobuffalo/tags/v3)
 * [github.com/gobuffalo/validate/v3](https://godoc.org/github.com/gobuffalo/validate/v3)
 * [github.com/gofrs/uuid](https://godoc.org/github.com/gofrs/uuid)
